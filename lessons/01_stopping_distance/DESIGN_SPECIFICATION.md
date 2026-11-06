@@ -16,7 +16,7 @@ This specification also covers the earlier Origin requirement *Mandatory Test �
 | B. Expanded | Declared fields → IRRS evaluation and admission → canonical A (and B, ρ, R where admissible) → an **Origin-authorized** Newtonian calculation that consumes declared projections of admitted A outputs | Kernel for the operators. The stopping-distance formula is **not** kernel and needs authorization (D-SD-4) | CALCULATED, or OPEN if not authorized |
 | C. Reference | A deterministic, fully specified simulated braking event | A declared simulator [EXPLANATORY]. V9: simulated, admitted only as simulated | SIMULATED. Never empirical |
 
-The design's central finding [CANONICAL basis]: **no canonical operator computes a stopping distance, and no canonical mapping exists from A, B, R, ρ or 𝟙 to a stopping distance.** The kernel's role is to admit the expanded observable information and to express its relations: directed differences such as slip velocity, relative air velocity, elevation drop, a change in friction between stations, and latencies. Turning those outputs into a distance takes a declared projection C, "Not a kernel operator" (`kernel_reference.md` §10 table), plus a Newtonian calculation that only Origin can authorize. The lesson will show exactly where the kernel stops and the authorized calculation begins.
+**[SUPERSEDED — wrong; see §13.]** The design's central finding [CANONICAL basis]: **no canonical operator computes a stopping distance, and no canonical mapping exists from A, B, R, ρ or 𝟙 to a stopping distance.** The kernel's role is to admit the expanded observable information and to express its relations: directed differences such as slip velocity, relative air velocity, elevation drop, a change in friction between stations, and latencies. Turning those outputs into a distance takes a declared projection C, "Not a kernel operator" (`kernel_reference.md` §10 table), plus a Newtonian calculation that only Origin can authorize. The lesson will show exactly where the kernel stops and the authorized calculation begins.
 
 ---
 
@@ -318,3 +318,25 @@ The marble-ramp Lesson 1 was removed on Origin instruction. It is recoverable fr
 - **Expanded calculation (D-SD-4).** Executed and reported as "pending Origin authorization", never as a kernel result.
 - **"Material" threshold (D-SD-10).** 1 m, provisional.
 - **Condition diamonds (D-SD-8).** Executed as declared relations of class `coupling`. IRRS raised no violation for them. Their admissibility is still Origin's decision.
+
+---
+
+## 13. Correction (Origin, 2026-11-05)
+
+§1, §4 and §5 above state that "no canonical operator computes a stopping distance". **That is wrong.** The operators calculate the directed difference between elements of a system on declared relations. The stopping distance is the difference between two observed states of the vehicle.
+
+The design left those states out of the field. They are now declared as **F5, the vehicle's observed states**:
+- loci: Onset, ResponseStart, BrakeOnset, FullBraking, Standstill;
+- components: position, and separately speed;
+- relations: the chain in the observed order of the event, plus Onset → Standstill.
+
+The kernel then calculates:
+- **stopping distance:** −A[Onset → Standstill];
+- each phase distance: −A on the chain;
+- **reaction distance:** −B[Onset → ResponseStart];
+- **braking distance:** −B[BrakeOnset → FullBraking].
+
+The expanded Newtonian formula (§6) remains a *prediction* from the condition fields. It is compared with the relational calculation from the observed states.
+
+**D-SD-12 (new).** Confirm the declared Onset → Standstill relation (the stopping event as a whole).
+

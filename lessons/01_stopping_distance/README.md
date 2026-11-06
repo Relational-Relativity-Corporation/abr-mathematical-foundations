@@ -31,11 +31,13 @@ To try your own change, copy a declaration from `records/expanded_event/`, edit 
 
 ## Results at a glance (illustrative; simulated reference)
 
-| | Stopping distance | Minus reference |
+| | Stopping distance | Minus relational |
 |---|---|---|
-| Basic (Exercise A inputs) | 100.187 m | −74.766 m |
-| Expanded (Newtonian formula pending Origin authorization, D-SD-4; inputs from IRRS-admitted fields and A outputs) | 180.109 m | +5.156 m |
-| Reference (simulated event: worn tread, wet road, 3 % downgrade, wind 20° off the nose, dusk, distracted driver) | 174.953 m | — |
+| Basic Newtonian prediction (Exercise A inputs) | 100.187 m | −74.766 m |
+| Expanded Newtonian prediction (formula pending Origin authorization, D-SD-4; inputs from IRRS-admitted fields and A outputs) | 180.109 m | +5.156 m |
+| **Relational: canonical A on the observed vehicle states, −A[Onset → Standstill]** (simulated event: worn tread, wet road, 3 % downgrade, wind 20° off the nose, dusk, distracted driver) | **174.953 m** | — |
+
+The kernel calculates the stopping distance as the directed difference between the vehicle's observed states. B over immediate successors gives the reaction distance (65.472 m) and the braking distance (109.481 m).
 
 ## Files
 

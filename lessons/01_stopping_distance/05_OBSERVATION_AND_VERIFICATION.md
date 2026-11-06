@@ -23,16 +23,18 @@ So agreement is not built in.
 
 ## 5.2 Side by side
 
-| | Basic (Exercise A) | Expanded (Exercise B) | Reference (simulated) |
+| | Basic prediction (Exercise A) | Expanded prediction (Exercise B) | Relational calculation from the observed states |
 |---|---|---|---|
-| Stopping distance | 100.187 m | 180.109 m | 174.953 m |
-| Minus reference | −74.766 m | +5.156 m | — |
-| Inputs | v, t, a | admitted fields and A outputs via declared projections; declared mass, drag area, air density, g | the full simulator declaration |
-| Authority | Newtonian, by hand | IRRS and Kernel V9 for the field; a Newtonian formula **pending authorization** (D-SD-4) | declared simulator |
+| Stopping distance | 100.187 m | 180.109 m | **174.953 m** = −A[Onset → Standstill] |
+| Minus relational | −74.766 m | +5.156 m | — |
+| Inputs | v, t, a (assumed) | condition fields (F1, F2, F3) via declared projections; declared mass, drag area, air density, g | the vehicle's observed states (F5), admitted by IRRS |
+| Authority | Newtonian, by hand | a Newtonian formula **pending authorization** (D-SD-4) | Kernel V9 operator A, executed through IRRS |
 
-**Observed result.** Here the expanded calculation is closer to the reference: |difference| 5.156 m against 74.766 m.
+The relational value agrees with the simulator's own stopping distance to 0.000 m, because it is calculated from the same observation. It is a calculation of observable data, not a prediction. The two predictions are what observation tests.
 
-In the sixteen controlled trials, the expanded calculation differs from the reference by between −1.088 m (downgrade, dry) and +5.973 m (worn tread, wet). The basic calculation differs by between −32.193 m (worn tread, wet) and +25.024 m (headwind, 60 mph). The expanded calculation tends to run long: it leaves out rolling resistance. It runs short on downgrades: it ignores the grade during the reaction phase. See Document 4 and the report.
+**Observed result.** Here the expanded prediction is closer to the relational value: |difference| 5.156 m against 74.766 m.
+
+In the sixteen controlled trials, the expanded prediction differs from the relational value by between −1.088 m (downgrade, dry) and +5.973 m (worn tread, wet). The basic calculation differs by between −32.193 m (worn tread, wet) and +25.024 m (headwind, 60 mph). The expanded calculation tends to run long: it leaves out rolling resistance. It runs short on downgrades: it ignores the grade during the reaction phase. See Document 4 and the report.
 
 These are agreements and disagreements **with a declared model**. They say nothing about the accuracy of either calculation for a real car.
 
@@ -55,15 +57,17 @@ Mass enters only through drag divided by mass. With braking limited by friction,
 
 - **No measurement exists.** Every value is illustrative and the reference is simulated, so observational verification is OPEN. A real test would replace the simulator readings with instrumented measurements and rerun the same declarations.
 - **Phase 2** (changing deceleration, brake activation history): not entered (§8; D-SD-6). `irrs-session` has no persistence path.
-- **B, R, ρ, 𝟙:** calculated, but they have no canonical mapping to a distance. ρ_base and χ₀ are illustrative.
+- **ρ_base and χ₀** are illustrative, so R and ρ on the condition fields are reported only. On the stopping relation, R rests on empty sums (A-3 OPEN).
+- **The Onset → Standstill relation** awaits Origin confirmation (D-SD-12).
 - **V9 provenance admission for A → B → R:** OPEN, outside the `abr-kernel` `1c1ef70` admission scope.
 - **Origin decisions:** D-SD-2 (direction bases), D-SD-3 (projections), D-SD-4 (expanded formula), D-SD-8 (relations between trials).
 
 ## 5.5 What this lesson establishes
 
 **Established:**
-- With the declared information, the canonical operators execute through IRRS and return directed differences: latencies, grade, friction change, relative air speed and slip.
-- A declared Newtonian calculation can use those outputs.
+- With the declared information, the canonical operators execute through IRRS.
+- On the vehicle's observed states they calculate the stopping distance and its reaction and braking parts.
+- On the condition fields they calculate latencies, grade, friction change, relative air speed and slip, which a declared Newtonian prediction can use.
 - In the condition diamonds, two admitted A outputs show one condition's significance depending on another.
 
 **Not established:** that any of these numbers describe a real vehicle. Accuracy has to be established through observation.

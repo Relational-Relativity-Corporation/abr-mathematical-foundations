@@ -323,3 +323,60 @@ pub fn diamond(id: &str, fa: &str, la: [&str; 2], fb: &str, lb: [&str; 2], d: [f
         acquisition: "simulated reference stopping distance of the trial".into(),
     }
 }
+
+/// F5 — the vehicle's own observed states during the stopping event.
+///
+/// The stopping distance is a relational quantity: the difference between
+/// the vehicle's position at hazard onset and its position at standstill.
+/// A on the declared relations between these states calculates it:
+///   A[Onset->Standstill] = x(onset) − x(standstill) = −(stopping distance)
+///   A on each chain relation = −(distance travelled in that phase)
+///   B on a chain relation (immediate successors) combines a phase with the
+///   next one, e.g. B[Onset->ResponseStart] = −(perception + response
+///   distance) = −(reaction distance).
+/// With component "speed", A gives the speed lost in each phase.
+pub fn f5_states(obs: &Observation, component: &str) -> FieldSpec {
+    let ids: Vec<String> = ["Onset", "ResponseStart", "BrakeOnset", "FullBraking", "Standstill"]
+        .iter().map(|s| s.to_string()).collect();
+    let what = [
+        "the vehicle at hazard onset (obstacle first visible)",
+        "the vehicle when the driver's response begins",
+        "the vehicle when brake pressure begins",
+        "the vehicle when full braking deceleration is reached",
+        "the vehicle at standstill",
+    ];
+    let (unit, floor, ceiling, values, chi_0, quantity, instrument) = match component {
+        "position" => ("m", 0.0, 600.0, obs.state_positions_m, 5.0,
+            "position along the road from the hazard-onset position", "simulated position track (wheel odometry / GNSS)"),
+        _ => ("m/s", 0.0, 60.0, obs.state_speeds_m_s, 1.0,
+            "speed along the road", "simulated speed track"),
+    };
+    let next = |k: usize| EdgeSpec {
+        from: ids[k].clone(), to: ids[k + 1].clone(), class: "continuation",
+        basis: format!("the vehicle passes directly from state {} to state {} in the observed course of the stopping event, with no declared state between; direction is the observed order of the event", ids[k], ids[k + 1]),
+    };
+    let mut edges: Vec<EdgeSpec> = (0..4).map(next).collect();
+    edges.push(EdgeSpec {
+        from: "Onset".into(), to: "Standstill".into(), class: "continuation",
+        basis: "the stopping event as a whole: the vehicle passes from its hazard-onset state to its standstill state. Declared so that the stopping distance is the directed difference on one relation (DESIGN D-SD-12, for Origin)".into(),
+    });
+    FieldSpec {
+        stem: format!("F5_vehicle_states_{component}"),
+        domain: "lesson1.stopping_event".into(),
+        description: format!("SIMULATED (illustrative values). Field F5: the {quantity} of the vehicle at five observed states of the stopping event '{}'.", obs.trial),
+        unit,
+        floor,
+        ceiling,
+        preserved: format!("the vehicle's {quantity} at each declared state, in {unit}"),
+        discarded: "the vehicle between the declared states; lateral and vertical motion; everything else about the vehicle".into(),
+        rule: format!("A reading is admitted only within {floor} {unit} to {ceiling} {unit} inclusive."),
+        mapping_input: format!("{instrument} reading at the declared state, in {unit}"),
+        nodes: ids.iter().zip(what).zip(values).map(|((id, w), v)| NodeSpec {
+            id: id.clone(), about: format!("{quantity} of {w}"), value: v,
+        }).collect(),
+        edges,
+        interior: chain_interior(&ids, "the vehicle arrives at this state from the previous one and continues to the next in the observed course of the event"),
+        chi_0,
+        acquisition: format!("{instrument}, read at the declared state of the reference event"),
+    }
+}

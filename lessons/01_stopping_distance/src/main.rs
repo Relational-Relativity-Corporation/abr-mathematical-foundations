@@ -96,13 +96,40 @@ fn event_fields(obs: &Observation, spacing: f64) -> Vec<FieldSpec> {
         fields::f2_elevation(obs, spacing),
         fields::f2_friction(obs, spacing),
         fields::f3_response(obs),
+        fields::f5_states(obs, "position"),
+        fields::f5_states(obs, "speed"),
     ]
+}
+
+/// The stopping distance and its parts, as calculated by the canonical
+/// operators on field F5 (vehicle states, position). Sign reversal only:
+/// A[s->t] = x(s) − x(t), and positions increase along the direction of travel.
+#[derive(Clone, Debug)]
+struct Relational {
+    stopping: f64,        // −A[Onset->Standstill]
+    reaction: f64,        // −B[Onset->ResponseStart]   (perception + response)
+    braking: f64,         // −B[BrakeOnset->FullBraking] (build-up + full braking)
+    phases: [f64; 4],     // −A on the four chain relations
+    speed_lost: [f64; 4], // A on the four chain relations of F5 speed
+}
+
+fn relational(pos: &Outcome, spd: &Outcome) -> Option<Relational> {
+    if !pos.executed { return None; }
+    let chain = ["Onset->ResponseStart", "ResponseStart->BrakeOnset", "BrakeOnset->FullBraking", "FullBraking->Standstill"];
+    Some(Relational {
+        stopping: -pos.a["Onset->Standstill"],
+        reaction: -pos.b["Onset->ResponseStart"],
+        braking: -pos.b["BrakeOnset->FullBraking"],
+        phases: chain.map(|l| -pos.a[l]),
+        speed_lost: chain.map(|l| spd.a.get(l).copied().unwrap_or(f64::NAN)),
+    })
 }
 
 struct EventRun {
     outcomes: BTreeMap<String, Outcome>,
     inputs: Option<ExpandedInputs>,
     missing: Vec<String>,
+    relational: Option<Relational>,
 }
 
 /// Run every field of one event through IRRS and the kernel, then build the
@@ -130,7 +157,8 @@ fn run_event(obs: &Observation, spacing: f64, veh: &Vehicle, save_dir: Option<&s
     need("F2_road_friction", fr.admission.starts_with("ADMITTED"));
     need("F3_response_chain", f3.executed);
     if !missing.is_empty() {
-        return EventRun { outcomes, inputs: None, missing };
+        let rel = relational(&outcomes["F5_vehicle_states_position"], &outcomes["F5_vehicle_states_speed"]);
+        return EventRun { outcomes, inputs: None, missing, relational: rel };
     }
     // Declared projections C (DESIGN §5.1, D-SD-3). Each line states its source.
     let speed = f1.admitted["Body"];                         // admitted node value
@@ -149,7 +177,9 @@ fn run_event(obs: &Observation, spacing: f64, veh: &Vehicle, save_dir: Option<&s
             friction: fr.admitted[&a],                       // admitted node value
         }
     }).collect();
+    let rel = relational(&outcomes["F5_vehicle_states_position"], &outcomes["F5_vehicle_states_speed"]);
     EventRun {
+        relational: rel,
         outcomes,
         inputs: Some(ExpandedInputs {
             speed, perception, response, buildup, wind_along, segments,
@@ -241,22 +271,41 @@ fn main() {
     let _ = writeln!(r, "\n  𝟙[e] = 1.0 (review signal, §11.4) on {signals} of {rels} relations across the five fields.");
 
     // Relationship between kernel outputs and the calculation.
-    let _ = writeln!(r, "\n  How admitted relational outputs enter the stopping-distance calculation (declared projections C, D-SD-3):");
-    let _ = writeln!(r, "    initial speed           ← admitted node value Body (F1 onset)");
-    let _ = writeln!(r, "    along-road wind         ← admitted node value Air (F1 onset; M projects speed × cos(direction))");
-    let _ = writeln!(r, "    relative air speed      ← A[Air->Body] = w − v (reported; the calculation uses v − w at each segment entry)");
-    let _ = writeln!(r, "    perception / response / build-up times ← −A on F3 relations (sign reversal)");
-    let _ = writeln!(r, "    grade of segment k      ← atan(−A[Sk->Sk+1] / spacing) from F2a (drop ÷ declared spacing)");
-    let _ = writeln!(r, "    friction of segment k   ← admitted node value at Sk (F2b)");
-    let _ = writeln!(r, "    slip velocity           ← A[Body->Tread] at full braking — reported; no use in the calculation");
-    let _ = writeln!(r, "    B, R, ρ, 𝟙              ← NO canonical mapping to a stopping distance: OPEN, not used");
-    let _ = writeln!(r, "    mass, drag area, air density, g ← declared calculation inputs (single values, no relation; not kernel inputs)");
+    for stem in ["F5_vehicle_states_position", "F5_vehicle_states_speed"] {
+        show(&mut r, stem, &run.outcomes[stem]);
+    }
+    let _ = writeln!(r, "\n  ---- The stopping distance, calculated by the canonical operators on F5 (vehicle states) ----");
+    match &run.relational {
+        Some(q) => {
+            let _ = writeln!(r, "    stopping distance   = −A[Onset->Standstill]          = {:.3} m", q.stopping);
+            let _ = writeln!(r, "    reaction distance   = −B[Onset->ResponseStart]       = {:.3} m  (perception {:.3} + response {:.3})", q.reaction, q.phases[0], q.phases[1]);
+            let _ = writeln!(r, "    braking distance    = −B[BrakeOnset->FullBraking]    = {:.3} m  (build-up {:.3} + full braking {:.3})", q.braking, q.phases[2], q.phases[3]);
+            let _ = writeln!(r, "    speed lost per phase (A on F5 speed): perception {:.3}, response {:.3}, build-up {:.3}, full braking {:.3} m/s",
+                q.speed_lost[0], q.speed_lost[1], q.speed_lost[2], q.speed_lost[3]);
+            let _ = writeln!(r, "    The basic calculation's two terms, v·t and v²/(2a), correspond to −B on the two chain relations that begin");
+            let _ = writeln!(r, "    the reaction and the braking; the relational field calculates them from the observed states, not from assumed t and a.");
+            let _ = writeln!(r, "    Check: reaction + braking − stopping = {:+.3e} m", q.reaction + q.braking - q.stopping);
+            let pos = &run.outcomes["F5_vehicle_states_position"];
+            let l = "Onset->Standstill";
+            let _ = writeln!(r, "    On Onset->Standstill the full path gives A = B = R = {} m, 𝟙 = {}. No relation precedes Onset or follows",
+                fmt(pos.a[l]), fmt(pos.indicator[l]));
+            let _ = writeln!(r, "    Standstill, so both sums in R are over empty sets: R there does not depend on ρ_base and χ₀, but it rests on");
+            let _ = writeln!(r, "    empty sums evaluating to 0.0, which is kernel open condition A-3 (§18). A and B there do not depend on A-3.");
+        }
+        None => { let _ = writeln!(r, "    OPEN — F5 was not executed"); }
+    }
+    let _ = writeln!(r, "\n  Outputs that describe the conditions of the event (A on F1, F2, F3):");
+    let _ = writeln!(r, "    A[Air->Body] = w − v: relative air speed;  A[Body->Tread] at full braking: slip velocity;");
+    let _ = writeln!(r, "    A[Sk->Sk+1] on F2a: elevation drop per segment;  A on F2b: change in friction;  −A on F3: latencies.");
+    let _ = writeln!(r, "    These, with admitted readings, are the inputs of the expanded (predictive) Newtonian calculation below");
+    let _ = writeln!(r, "    (projections C, D-SD-3: wind ← Air reading; grade ← atan(−A/spacing); friction ← station readings; times ← −A on F3).");
+    let _ = writeln!(r, "    R and ρ depend on the illustrative ρ_base and χ₀; 𝟙 is a review signal (§11.4).");
 
     // ── Side-by-side ──────────────────────────────────────────────────────
-    let _ = writeln!(r, "\n================ Exercise C — Comparison with the reference (simulated) observation ================");
-    let reference = obs.stopping_distance_m;
+    let _ = writeln!(r, "\n================ Exercise C — Predictions compared with the relational calculation from observation ================");
+    let reference = run.relational.as_ref().map(|q| q.stopping).unwrap_or(f64::NAN);
     let expanded = run.inputs.as_ref().map(calc::expanded);
-    let _ = writeln!(r, "  {:44} {:>14} {:>16}", "", "distance (m)", "minus reference");
+    let _ = writeln!(r, "  {:44} {:>14} {:>16}", "", "distance (m)", "minus relational");
     let _ = writeln!(r, "  {:44} {:>14.3} {:>+16.3}", "Basic (Exercise A inputs)", basic.total_m, basic.total_m - reference);
     match &expanded {
         Some(e) => {
@@ -265,11 +314,13 @@ fn main() {
         }
         None => { let _ = writeln!(r, "  Expanded: OPEN — required field(s) not executed: {}", run.missing.join(", ")); }
     }
-    let _ = writeln!(r, "  {:44} {:>14.3} {:>16}", "Reference (simulated event)", reference, "—");
+    let _ = writeln!(r, "  {:44} {:>14.3} {:>16}", "Relational (kernel: −A[Onset->Standstill], F5)", reference, "—");
+    let _ = writeln!(r, "      calculated from the observed (simulated) vehicle states. The simulator's own figure is {:.3} m (difference {:+.3e} m):", obs.stopping_distance_m, reference - obs.stopping_distance_m);
+    let _ = writeln!(r, "      the same observation, so they agree. The relational result is a calculation of observable data, not a prediction.");
     let _ = writeln!(r, "      stopping time {:.3} s; trajectory in records/expanded_event/reference_observation.json", obs.stopping_time_s);
     if let Some(e) = &expanded {
         let (db, de) = ((basic.total_m - reference).abs(), (e.total_m - reference).abs());
-        let _ = writeln!(r, "  Observed result: |basic − reference| = {db:.3} m, |expanded − reference| = {de:.3} m — the {} calculation is closer here.",
+        let _ = writeln!(r, "  Observed result: |basic − relational| = {db:.3} m, |expanded − relational| = {de:.3} m — the {} prediction is closer here.",
             if de < db { "expanded" } else if db < de { "basic" } else { "two" });
         let _ = writeln!(r, "  The remaining expanded difference includes effects the simulator models and the calculation does not (D-SD-9).");
     }
@@ -299,14 +350,15 @@ fn main() {
     let _ = writeln!(r, "    - every value: illustrative, simulated; no measurement exists (observational verification OPEN)");
     let _ = writeln!(r, "    - Phase 2 (changing deceleration over the event, brake activation history): not entered; the simulator is not declared");
     let _ = writeln!(r, "      a transducer (§8, D-SD-6), and irrs-session c7410c5 has no persistence execution path");
-    let _ = writeln!(r, "    - ρ_base, χ₀: illustrative; B, R, ρ, 𝟙 have no canonical mapping to distance");
+    let _ = writeln!(r, "    - ρ_base, χ₀: illustrative (R and ρ depend on them); the Onset->Standstill relation awaits Origin review (D-SD-12)");
     let _ = writeln!(r, "    - direction bases of F1/F3 (D-SD-2); projections C (D-SD-3); expanded formula (D-SD-4)");
     let _ = writeln!(r, "    - IRRS evaluation of every field is OPEN (nodes/edges 'proposed', parameters illustrative, Phase 2)");
 
     // ── §7 Interdependent conditions ──────────────────────────────────────
     let _ = writeln!(r, "\n================ Interdependent observable conditions (four controlled-trial diamonds) ================");
-    let _ = writeln!(r, "  Each trial: reference simulation; its five fields through IRRS and the kernel; basic and expanded calculations.");
-    let _ = writeln!(r, "  Then the four reference distances form field F4 (a diamond of controlled-condition relations, D-SD-8 OPEN).");
+    let _ = writeln!(r, "  Each trial: reference simulation; its seven fields through IRRS and the kernel (stopping distance = −A on F5);");
+    let _ = writeln!(r, "  basic and expanded predictions. The four relational stopping distances then form field F4, a diamond of");
+    let _ = writeln!(r, "  controlled-condition relations (D-SD-8 OPEN), whose A outputs are the differences between trials.");
     let mut trial_lines = String::new();
     for d in cfg["diamonds"].as_array().unwrap() {
         let id = d["id"].as_str().unwrap();
@@ -318,20 +370,21 @@ fn main() {
         let mut dist = [0.0; 4];
         let _ = writeln!(r, "\n  --- {id}: {fa} × {fb} ---");
         let _ = writeln!(r, "    Source of any interaction: {}", d["_basis"].as_str().unwrap_or("<not declared>"));
-        let _ = writeln!(r, "    {:22} {:>12} {:>12} {:>12}  {}", "trial", "basic (m)", "expanded (m)", "reference (m)", "IRRS (all five fields)");
+        let _ = writeln!(r, "    {:22} {:>12} {:>12} {:>12}  {}", "trial", "basic (m)", "expanded (m)", "relational (m)", "IRRS (all seven fields)");
         for (k, (i, j)) in order.iter().enumerate() {
             let tid = format!("{}_{}", la[*i], lb[*j]);
             let t = trial(&cfg, &tid, &d["trials"][&tid]);
             let o = sim::simulate(&t, &veh, dt);
             let er = run_event(&o, spacing, &veh, None);
             let e = er.inputs.as_ref().map(|x| calc::expanded(x).total_m);
-            dist[k] = round9(o.stopping_distance_m);
+            let rel = er.relational.as_ref().map(|q| q.stopping).unwrap_or(f64::NAN);
+            dist[k] = round9(rel);
             let all_open = er.outcomes.values().all(|x| x.irrs_status.starts_with("OPEN") && x.violations == 0);
             let all_exec = er.outcomes.values().all(|x| x.executed);
             let _ = writeln!(r, "    {:22} {:>12.3} {:>12} {:>12.3}  {}", tid, basic.total_m,
-                e.map(|x| format!("{x:.3}")).unwrap_or_else(|| "OPEN".into()), o.stopping_distance_m,
+                e.map(|x| format!("{x:.3}")).unwrap_or_else(|| "OPEN".into()), rel,
                 format!("{}; {}", if all_open { "OPEN, 0 violations" } else { "see record" }, if all_exec { "A→B→R executed" } else { "not all executed" }));
-            let _ = writeln!(trial_lines, "{id}/{tid}: reference {:.6} m; expanded {}; field digests {}", o.stopping_distance_m,
+            let _ = writeln!(trial_lines, "{id}/{tid}: relational −A[Onset->Standstill] {:.6} m (simulator {:.6} m); expanded {}; field digests {}", rel, o.stopping_distance_m,
                 e.map(|x| format!("{x:.6} m")).unwrap_or_else(|| "OPEN".into()),
                 er.outcomes.iter().map(|(s, x)| format!("{s}={}", &x.digest[..16])).collect::<Vec<_>>().join(" "));
         }

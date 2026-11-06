@@ -26,7 +26,7 @@ Because of the NodeField rule, the twelve items cannot share one field: lux, sec
 | 8 | Ambient illumination | A trial condition, acting through F3 times |
 | 9 | Visibility and obstacle detection | F3, obstacle and driver times |
 | 10 | Driver attention and response history | F3, driver and brake times |
-| 11 | Vehicle position and velocity | F1, and the reference trajectory |
+| 11 | Vehicle position and velocity | **F5, the vehicle's observed states**, and F1 |
 | 12 | Changing deceleration | Phase 2: OPEN (§2.4) |
 
 ## 2.3 The fields  (declarations are written by `src/fields.rs` and saved in `records/expanded_event/*.declaration.json`)
@@ -37,6 +37,9 @@ Because of the NodeField rule, the twelve items cannot share one field: lux, sec
 | **F2a elevation** | stations S00 … S16, every 25 m | elevation relative to S00 (m), [−50, 50] | Sk → Sk+1 *(continuation: the observed direction of travel)* | S01 … S15 |
 | **F2b friction** | S00 … S16 | peak friction coefficient (1), [0, 1.5] | as F2a | S01 … S15 |
 | **F3 response chain** | Obstacle, Driver, Brake, Tread | time from hazard onset (s), [0, 10] | Obstacle → Driver → Brake → Tread *(the observed signal path)* | Driver, Brake |
+| **F5 vehicle states**, position and speed (two fields) | the vehicle at Onset, ResponseStart, BrakeOnset, FullBraking, Standstill | position from the onset position (m), [0, 600]; speed (m/s), [0, 60] | Onset → ResponseStart → BrakeOnset → FullBraking → Standstill *(continuation: the observed course of the event)*, plus Onset → Standstill *(the stopping event as a whole; D-SD-12)* | ResponseStart, BrakeOnset, FullBraking |
+
+**F5 is the field the stopping distance belongs to.** The stopping distance is a relation between two observed states of the same vehicle: where it was at hazard onset and where it is at standstill. Declaring those states as loci, and the passage between them as relations, lets the canonical operators calculate it (Document 3).
 
 **M for each field** is an identity on the declared reading, except at the Air locus. There M projects the measured wind speed and direction onto the direction of travel (speed × cos direction). The projection is declared with what it preserves (the along-road component) and what it discards (the crosswind) (D-SD-3).
 
@@ -50,6 +53,7 @@ Because of the NodeField rule, the twelve items cannot share one field: lux, sec
 | F2a | 0.5 | 0.5 m |
 | F2b | 0.5 | 0.05 |
 | F3 | 0.5 | 0.25 s |
+| F5 position, F5 speed | 0.5 | 5.0 m, 1.0 m/s |
 
 ## 2.4 What is not declared  [OPEN]
 

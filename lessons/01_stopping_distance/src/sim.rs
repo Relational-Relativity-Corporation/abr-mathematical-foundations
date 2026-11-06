@@ -82,6 +82,11 @@ pub struct Observation {
     /// hazard onset.
     pub stopping_distance_m: f64,
     pub stopping_time_s: f64,
+    /// The vehicle's observed states: hazard onset, response start, brake
+    /// onset, full braking, standstill. Position along the road from the
+    /// hazard-onset position (m) and speed (m/s) at each.
+    pub state_positions_m: [f64; 5],
+    pub state_speeds_m_s: [f64; 5],
     /// Trajectory sampled every 0.1 s: (t, x, v, deceleration).
     pub trajectory: Vec<[f64; 4]>,
 }
@@ -127,7 +132,12 @@ pub fn simulate(tr: &Trial, veh: &Vehicle, dt: f64) -> Observation {
     let mut traj = Vec::new();
     let mut next_sample = 0.0;
     let mut full_v = None;
+    let state_times = [0.0, tr.perception, tr.perception + tr.response, t_full];
+    let mut states: Vec<(f64, f64)> = Vec::new();
     loop {
+        while states.len() < 4 && t + 1e-12 >= state_times[states.len()] {
+            states.push((x, v));
+        }
         let th = slope(&tr.stations, x);
         let mu = interp(&tr.stations, x, |s| s.friction);
         let n = veh.mass * veh.g * th.cos();
@@ -158,6 +168,9 @@ pub fn simulate(tr: &Trial, veh: &Vehicle, dt: f64) -> Observation {
         t += dt;
     }
     let vf = full_v.unwrap_or(0.0);
+    while states.len() < 4 { states.push((x, 0.0)); }
+    let state_positions_m = [states[0].0, states[1].0, states[2].0, states[3].0, x];
+    let state_speeds_m_s = [states[0].1, states[1].1, states[2].1, states[3].1, 0.0];
     Observation {
         trial: tr.id.clone(),
         mode: "full declared mechanics".into(),
@@ -170,6 +183,8 @@ pub fn simulate(tr: &Trial, veh: &Vehicle, dt: f64) -> Observation {
         stations: tr.stations.clone(),
         stopping_distance_m: x,
         stopping_time_s: t,
+        state_positions_m,
+        state_speeds_m_s,
         trajectory: traj,
     }
 }

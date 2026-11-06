@@ -14,13 +14,13 @@
 
 | # | Finding |
 |---|---|
-| F-1 | **No canonical operator calculates a stopping distance**, and no canonical mapping exists from A, B, R, ρ or 𝟙 to one. Only admitted node values and A outputs enter the calculation, through declared projections C (not kernel operators). B, R, ρ and 𝟙 are reported, not used |
-| F-2 | **IRRS returned OPEN with 0 violations for all nine fields.** Five event fields: 14, 14, 40, 40 and 14 conditions. Four diamonds: 15 each. The conditions are the absent Phase 2 declarations, "proposed" support (GR-5) and the illustrative parameters. Every reading was admitted by the gate |
-| F-3 | **A → B → R executed on every field.** The RPPI re-execution agreed each time. 𝟙[e] = 1.0 on 27 of the 41 event relations, a review signal under §11.4 |
+| F-1 | **The canonical operators calculate the stopping distance** on field F5, the vehicle's observed states: −A[Onset → Standstill] = 174.953 m, −B[Onset → ResponseStart] = 65.472 m (reaction), −B[BrakeOnset → FullBraking] = 109.481 m (braking). *Correction:* the first version of this lesson (commit `6d8b9ea`) wrongly stated that no operator gives a stopping distance. It had left the vehicle's own states out of the field. Origin pointed out the error, and F5 was added |
+| F-2 | **IRRS returned OPEN with 0 violations for all eleven fields.** Seven event fields: 14, 14, 40, 40, 14, 17 and 17 conditions. Four diamonds: 15 each. The conditions are the absent Phase 2 declarations, "proposed" support (GR-5) and the illustrative parameters. Every reading was admitted by the gate |
+| F-3 | **A → B → R executed on every field.** The RPPI re-execution agreed each time. 𝟙[e] = 1.0 on most relations, a review signal under §11.4. On Onset → Standstill, A = B = R and 𝟙 = 0: R there rests on empty sums (A-3) |
 | F-4 | **Phase 2 is unreachable.** Changing deceleration needs Phase 2. §8 requires the simulator to be declared a transducer (D-SD-6), and `irrs-session` `c7410c5` has no persistence execution path |
 | F-5 | **IRRS raised no objection to relations between separate controlled trials** (the F4 diamonds). Their admissibility is still Origin's decision (D-SD-8): IRRS checks structure, not whether a relation is an observed passage |
 | F-6 | **Two of the four diamond interactions are Generator-authored.** Tread × moisture and visibility × attention come from tabled values; wind × speed and grade × surface come from the declared mechanics. Documents 4 and the report state this |
-| F-7 | **Results:** basic 100.187 m; expanded 180.109 m (pending D-SD-4); simulated reference 174.953 m. The expanded calculation is closer here, but that is agreement with a declared model only |
+| F-7 | **Results:** basic prediction 100.187 m; expanded prediction 180.109 m (pending D-SD-4); relational 174.953 m (equal to the simulator's own figure, since it is the same observation). The expanded prediction is closer here, but that is agreement with a declared model only |
 | F-8 | **Rings are not refused** by `irrs-eval`, `relational-gate` or `irrs-session` at `c7410c5`, although Kernel V9 §8 declares them inadmissible (see §3, negative-path checks). Returned to Origin |
 
 ## 3. Self-audit
@@ -34,7 +34,7 @@
 | Values imported from another domain or repository | none; g is declared as the standard value |
 | Canonical repositories modified | none |
 | Machine paths or secrets in records | none (checked by grep) |
-| Determinism | two consecutive runs gave byte-identical `records/` (30 files) |
+| Determinism | two consecutive runs gave byte-identical `records/` (36 files) |
 | Build | `cargo build --locked`: 0 warnings |
 
 **Negative-path checks.** Each check used a modified copy of `records/expanded_event/F3_response_chain.declaration.json`, run with `cargo run -- <file>`. The copies were kept outside the repository.
@@ -64,10 +64,10 @@ cargo run --locked
 
 `Cargo.lock` sha256 is `d9a31b9c2eadf4c4b773fdd81e90be0582714a38af82e8a4b1326abf15b5da1b`.
 
-`records/LESSON1_REPORT.txt` sha256 is `8f4afe1e0d6dcdfe44663efbde29b04227a856ef9844713b178747f4a0a4c36b`. This was produced on Windows, and the stored file uses LF line endings.
+`records/LESSON1_REPORT.txt` sha256 is `6b6281b882ee8fc142d860c4a73295d42f04c7c0246a3348f7c6d61d42ba9a66`. This was produced on Windows, and the stored file uses LF line endings.
 
 ## 6. Recommendation
 
-Ready for Verifier conformance review once Origin has decided D-SD-4 (expanded formula), D-SD-6 (Phase 2), D-SD-7 (values) and D-SD-8 (relations between trials). It is not observationally verified.
+Ready for Verifier conformance review once Origin has decided D-SD-4 (expanded formula), D-SD-6 (Phase 2), D-SD-7 (values), D-SD-8 (relations between trials) and D-SD-12 (the Onset → Standstill relation). It is not observationally verified.
 
 *Bounded over D. No claim beyond D.*

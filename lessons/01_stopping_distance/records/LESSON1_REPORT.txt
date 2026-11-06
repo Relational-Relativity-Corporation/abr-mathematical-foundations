@@ -27,6 +27,8 @@ Canonical authorities (resolved by Cargo.lock):
   F2_road_elevation            OPEN — 40 condition(s), 0 violation(s); not authorized ADMITTED — all 17 readings   CALCULATED (A, ρ, B, R, 𝟙)
   F2_road_friction             OPEN — 40 condition(s), 0 violation(s); not authorized ADMITTED — all 17 readings   CALCULATED (A, ρ, B, R, 𝟙)
   F3_response_chain            OPEN — 14 condition(s), 0 violation(s); not authorized ADMITTED — all 4 readings    CALCULATED (A, ρ, B, R, 𝟙)
+  F5_vehicle_states_position   OPEN — 17 condition(s), 0 violation(s); not authorized ADMITTED — all 5 readings    CALCULATED (A, ρ, B, R, 𝟙)
+  F5_vehicle_states_speed      OPEN — 17 condition(s), 0 violation(s); not authorized ADMITTED — all 5 readings    CALCULATED (A, ρ, B, R, 𝟙)
 
   F1_velocity_hazard_onset: canonical outputs
     relation                    A              B              R    𝟙
@@ -56,27 +58,55 @@ Canonical authorities (resolved by Cargo.lock):
     S02->S03           0.75          1.5          1.5 |       0.0315        0.014 0.00655981595092
     S03->S04           0.75          1.5          1.5 |      -0.0175       -0.028 -0.0286763803681
 
-  𝟙[e] = 1.0 (review signal, §11.4) on 27 of 41 relations across the five fields.
+  𝟙[e] = 1.0 (review signal, §11.4) on 35 of 51 relations across the five fields.
 
-  How admitted relational outputs enter the stopping-distance calculation (declared projections C, D-SD-3):
-    initial speed           ← admitted node value Body (F1 onset)
-    along-road wind         ← admitted node value Air (F1 onset; M projects speed × cos(direction))
-    relative air speed      ← A[Air->Body] = w − v (reported; the calculation uses v − w at each segment entry)
-    perception / response / build-up times ← −A on F3 relations (sign reversal)
-    grade of segment k      ← atan(−A[Sk->Sk+1] / spacing) from F2a (drop ÷ declared spacing)
-    friction of segment k   ← admitted node value at Sk (F2b)
-    slip velocity           ← A[Body->Tread] at full braking — reported; no use in the calculation
-    B, R, ρ, 𝟙              ← NO canonical mapping to a stopping distance: OPEN, not used
-    mass, drag area, air density, g ← declared calculation inputs (single values, no relation; not kernel inputs)
+  F5_vehicle_states_position: canonical outputs
+    relation                    A              B              R    𝟙
+    BrakeOnset->FullBraking -6.619644715945 -109.4807528234 -139.2091089847    1
+    FullBraking->Standstill -102.8611081075 -102.8611081075 -50.65827174946    1
+    Onset->ResponseStart -53.48279955772 -65.47236975479 -74.51844856442    1
+    Onset->Standstill -174.9531225782 -174.9531225782 -174.9531225782  0.0
+    ResponseStart->BrakeOnset -11.98957019707 -18.60921491302 -38.73215318135    1
+    ρ: BrakeOnset 0.3528508978744, FullBraking 0.4768220441653, Onset 0.4861074930839, ResponseStart 0.4572523884132, Standstill 0.4861074930839
 
-================ Exercise C — Comparison with the reference (simulated) observation ================
-                                                 distance (m)  minus reference
+  F5_vehicle_states_speed: canonical outputs
+    relation                    A              B              R    𝟙
+    BrakeOnset->FullBraking 0.4299072889071 26.62574449288 30.49371734067    1
+    FullBraking->Standstill 26.19583720397 26.19583720397 13.37248370801    1
+    Onset->ResponseStart 0.1611224058154 0.1966555071248 0.4210112119264    1
+    Onset->Standstill        26.8224        26.8224        26.8224  0.0
+    ResponseStart->BrakeOnset 0.03553310130938 0.4654403902165  2.29914818001    1
+    ρ: BrakeOnset 0.1503269800225, FullBraking 0.4816148333199, Onset 0.4820288688251, ResponseStart 0.06938217926398, Standstill 0.4820288688251
+
+  ---- The stopping distance, calculated by the canonical operators on F5 (vehicle states) ----
+    stopping distance   = −A[Onset->Standstill]          = 174.953 m
+    reaction distance   = −B[Onset->ResponseStart]       = 65.472 m  (perception 53.483 + response 11.990)
+    braking distance    = −B[BrakeOnset->FullBraking]    = 109.481 m  (build-up 6.620 + full braking 102.861)
+    speed lost per phase (A on F5 speed): perception 0.161, response 0.036, build-up 0.430, full braking 26.196 m/s
+    The basic calculation's two terms, v·t and v²/(2a), correspond to −B on the two chain relations that begin
+    the reaction and the braking; the relational field calculates them from the observed states, not from assumed t and a.
+    Check: reaction + braking − stopping = +0.000e0 m
+    On Onset->Standstill the full path gives A = B = R = -174.9531225782 m, 𝟙 = 0.0. No relation precedes Onset or follows
+    Standstill, so both sums in R are over empty sets: R there does not depend on ρ_base and χ₀, but it rests on
+    empty sums evaluating to 0.0, which is kernel open condition A-3 (§18). A and B there do not depend on A-3.
+
+  Outputs that describe the conditions of the event (A on F1, F2, F3):
+    A[Air->Body] = w − v: relative air speed;  A[Body->Tread] at full braking: slip velocity;
+    A[Sk->Sk+1] on F2a: elevation drop per segment;  A on F2b: change in friction;  −A on F3: latencies.
+    These, with admitted readings, are the inputs of the expanded (predictive) Newtonian calculation below
+    (projections C, D-SD-3: wind ← Air reading; grade ← atan(−A/spacing); friction ← station readings; times ← −A on F3).
+    R and ρ depend on the illustrative ρ_base and χ₀; 𝟙 is a review signal (§11.4).
+
+================ Exercise C — Predictions compared with the relational calculation from observation ================
+                                                 distance (m) minus relational
   Basic (Exercise A inputs)                           100.187          -74.766
   Expanded (pending Origin authorization D-SD-4)        180.109           +5.156
       reaction 65.715 m + build-up 6.669 m + braking 107.725 m
-  Reference (simulated event)                         174.953                —
+  Relational (kernel: −A[Onset->Standstill], F5)        174.953                —
+      calculated from the observed (simulated) vehicle states. The simulator's own figure is 174.953 m (difference +0.000e0 m):
+      the same observation, so they agree. The relational result is a calculation of observable data, not a prediction.
       stopping time 10.628 s; trajectory in records/expanded_event/reference_observation.json
-  Observed result: |basic − reference| = 74.766 m, |expanded − reference| = 5.156 m — the expanded calculation is closer here.
+  Observed result: |basic − relational| = 74.766 m, |expanded − relational| = 5.156 m — the expanded prediction is closer here.
   The remaining expanded difference includes effects the simulator models and the calculation does not (D-SD-9).
   Agreement with a simulator is agreement with a declared model, not with the world.
 
@@ -94,17 +124,18 @@ Canonical authorities (resolved by Cargo.lock):
     - every value: illustrative, simulated; no measurement exists (observational verification OPEN)
     - Phase 2 (changing deceleration over the event, brake activation history): not entered; the simulator is not declared
       a transducer (§8, D-SD-6), and irrs-session c7410c5 has no persistence execution path
-    - ρ_base, χ₀: illustrative; B, R, ρ, 𝟙 have no canonical mapping to distance
+    - ρ_base, χ₀: illustrative (R and ρ depend on them); the Onset->Standstill relation awaits Origin review (D-SD-12)
     - direction bases of F1/F3 (D-SD-2); projections C (D-SD-3); expanded formula (D-SD-4)
     - IRRS evaluation of every field is OPEN (nodes/edges 'proposed', parameters illustrative, Phase 2)
 
 ================ Interdependent observable conditions (four controlled-trial diamonds) ================
-  Each trial: reference simulation; its five fields through IRRS and the kernel; basic and expanded calculations.
-  Then the four reference distances form field F4 (a diamond of controlled-condition relations, D-SD-8 OPEN).
+  Each trial: reference simulation; its seven fields through IRRS and the kernel (stopping distance = −A on F5);
+  basic and expanded predictions. The four relational stopping distances then form field F4, a diamond of
+  controlled-condition relations (D-SD-8 OPEN), whose A outputs are the differences between trials.
 
   --- tread_x_moisture: tread × moisture ---
     Source of any interaction: table, no formula: on a dry road worn tread loses little grip; on a wet road it loses much more (less water evacuation). Generator-chosen illustrative values
-    trial                     basic (m) expanded (m) reference (m)  IRRS (all five fields)
+    trial                     basic (m) expanded (m) relational (m)  IRRS (all seven fields)
     good_dry                    100.187       79.339       77.386  OPEN, 0 violations; A→B→R executed
     worn_dry                    100.187       81.969       79.872  OPEN, 0 violations; A→B→R executed
     good_wet                    100.187      102.072       98.829  OPEN, 0 violations; A→B→R executed
@@ -121,7 +152,7 @@ Canonical authorities (resolved by Cargo.lock):
 
   --- visibility_x_attention: attention × illumination ---
     Source of any interaction: table, no formula: perception delay per trial. Generator-chosen illustrative values
-    trial                     basic (m) expanded (m) reference (m)  IRRS (all five fields)
+    trial                     basic (m) expanded (m) relational (m)  IRRS (all seven fields)
     attentive_day               100.187       79.339       77.386  OPEN, 0 violations; A→B→R executed
     distracted_day              100.187       92.742       90.098  OPEN, 0 violations; A→B→R executed
     attentive_dusk              100.187       87.375       85.021  OPEN, 0 violations; A→B→R executed
@@ -138,7 +169,7 @@ Canonical authorities (resolved by Cargo.lock):
 
   --- wind_x_speed: wind × speed ---
     Source of any interaction: no interaction is tabled here: any interaction comes from the simulator's declared drag law (force proportional to the square of air speed relative to the vehicle). Wind direction is the direction the wind blows toward, measured from the direction of travel: 180 deg is a pure headwind
-    trial                     basic (m) expanded (m) reference (m)  IRRS (all five fields)
+    trial                     basic (m) expanded (m) relational (m)  IRRS (all seven fields)
     calm_60mph                  100.187       79.339       77.386  OPEN, 0 violations; A→B→R executed
     headwind_60mph              100.187       78.199       75.163  OPEN, 0 violations; A→B→R executed
     calm_80mph                  100.187      123.940      120.466  OPEN, 0 violations; A→B→R executed
@@ -155,7 +186,7 @@ Canonical authorities (resolved by Cargo.lock):
 
   --- grade_x_surface: grade × surface ---
     Source of any interaction: no interaction is tabled here: any interaction comes from the simulator's declared mechanics (gravity along the grade, friction proportional to the normal force). Negative grade = road descends in the direction of travel
-    trial                     basic (m) expanded (m) reference (m)  IRRS (all five fields)
+    trial                     basic (m) expanded (m) relational (m)  IRRS (all seven fields)
     level_dry                   100.187       79.339       77.386  OPEN, 0 violations; A→B→R executed
     downgrade_dry               100.187       82.615       83.703  OPEN, 0 violations; A→B→R executed
     level_wet                   100.187      102.072       98.829  OPEN, 0 violations; A→B→R executed

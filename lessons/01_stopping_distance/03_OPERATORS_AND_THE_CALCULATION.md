@@ -21,6 +21,8 @@ For each field the program (`src/pipeline.rs`) calls only canonical code:
 | F2a elevation | OPEN, 40, 0 | 17 admitted | calculated |
 | F2b friction | OPEN, 40, 0 | 17 admitted | calculated |
 | F3 response chain | OPEN, 14, 0 | 4 admitted | calculated |
+| F5 vehicle states, position | OPEN, 17, 0 | 5 admitted | calculated |
+| F5 vehicle states, speed | OPEN, 17, 0 | 5 admitted | calculated |
 
 **Why every field is OPEN:**
 - the four Phase 2 declarations are absent;
@@ -40,30 +42,48 @@ IRRS raised no violation. The lesson executes on OPEN, as Lesson 1 revision 2 di
 | F2b, S00 → S01 | +0.0105 | change in friction between stations (a patchy wet surface) |
 | F3, Obstacle → Driver; Driver → Brake; Brake → Tread | −2.0 s; −0.45 s; −0.25 s | the negated perception, response and build-up latencies |
 
-B, R and ρ were also calculated for every relation. 𝟙[e] = 1.0 on 27 of the 41 relations. Under §11.4 that is a **review signal**, preserved as returned. It is not a finding.
+B, R and ρ were also calculated for every relation. 𝟙[e] = 1.0 on most relations. Under §11.4 that is a **review signal**, preserved as returned. It is not a finding.
 
-## 3.4 Exactly how the outputs reach the stopping distance  [CANONICAL limit, then EXPLANATORY]
+## 3.4 The stopping distance, calculated by the canonical operators  [CANONICAL operators on declared F5]
 
-**No Kernel V9 operator calculates a stopping distance, and no canonical mapping exists from A, B, R, ρ or 𝟙 to one.** A projection C is "Not a kernel operator" (§10).
+The operators calculate the directed difference between elements of the system on declared relations. The stopping distance is exactly such a difference: between the vehicle's position at hazard onset and its position at standstill. On field F5 (position), A[s → t] = x(s) − x(t):
 
-The calculation uses only admitted node values and A outputs, through declared projections (D-SD-3):
-
-| Calculation input | Source | Projection |
+| Canonical output on F5 | Value | Meaning |
 |---|---|---|
-| initial speed | admitted Body reading, F1 onset | none |
-| along-road wind | admitted Air reading, F1 onset | M: speed × cos direction |
-| perception, response and build-up times | A on the F3 relations | sign reversal |
-| grade of segment k | A[Sk → Sk+1] in F2a | atan(−A / spacing) |
-| friction of segment k | admitted reading at Sk in F2b | none |
-| mass, drag area, air density, g | declared calculation inputs | none (not kernel inputs) |
+| −A[Onset → Standstill] | **174.953 m** | **stopping distance** |
+| −A[Onset → ResponseStart] | 53.483 m | distance during perception |
+| −A[ResponseStart → BrakeOnset] | 11.990 m | distance during response |
+| −A[BrakeOnset → FullBraking] | 6.620 m | distance during brake build-up |
+| −A[FullBraking → Standstill] | 102.861 m | distance under full braking |
+| −B[Onset → ResponseStart] = −(A[e] + A[ResponseStart → BrakeOnset]) | 65.472 m | **reaction distance**, the counterpart of v·t |
+| −B[BrakeOnset → FullBraking] = −(A[e] + A[FullBraking → Standstill]) | 109.481 m | **braking distance**, the counterpart of v²/(2a) |
 
-**Not used:** B, R, ρ, 𝟙 and the slip velocity. They are reported, but none has a canonical meaning as a distance (OPEN).
+reaction + braking − stopping = 0.
 
-**The expanded calculation** (`src/calc.rs`, Generator-proposed and pending Origin authorization D-SD-4) is Newtonian:
-1. constant speed through the reaction;
-2. a linear build-up of deceleration;
-3. then a constant deceleration in each segment, g·(μ·cosθ + sinθ) + drag/m, with drag taken at the speed entering the segment.
+The basic calculation *assumes* t and a. The relational calculation obtains each term as a difference between observed states.
 
-It is not attributed to the kernel. For this event it gives **180.109 m** (reaction 65.715 m + build-up 6.669 m + braking 107.725 m).
+**On the stopping relation:**
+- The full path gives A = B = R and 𝟙 = 0.
+- No relation precedes Onset or follows Standstill, so both sums in R are over empty sets. R there therefore does not depend on the illustrative ρ_base and χ₀.
+- It does rest on empty sums evaluating to 0.0, which is kernel open condition A-3 (§18). A and B do not.
+
+**F5 speed** gives the speed lost in each phase as A: 0.161, 0.036, 0.430 and 26.196 m/s.
+
+[OPEN] The Onset → Standstill relation is declared so that the stopping distance is the difference on a single relation. Origin should confirm it (D-SD-12).
+
+## 3.5 The expanded prediction  [EXPLANATORY, pending D-SD-4]
+
+The relational result above is a **calculation from the observed states**. A *prediction* has to be made before the event, from its conditions.
+
+The expanded Newtonian calculation (`src/calc.rs`) makes that prediction from the condition fields. Its inputs:
+- the admitted Body and Air readings (F1);
+- −A on F3 (latencies);
+- atan(−A / spacing) on F2a (grade);
+- the friction readings in F2b;
+- declared mass, drag area, air density and g.
+
+How it runs: constant speed through the reaction; a linear build-up of deceleration; then g·(μ·cosθ + sinθ) + drag/m in each segment. It gives **180.109 m**. It is not attributed to the kernel.
+
+R and ρ on the condition fields depend on the illustrative ρ_base and χ₀, and are reported only.
 
 *Bounded over D. No claim beyond D.*

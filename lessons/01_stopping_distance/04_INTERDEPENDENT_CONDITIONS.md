@@ -11,7 +11,7 @@ There are four controlled trials for each pair of conditions. Everything else is
 - perception 0.8 s, response 0.45 s, build-up 0.25 s;
 - calm air, level road, good tread, dry surface.
 
-Each trial runs through the reference simulator, its five fields go through IRRS and the kernel, and the basic and expanded calculations are made. The four reference stopping distances then form one field F4, a **diamond** of declared relations:
+Each trial runs through the reference simulator, and its seven fields go through IRRS and the kernel. The stopping distance of each trial is the canonical −A[Onset → Standstill] on its F5 field, and the basic and expanded predictions are also made. The four relational stopping distances then form one field F4, a **diamond** of declared relations:
 
 ```
         a0_b0 ──(factor a)──▶ a1_b0
@@ -36,7 +36,7 @@ A on a "factor a" edge is the difference in stopping distance when only factor a
 | wind × speed | Nothing tabled. It comes from the simulator's declared drag law: force ∝ (air speed relative to the car)² |
 | grade × surface | Nothing tabled. It comes from the declared mechanics: gravity along the grade, and friction ∝ the normal force |
 
-## 4.3 Results (reference simulated distances; −A = increase in stopping distance)
+## 4.3 Results (relational stopping distances; −A on F4 = increase in stopping distance)
 
 | Diamond | Change in factor a, at b = level 0 | Change in factor a, at b = level 1 | Change in factor b, at a = level 0 | Change in factor b, at a = level 1 |
 |---|---|---|---|---|

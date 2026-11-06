@@ -1,0 +1,362 @@
+{
+  "record_id": "lesson1.stopping_event-lesson1.F5_vehicle_states_speed-lesson1-v0.3-simulated",
+  "declaration_digest": "8ae021f55a4973d631167029543601e3dbd8aaff20e2dd336c38f3bfdf17a01e",
+  "domain": "lesson1.stopping_event",
+  "topology_id": "lesson1.F5_vehicle_states_speed",
+  "version": "lesson1-v0.3-simulated",
+  "kernel": null,
+  "input_inventory": [
+    {
+      "name": "obs.Onset",
+      "classification": "SimulatedInput",
+      "source_identity": "SIMULATED — Lesson 1 reference simulator (src/sim.rs), illustrative declaration declarations/simulator_illustrative.json; no measurement was made",
+      "acquisition_method": "simulated speed track, read at the declared state of the reference event",
+      "relationship_to_problem": "speed along the road of the vehicle at hazard onset (obstacle first visible)",
+      "evidence_count": 0,
+      "known_limitations": "simulated reading from Generator-chosen illustrative values; admitted only as simulated (V9); not empirical evidence",
+      "provenance_status_claimed": "declared",
+      "evaluator_provenance_assessment": "consistent_claim",
+      "submitted_to_gate": true
+    },
+    {
+      "name": "obs.ResponseStart",
+      "classification": "SimulatedInput",
+      "source_identity": "SIMULATED — Lesson 1 reference simulator (src/sim.rs), illustrative declaration declarations/simulator_illustrative.json; no measurement was made",
+      "acquisition_method": "simulated speed track, read at the declared state of the reference event",
+      "relationship_to_problem": "speed along the road of the vehicle when the driver's response begins",
+      "evidence_count": 0,
+      "known_limitations": "simulated reading from Generator-chosen illustrative values; admitted only as simulated (V9); not empirical evidence",
+      "provenance_status_claimed": "declared",
+      "evaluator_provenance_assessment": "consistent_claim",
+      "submitted_to_gate": true
+    },
+    {
+      "name": "obs.BrakeOnset",
+      "classification": "SimulatedInput",
+      "source_identity": "SIMULATED — Lesson 1 reference simulator (src/sim.rs), illustrative declaration declarations/simulator_illustrative.json; no measurement was made",
+      "acquisition_method": "simulated speed track, read at the declared state of the reference event",
+      "relationship_to_problem": "speed along the road of the vehicle when brake pressure begins",
+      "evidence_count": 0,
+      "known_limitations": "simulated reading from Generator-chosen illustrative values; admitted only as simulated (V9); not empirical evidence",
+      "provenance_status_claimed": "declared",
+      "evaluator_provenance_assessment": "consistent_claim",
+      "submitted_to_gate": true
+    },
+    {
+      "name": "obs.FullBraking",
+      "classification": "SimulatedInput",
+      "source_identity": "SIMULATED — Lesson 1 reference simulator (src/sim.rs), illustrative declaration declarations/simulator_illustrative.json; no measurement was made",
+      "acquisition_method": "simulated speed track, read at the declared state of the reference event",
+      "relationship_to_problem": "speed along the road of the vehicle when full braking deceleration is reached",
+      "evidence_count": 0,
+      "known_limitations": "simulated reading from Generator-chosen illustrative values; admitted only as simulated (V9); not empirical evidence",
+      "provenance_status_claimed": "declared",
+      "evaluator_provenance_assessment": "consistent_claim",
+      "submitted_to_gate": true
+    },
+    {
+      "name": "obs.Standstill",
+      "classification": "SimulatedInput",
+      "source_identity": "SIMULATED — Lesson 1 reference simulator (src/sim.rs), illustrative declaration declarations/simulator_illustrative.json; no measurement was made",
+      "acquisition_method": "simulated speed track, read at the declared state of the reference event",
+      "relationship_to_problem": "speed along the road of the vehicle at standstill",
+      "evidence_count": 0,
+      "known_limitations": "simulated reading from Generator-chosen illustrative values; admitted only as simulated (V9); not empirical evidence",
+      "provenance_status_claimed": "declared",
+      "evaluator_provenance_assessment": "consistent_claim",
+      "submitted_to_gate": true
+    },
+    {
+      "name": "rho_base",
+      "classification": "DeclaredParameter",
+      "source_identity": "ILLUSTRATIVE — chosen for this field by the Generator; taken from no other domain or repository",
+      "acquisition_method": "declared by M for this field (kernel_reference.md §9: M-supplied, no kernel value)",
+      "relationship_to_problem": "dimensionless ceiling of ρ used by operator_r",
+      "evidence_count": 0,
+      "known_limitations": "no observational basis; ρ, B and R depend on it",
+      "provenance_status_claimed": "declared",
+      "evaluator_provenance_assessment": "consistent_claim",
+      "submitted_to_gate": false
+    },
+    {
+      "name": "chi_0",
+      "classification": "DeclaredParameter",
+      "source_identity": "ILLUSTRATIVE — chosen for this field by the Generator; taken from no other domain or repository",
+      "acquisition_method": "declared by M for this field (kernel_reference.md §9: M-supplied, no kernel value)",
+      "relationship_to_problem": "reference of the saturating map in ρ, in the dimension of χ",
+      "evidence_count": 0,
+      "known_limitations": "no observational basis; ρ, B and R depend on it",
+      "provenance_status_claimed": "declared",
+      "evaluator_provenance_assessment": "consistent_claim",
+      "submitted_to_gate": false
+    }
+  ],
+  "provenance_summary": {
+    "claimed_declared": 7,
+    "claimed_verified": 0,
+    "claimed_unverified": 0,
+    "inputs_with_evidence": 0,
+    "inputs_without_evidence": [
+      "obs.Onset",
+      "obs.ResponseStart",
+      "obs.BrakeOnset",
+      "obs.FullBraking",
+      "obs.Standstill",
+      "rho_base",
+      "chi_0"
+    ],
+    "inconsistent_claims": 0,
+    "evaluator_note": "The evaluator records submitter claims. It does not independently verify physical acquisition. Independent verification is Origin's determination to make. 7 input(s) carry no supporting evidence (obs.Onset, obs.ResponseStart, obs.BrakeOnset, obs.FullBraking, obs.Standstill, rho_base, chi_0). This is acceptable for a declared-only submission; Origin notes which inputs would benefit from independent evidence."
+  },
+  "regional_prerequisite": {
+    "region_name": "lesson1.F5_vehicle_states_speed",
+    "extent": "[0, 60] m/s",
+    "orientation_preserved": "the vehicle's speed along the road at each declared state, in m/s",
+    "orientation_discarded": "the vehicle between the declared states; lateral and vertical motion; everything else about the vehicle",
+    "admission_rule_name": "lesson1.F5_vehicle_states_speed.extent",
+    "admission_rule_description": "A reading is admitted only within 0 m/s to 60 m/s inclusive.",
+    "all_fields_declared": true,
+    "observed_locus": 26.8224,
+    "observed_locus_inside_extent": true
+  },
+  "mapping_chain": [
+    {
+      "mapping_name": "m.F5_vehicle_states_speed.identity",
+      "input_description": "simulated speed track reading at the declared state, in m/s",
+      "output_description": "the same value in D, in m/s",
+      "preserves": "the vehicle's speed along the road at each declared state, in m/s",
+      "discards": "the vehicle between the declared states; lateral and vertical motion; everything else about the vehicle",
+      "executor": "AdmissionGate (declared; the evaluator does not execute mappings)"
+    }
+  ],
+  "status": "open",
+  "failure_reason": "V9 Phase 2: the sequence of actual observations {M(o1), ..., M(on)} is not declared.",
+  "open_conditions": [
+    "V9 Phase 2: the sequence of actual observations {M(o1), ..., M(on)} is not declared.",
+    "V9 Phase 2: what one relational step is in this system is not declared.",
+    "V9 Phase 2: whether the sequence comes from actual measurements or a declared model is not declared.",
+    "V9 Phase 2: the direction of relational evolution is not declared (index order is not a direction).",
+    "ABR topology admission — Node 'Onset': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Node 'ResponseStart': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Node 'BrakeOnset': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Node 'FullBraking': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Node 'Standstill': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Edge 'Onset' → 'ResponseStart': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Edge 'ResponseStart' → 'BrakeOnset': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Edge 'BrakeOnset' → 'FullBraking': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Edge 'FullBraking' → 'Standstill': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Edge 'Onset' → 'Standstill': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Interior locus 'ResponseStart': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Parameter 'rho_base': illustrative value — not admissible for production evaluation. OPEN.",
+    "ABR topology admission — Parameter 'chi_0': illustrative value — not admissible for production evaluation. OPEN."
+  ],
+  "continuous_process": {
+    "process_entry_declared": true,
+    "process_entry_statement": "One declared instant of one simulated braking event. No sequence of observations is declared: the simulator is not declared as a transducer from observable inputs (kernel_reference.md §8; DESIGN D-SD-6), so Phase 2 is not entered.",
+    "prior_evidence": "open",
+    "persistence_path": [
+      "A_persistence",
+      "B_persistence",
+      "R_persistence"
+    ],
+    "persistence_path_valid": true,
+    "prior_evidence_refs_count": 0,
+    "open_conditions": [
+      "OPEN — Prior relational evidence unavailable at evaluation window open. The evaluation record begins with the first admitted observation. The prior relational result does not yet exist; it is not zero. No value is fabricated. Otherwise admissible calculations proceed. This dependency resolves when the first complete evaluation cycle produces an actual relational result."
+    ],
+    "observation_sequence_declared": false,
+    "process_step_declared": false
+  },
+  "evaluation_notes": [
+    "Problem space: SIMULATED (illustrative values). Field F5: the speed along the road of the vehicle at five observed states of the stopping event 'expanded_event'.",
+    "CONTINUOUS PROCESS: Declared persistence path [A_persistence, B_persistence, R_persistence] is valid. Matches Kernel V9 (kernel_reference.md §11.1): A_persistence → B_persistence → R_persistence, executed by operator_e_v5.",
+    "CONTINUOUS PROCESS: OPEN — Prior relational evidence unavailable at evaluation window open. The evaluation record begins with the first admitted observation. The prior relational result does not yet exist; it is not zero. No value is fabricated. Otherwise admissible calculations proceed. This dependency resolves when the first complete evaluation cycle produces an actual relational result.",
+    "OPEN (not evaluated): V9 Phase 2: the sequence of actual observations {M(o1), ..., M(on)} is not declared.",
+    "OPEN (not evaluated): V9 Phase 2: what one relational step is in this system is not declared.",
+    "OPEN (not evaluated): V9 Phase 2: whether the sequence comes from actual measurements or a declared model is not declared.",
+    "OPEN (not evaluated): V9 Phase 2: the direction of relational evolution is not declared (index order is not a direction).",
+    "OPEN (not evaluated): ABR topology admission — Node 'Onset': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Node 'ResponseStart': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Node 'BrakeOnset': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Node 'FullBraking': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Node 'Standstill': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Edge 'Onset' → 'ResponseStart': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Edge 'ResponseStart' → 'BrakeOnset': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Edge 'BrakeOnset' → 'FullBraking': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Edge 'FullBraking' → 'Standstill': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Edge 'Onset' → 'Standstill': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Interior locus 'ResponseStart': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Parameter 'rho_base': illustrative value — not admissible for production evaluation. OPEN.",
+    "OPEN (not evaluated): ABR topology admission — Parameter 'chi_0': illustrative value — not admissible for production evaluation. OPEN."
+  ],
+  "abr_topology": {
+    "domain_observables": [
+      [
+        "obs.Onset",
+        true
+      ],
+      [
+        "obs.ResponseStart",
+        true
+      ],
+      [
+        "obs.BrakeOnset",
+        true
+      ],
+      [
+        "obs.FullBraking",
+        true
+      ],
+      [
+        "obs.Standstill",
+        true
+      ]
+    ],
+    "nodes": [
+      {
+        "node_id": "Onset",
+        "observable": "obs.Onset",
+        "observable_in_inventory": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Node 'Onset': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      },
+      {
+        "node_id": "ResponseStart",
+        "observable": "obs.ResponseStart",
+        "observable_in_inventory": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Node 'ResponseStart': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      },
+      {
+        "node_id": "BrakeOnset",
+        "observable": "obs.BrakeOnset",
+        "observable_in_inventory": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Node 'BrakeOnset': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      },
+      {
+        "node_id": "FullBraking",
+        "observable": "obs.FullBraking",
+        "observable_in_inventory": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Node 'FullBraking': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      },
+      {
+        "node_id": "Standstill",
+        "observable": "obs.Standstill",
+        "observable_in_inventory": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Node 'Standstill': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      }
+    ],
+    "edges": [
+      {
+        "from_node": "Onset",
+        "to_node": "ResponseStart",
+        "description": "the vehicle passes directly from state Onset to state ResponseStart in the observed course of the stopping event, with no declared state between; direction is the observed order of the event",
+        "nodes_declared": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Edge 'Onset' → 'ResponseStart': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      },
+      {
+        "from_node": "ResponseStart",
+        "to_node": "BrakeOnset",
+        "description": "the vehicle passes directly from state ResponseStart to state BrakeOnset in the observed course of the stopping event, with no declared state between; direction is the observed order of the event",
+        "nodes_declared": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Edge 'ResponseStart' → 'BrakeOnset': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      },
+      {
+        "from_node": "BrakeOnset",
+        "to_node": "FullBraking",
+        "description": "the vehicle passes directly from state BrakeOnset to state FullBraking in the observed course of the stopping event, with no declared state between; direction is the observed order of the event",
+        "nodes_declared": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Edge 'BrakeOnset' → 'FullBraking': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      },
+      {
+        "from_node": "FullBraking",
+        "to_node": "Standstill",
+        "description": "the vehicle passes directly from state FullBraking to state Standstill in the observed course of the stopping event, with no declared state between; direction is the observed order of the event",
+        "nodes_declared": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Edge 'FullBraking' → 'Standstill': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      },
+      {
+        "from_node": "Onset",
+        "to_node": "Standstill",
+        "description": "the stopping event as a whole: the vehicle passes from its hazard-onset state to its standstill state. Declared so that the stopping distance is the directed difference on one relation (DESIGN D-SD-12, for Origin)",
+        "nodes_declared": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Edge 'Onset' → 'Standstill': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      }
+    ],
+    "interior_locus": {
+      "node_id": "ResponseStart",
+      "node_declared": true,
+      "status": "proposed",
+      "evidence_count": 0,
+      "note": "Interior locus 'ResponseStart': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+    },
+    "parameters": [
+      {
+        "name": "rho_base",
+        "value": 0.5,
+        "provenance_kind": "illustrative",
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Parameter 'rho_base': illustrative value — not admissible for production evaluation. OPEN."
+      },
+      {
+        "name": "chi_0",
+        "value": 1.0,
+        "provenance_kind": "illustrative",
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Parameter 'chi_0': illustrative value — not admissible for production evaluation. OPEN."
+      }
+    ],
+    "persistence_required": false,
+    "summary": {
+      "total_nodes": 5,
+      "observed_nodes": 0,
+      "proposed_nodes": 5,
+      "missing_nodes": 0,
+      "contradicted_nodes": 0,
+      "total_edges": 5,
+      "observed_edges": 0,
+      "proposed_edges": 5,
+      "missing_edges": 0,
+      "contradicted_edges": 0,
+      "interior_locus_status": "proposed",
+      "total_parameters": 2,
+      "observational_parameters": 0,
+      "illustrative_parameters": 2
+    },
+    "open_conditions": [
+      "Node 'Onset': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Node 'ResponseStart': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Node 'BrakeOnset': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Node 'FullBraking': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Node 'Standstill': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Edge 'Onset' → 'ResponseStart': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Edge 'ResponseStart' → 'BrakeOnset': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Edge 'BrakeOnset' → 'FullBraking': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Edge 'FullBraking' → 'Standstill': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Edge 'Onset' → 'Standstill': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Interior locus 'ResponseStart': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Parameter 'rho_base': illustrative value — not admissible for production evaluation. OPEN.",
+      "Parameter 'chi_0': illustrative value — not admissible for production evaluation. OPEN."
+    ]
+  }
+}
