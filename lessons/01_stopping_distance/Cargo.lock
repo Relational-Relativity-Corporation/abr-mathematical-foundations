@@ -3,6 +3,11 @@
 version = 4
 
 [[package]]
+name = "abr-kernel"
+version = "9.0.0"
+source = "git+https://github.com/Relational-Relativity-Corporation/abr-kernel?rev=1c1ef70a69b3175a2df0458d0ebf1f71475a3d62#1c1ef70a69b3175a2df0458d0ebf1f71475a3d62"
+
+[[package]]
 name = "block-buffer"
 version = "0.10.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -96,6 +101,7 @@ checksum = "8f42a60cbdf9a97f5d2305f08a87dc4e09308d1276d28c869c684d7777685682"
 name = "lesson01-stopping-distance"
 version = "0.3.0"
 dependencies = [
+ "abr-kernel",
  "hex",
  "irrs-eval",
  "irrs-kernel",

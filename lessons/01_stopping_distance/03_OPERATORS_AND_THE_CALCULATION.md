@@ -29,7 +29,11 @@ For each field the program (`src/pipeline.rs`) calls only canonical code:
 - every node, edge and interior locus is marked "proposed", because it is simulated, not observationally established (GR-5);
 - ρ_base and χ₀ are illustrative.
 
-IRRS raised no violation. The lesson executes on OPEN, as Lesson 1 revision 2 did, and stops only on REJECTED.
+IRRS raised no violation, but **OPEN is not authorization.**
+- `abr-irrs` `eval/README.md`: an OPEN record is "not evaluated; build held".
+- `authorization.rs`: an OPEN record "cannot be authorized".
+
+So **no IRRS-authorized execution is performed.** The canonical calls are still made, and every output in this document is a **NON-AUTHORITATIVE DIAGNOSTIC** of the declared fields, labelled so in the runtime report.
 
 ## 3.3 Selected outputs (full tables in `records/LESSON1_REPORT.txt`)
 
@@ -44,7 +48,7 @@ IRRS raised no violation. The lesson executes on OPEN, as Lesson 1 revision 2 di
 
 B, R and ρ were also calculated for every relation. 𝟙[e] = 1.0 on most relations. Under §11.4 that is a **review signal**, preserved as returned. It is not a finding.
 
-## 3.4 The stopping distance, calculated by the canonical operators  [CANONICAL operators on declared F5]
+## 3.4 Reconstruction: the stopping distance from the vehicle's states  [canonical operators on declared F5; diagnostic, IRRS OPEN]
 
 The operators calculate the directed difference between elements of the system on declared relations. The stopping distance is exactly such a difference: between the vehicle's position at hazard onset and its position at standstill. On field F5 (position), A[s → t] = x(s) − x(t):
 
@@ -55,17 +59,31 @@ The operators calculate the directed difference between elements of the system o
 | −A[ResponseStart → BrakeOnset] | 11.990 m | distance during response |
 | −A[BrakeOnset → FullBraking] | 6.620 m | distance during brake build-up |
 | −A[FullBraking → Standstill] | 102.861 m | distance under full braking |
-| −B[Onset → ResponseStart] = −(A[e] + A[ResponseStart → BrakeOnset]) | 65.472 m | **reaction distance**, the counterpart of v·t |
-| −B[BrakeOnset → FullBraking] = −(A[e] + A[FullBraking → Standstill]) | 109.481 m | **braking distance**, the counterpart of v²/(2a) |
+| −B[Onset → ResponseStart] = −(A[e] + A[ResponseStart → BrakeOnset]) | 65.472 m | distance from onset to brake onset |
+| −B[BrakeOnset → FullBraking] = −(A[e] + A[FullBraking → Standstill]) | 109.481 m | distance from brake onset to standstill |
 
-reaction + braking − stopping = 0.
+**Canonical B** (`operator_b`): B[e] = A[e] + Σ A[f] over f ∈ succ(e), where succ(e) is the set of relations leaving target(e). The two sums above contain exactly one relation each.
 
-The basic calculation *assumes* t and a. The relational calculation obtains each term as a difference between observed states.
+The sum checks: 65.472 + 109.481 − 174.953 = 0.
+
+**These B outputs are not Exercise A's two terms.** Exercise A's t = 1.5 s covers perception, response *and* build-up (0.8 + 0.45 + 0.25 s in the base trial). Its v·t therefore spans Onset → FullBraking, which no single B output gives under this topology.
+
+**State definitions** (from the simulator):
+- ResponseStart = end of perception;
+- BrakeOnset = brake pressure begins;
+- FullBraking = full deceleration reached.
+
+**This is a reconstruction.** It uses the event's own states, so it is not a prediction, and its agreement with the simulator's figure is a conformance check.
+
+**Kernel V9 verification.** Onset → Standstill was declared alone (two loci, so the Primary kernel; Δ has the same formula as A) and run through `abr_kernel::admission::admit` at `1c1ef70`.
+- V9 **ADMITTED** it, with observational status Simulated: Δ = −174.9531225782069 m, bit-identical to F5's A.
+- The reverse traces end at the simulated position records (`records/expanded_event/V9_stopping_relation.report.txt`).
+- This is provenance conformance, not empirical verification.
 
 **On the stopping relation:**
 - The full path gives A = B = R and 𝟙 = 0.
 - No relation precedes Onset or follows Standstill, so both sums in R are over empty sets. R there therefore does not depend on the illustrative ρ_base and χ₀.
-- It does rest on empty sums evaluating to 0.0, which is kernel open condition A-3 (§18). A and B do not.
+- B and R there are A plus sums over empty sets. The A-3 register (§18) names Σ, R and R_persistence. Whether it also covers B's empty successor sum is OPEN.
 
 **F5 speed** gives the speed lost in each phase as A: 0.161, 0.036, 0.430 and 26.196 m/s.
 
@@ -75,7 +93,12 @@ The basic calculation *assumes* t and a. The relational calculation obtains each
 
 The relational result above is a **calculation from the observed states**. A *prediction* has to be made before the event, from its conditions.
 
-The expanded Newtonian calculation (`src/calc.rs`) makes that prediction from the condition fields. Its inputs:
+The expanded Newtonian calculation (`src/calc.rs`) makes that prediction from the condition fields. The full provenance chain of every input is in the runtime report and in `VERIFICATION_REPORT.md` §4. Three findings are OPEN:
+- **V-03a:** the wind projection is computed before the gate.
+- **V-03b:** mass, drag area, air density, g and spacing are never submitted to IRRS.
+- **V-03c:** the latencies are observed during the event, so they are not pre-event conditions.
+
+Its inputs:
 - the admitted Body and Air readings (F1);
 - −A on F3 (latencies);
 - atan(−A / spacing) on F2a (grade);

@@ -37,13 +37,13 @@ Because of the NodeField rule, the twelve items cannot share one field: lux, sec
 | **F2a elevation** | stations S00 … S16, every 25 m | elevation relative to S00 (m), [−50, 50] | Sk → Sk+1 *(continuation: the observed direction of travel)* | S01 … S15 |
 | **F2b friction** | S00 … S16 | peak friction coefficient (1), [0, 1.5] | as F2a | S01 … S15 |
 | **F3 response chain** | Obstacle, Driver, Brake, Tread | time from hazard onset (s), [0, 10] | Obstacle → Driver → Brake → Tread *(the observed signal path)* | Driver, Brake |
-| **F5 vehicle states**, position and speed (two fields) | the vehicle at Onset, ResponseStart, BrakeOnset, FullBraking, Standstill | position from the onset position (m), [0, 600]; speed (m/s), [0, 60] | Onset → ResponseStart → BrakeOnset → FullBraking → Standstill *(continuation: the observed course of the event)*, plus Onset → Standstill *(the stopping event as a whole; D-SD-12)* | ResponseStart, BrakeOnset, FullBraking |
+| **F5 vehicle states**, position and speed (two fields) | the vehicle at Onset, ResponseStart, BrakeOnset, FullBraking, Standstill | position from the onset position (m), [0, 600]; speed (m/s), [0, 60] | Onset → ResponseStart → BrakeOnset → FullBraking → Standstill *(continuation: direction from the simulated position increase, not from the order of the labels)*, plus Onset → Standstill *(the stopping event as a whole; D-SD-12)* | ResponseStart, BrakeOnset, FullBraking |
 
 **F5 is the field the stopping distance belongs to.** The stopping distance is a relation between two observed states of the same vehicle: where it was at hazard onset and where it is at standstill. Declaring those states as loci, and the passage between them as relations, lets the canonical operators calculate it (Document 3).
 
 **M for each field** is an identity on the declared reading, except at the Air locus. There M projects the measured wind speed and direction onto the direction of travel (speed × cos direction). The projection is declared with what it preserves (the along-road component) and what it discards (the crosswind) (D-SD-3).
 
-**Direction bases** for F1 and F3 are Generator proposals. Whether they are physically justified is Origin's decision (D-SD-2).
+**Direction bases** for F1 and F3 are Generator proposals. Whether they are physically justified is Origin's decision (D-SD-2). For F3 the simulator supplies only the time order, which is not a direction declaration. Every relation's basis and status is in [`TOPOLOGY_REVIEW.md`](TOPOLOGY_REVIEW.md).
 
 **Parameters**, all illustrative and Generator-chosen (none is carried from another domain):
 

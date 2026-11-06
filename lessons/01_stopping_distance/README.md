@@ -1,6 +1,8 @@
 # Lesson 1 — Stopping Distance: a Newtonian Calculation and Its Relational Expansion
 
-> **Status: DRAFT. All values are illustrative, and the reference observation is simulated.** Nothing in this lesson is empirical evidence or observationally verified. It awaits Origin decisions D-SD-1 to D-SD-11 ([`DESIGN_SPECIFICATION.md`](DESIGN_SPECIFICATION.md) §10) and Verifier review.
+> **Status: DRAFT, Verifier revision 2.** All values are illustrative, and the readings are simulated.
+> - **IRRS returns OPEN for every declared field, so no IRRS-authorized execution is performed.** Every operator output is a labelled NON-AUTHORITATIVE DIAGNOSTIC.
+> - **Nothing is VERIFIED.** Kernel V9 admits the reconstructed stopping distance as provenance-conformant (status Simulated); that is not empirical evidence. It awaits Origin decisions D-SD-1 to D-SD-11 ([`DESIGN_SPECIFICATION.md`](DESIGN_SPECIFICATION.md) §10) and Verifier review.
 
 **Objective.** A simple physical calculation can be expanded into a more complete description of an observable system by bringing in more of the relevant relationships. More relevant knowledge permits a more complete description. Whether that description is accurate is established only by observation.
 
@@ -31,13 +33,19 @@ To try your own change, copy a declaration from `records/expanded_event/`, edit 
 
 ## Results at a glance (illustrative; simulated reference)
 
-| | Stopping distance | Minus relational |
-|---|---|---|
-| Basic Newtonian prediction (Exercise A inputs) | 100.187 m | −74.766 m |
-| Expanded Newtonian prediction (formula pending Origin authorization, D-SD-4; inputs from IRRS-admitted fields and A outputs) | 180.109 m | +5.156 m |
-| **Relational: canonical A on the observed vehicle states, −A[Onset → Standstill]** (simulated event: worn tread, wet road, 3 % downgrade, wind 20° off the nose, dusk, distracted driver) | **174.953 m** | — |
+| | Stopping distance | Comparison: minus reconstruction | Class |
+|---|---|---|---|
+| **PREDICTION**, basic Newtonian (Exercise A inputs) | 100.187 m | −74.766 m | CALCULATED (explanatory) |
+| **PREDICTION**, expanded Newtonian (D-SD-4 OPEN; uses latencies observed during the event, V-03c) | 180.109 m | +5.156 m | CALCULATED (explanatory; inputs are diagnostics) |
+| **RECONSTRUCTION**, −A[Onset → Standstill] on the vehicle's simulated states (event: worn tread, wet road, 3 % downgrade, wind 20° off the nose, dusk, distracted driver) | **174.953 m** | — | CALCULATED, diagnostic (IRRS OPEN); V9 ADMITTED (Simulated) |
 
-The kernel calculates the stopping distance as the directed difference between the vehicle's observed states. B over immediate successors gives the reaction distance (65.472 m) and the braking distance (109.481 m).
+The canonical A gives the stopping distance as the directed difference between the vehicle's states. B[e] = A[e] + Σ A over succ(e) gives:
+- 65.472 m from onset to brake onset;
+- 109.481 m from brake onset to standstill.
+
+These are *not* Exercise A's reaction and braking terms: Exercise A's 1.5 s also covers the brake build-up.
+
+The reconstruction uses the event's own states, so it is not a prediction.
 
 ## Files
 
@@ -52,6 +60,11 @@ The kernel calculates the stopping distance as the directed difference between t
 | `records/LESSON1_REPORT.txt` | The complete run report |
 | `records/expanded_event/` | For each field: the submitted declaration, the report and the IRRS evaluation record, plus the reference trajectory |
 | `records/diamonds/` | The four condition-diamond fields, plus a summary for each trial |
+| `records/expanded_event/V9_stopping_relation.report.txt` | Kernel V9 provenance admission of the stopping relation |
+| `declarations/negative_tests/`, `records/negative_tests/` | Negative-path fixtures and their reports (missing χ₀, out-of-extent reading, undeclared node, directed ring) |
+| `src/v9.rs` | Kernel V9 `admission::admit` of Δ[Onset → Standstill] |
+| [`TOPOLOGY_REVIEW.md`](TOPOLOGY_REVIEW.md) | Every relation: its simulated basis, the Generator's interpretation, and its authorization status |
+| [`DEFECT_REPORT_V06_RING_TOPOLOGY.md`](DEFECT_REPORT_V06_RING_TOPOLOGY.md) | Canonical defect: a directed ring reaches A → B → R |
 
 Canonical authorities: IRRS `abr-irrs` `c7410c5` (`irrs-eval`, `relational-gate`, `irrs-session`, `irrs-kernel` = Kernel V9 `abr-kernel` `1c1ef70`, byte for byte). The pins are fixed by `Cargo.lock`.
 

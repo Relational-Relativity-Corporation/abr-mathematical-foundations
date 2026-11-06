@@ -1,0 +1,11 @@
+Kernel V9 provenance admission — stopping relation Onset → Standstill, event 'expanded_event'
+  gate: Onset ADMITTED, 0.0 m
+  gate: Standstill ADMITTED, 174.9531225782069 m
+  Called: abr_kernel::provenanced_exec::execute_primary → operator_delta (abr-kernel 1c1ef70)
+  Called: abr_kernel::admission::admit (abr-kernel 1c1ef70, src/admission.rs)
+  ADMITTED — observational status Simulated (provenance conformance; a Simulated terminus is not empirical evidence)
+  Comparison rule: exact f64 bit equality: same declared calculation, same frozen function, same execution order, bit-identical declared inputs
+  Entry Delta[rel.Onset_to_Standstill] component 0 = -174.9531225782069 m; contributing: locus.Onset, locus.Standstill, rel.Onset_to_Standstill
+  Reverse trace Delta[rel.Onset_to_Standstill] → obs.Onset (Simulated): Lesson 1 reference simulator (src/sim.rs) with declarations/simulator_illustrative.json / records/expanded_event/reference_observation.json — trial 'expanded_event', state_positions_m, state Onset
+  Reverse trace Delta[rel.Onset_to_Standstill] → obs.Standstill (Simulated): Lesson 1 reference simulator (src/sim.rs) with declarations/simulator_illustrative.json / records/expanded_event/reference_observation.json — trial 'expanded_event', state_positions_m, state Standstill
+  Not evaluated (not 0.0): NotEvaluated { step: Sigma, missing: ["rho_base", "chi_0"] }

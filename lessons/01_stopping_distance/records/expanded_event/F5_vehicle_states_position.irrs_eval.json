@@ -1,6 +1,6 @@
 {
   "record_id": "lesson1.stopping_event-lesson1.F5_vehicle_states_position-lesson1-v0.3-simulated",
-  "declaration_digest": "728dbcf8db4296a40568a5282cc8b23572b0b1bc0ffd9f5e8c14a3da18311dd8",
+  "declaration_digest": "86b1764d0cb96e21c4e3eb06862904c9b7416244111153cf65b4a14377615296",
   "domain": "lesson1.stopping_event",
   "topology_id": "lesson1.F5_vehicle_states_position",
   "version": "lesson1-v0.3-simulated",
@@ -258,7 +258,7 @@
       {
         "from_node": "Onset",
         "to_node": "ResponseStart",
-        "description": "the vehicle passes directly from state Onset to state ResponseStart in the observed course of the stopping event, with no declared state between; direction is the observed order of the event",
+        "description": "SIMULATED observation: the vehicle's position track increases from state Onset to state ResponseStart (the vehicle travels forward along the road), with no declared state between; direction is declared from that observed position increase, not from the order of the state labels. Generator-proposed; awaits Origin confirmation (D-SD-2)",
         "nodes_declared": true,
         "status": "proposed",
         "evidence_count": 0,
@@ -267,7 +267,7 @@
       {
         "from_node": "ResponseStart",
         "to_node": "BrakeOnset",
-        "description": "the vehicle passes directly from state ResponseStart to state BrakeOnset in the observed course of the stopping event, with no declared state between; direction is the observed order of the event",
+        "description": "SIMULATED observation: the vehicle's position track increases from state ResponseStart to state BrakeOnset (the vehicle travels forward along the road), with no declared state between; direction is declared from that observed position increase, not from the order of the state labels. Generator-proposed; awaits Origin confirmation (D-SD-2)",
         "nodes_declared": true,
         "status": "proposed",
         "evidence_count": 0,
@@ -276,7 +276,7 @@
       {
         "from_node": "BrakeOnset",
         "to_node": "FullBraking",
-        "description": "the vehicle passes directly from state BrakeOnset to state FullBraking in the observed course of the stopping event, with no declared state between; direction is the observed order of the event",
+        "description": "SIMULATED observation: the vehicle's position track increases from state BrakeOnset to state FullBraking (the vehicle travels forward along the road), with no declared state between; direction is declared from that observed position increase, not from the order of the state labels. Generator-proposed; awaits Origin confirmation (D-SD-2)",
         "nodes_declared": true,
         "status": "proposed",
         "evidence_count": 0,
@@ -285,7 +285,7 @@
       {
         "from_node": "FullBraking",
         "to_node": "Standstill",
-        "description": "the vehicle passes directly from state FullBraking to state Standstill in the observed course of the stopping event, with no declared state between; direction is the observed order of the event",
+        "description": "SIMULATED observation: the vehicle's position track increases from state FullBraking to state Standstill (the vehicle travels forward along the road), with no declared state between; direction is declared from that observed position increase, not from the order of the state labels. Generator-proposed; awaits Origin confirmation (D-SD-2)",
         "nodes_declared": true,
         "status": "proposed",
         "evidence_count": 0,
@@ -294,7 +294,7 @@
       {
         "from_node": "Onset",
         "to_node": "Standstill",
-        "description": "the stopping event as a whole: the vehicle passes from its hazard-onset state to its standstill state. Declared so that the stopping distance is the directed difference on one relation (DESIGN D-SD-12, for Origin)",
+        "description": "SIMULATED observation: the vehicle's position track increases from its hazard-onset state to its standstill state (one vehicle, one continuous stopping event). Generator-proposed so that the stopping distance is the directed difference on one relation; awaits Origin authorization (D-SD-12)",
         "nodes_declared": true,
         "status": "proposed",
         "evidence_count": 0,

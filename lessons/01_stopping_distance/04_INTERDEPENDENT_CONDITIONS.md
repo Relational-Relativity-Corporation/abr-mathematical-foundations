@@ -25,7 +25,7 @@ The interior loci are a1_b0 and a0_b1. The diamond is acyclic, so it is not a ri
 
 A on a "factor a" edge is the difference in stopping distance when only factor a changes, with factor b held at one level. **If the two "factor a" edges carry different A values, the significance of factor a depends on factor b.** That conclusion comes from setting two admitted A outputs side by side. **No interaction formula is applied anywhere**, and the combined effect is not assumed to be the sum of the separate effects.
 
-[OPEN] These relations connect *separate trials*, not an observed passage. Whether a controlled-condition contrast is an admissible declared relation is Origin's decision (D-SD-8). IRRS evaluated every diamond as OPEN (15 conditions) with 0 violations.
+[OPEN] These relations connect *separate trials*, not an observed passage. Whether a controlled-condition contrast is an admissible declared relation is Origin's decision (D-SD-8). IRRS evaluated every diamond as OPEN (15 conditions) with 0 violations. An OPEN record is not authorized, so every A value in this document is a **non-authoritative diagnostic**.
 
 ## 4.2 Where each interaction comes from  [read this before the results]
 

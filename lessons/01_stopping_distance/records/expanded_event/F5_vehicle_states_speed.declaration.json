@@ -10,7 +10,7 @@
     "edges": [
       {
         "class": "continuation",
-        "description": "the vehicle passes directly from state Onset to state ResponseStart in the observed course of the stopping event, with no declared state between; direction is the observed order of the event",
+        "description": "SIMULATED observation: the vehicle's position track increases from state Onset to state ResponseStart (the vehicle travels forward along the road), with no declared state between; direction is declared from that observed position increase, not from the order of the state labels. Generator-proposed; awaits Origin confirmation (D-SD-2)",
         "from_node": "Onset",
         "mapping_name": "m.F5_vehicle_states_speed.identity",
         "observational_support": "proposed",
@@ -18,7 +18,7 @@
       },
       {
         "class": "continuation",
-        "description": "the vehicle passes directly from state ResponseStart to state BrakeOnset in the observed course of the stopping event, with no declared state between; direction is the observed order of the event",
+        "description": "SIMULATED observation: the vehicle's position track increases from state ResponseStart to state BrakeOnset (the vehicle travels forward along the road), with no declared state between; direction is declared from that observed position increase, not from the order of the state labels. Generator-proposed; awaits Origin confirmation (D-SD-2)",
         "from_node": "ResponseStart",
         "mapping_name": "m.F5_vehicle_states_speed.identity",
         "observational_support": "proposed",
@@ -26,7 +26,7 @@
       },
       {
         "class": "continuation",
-        "description": "the vehicle passes directly from state BrakeOnset to state FullBraking in the observed course of the stopping event, with no declared state between; direction is the observed order of the event",
+        "description": "SIMULATED observation: the vehicle's position track increases from state BrakeOnset to state FullBraking (the vehicle travels forward along the road), with no declared state between; direction is declared from that observed position increase, not from the order of the state labels. Generator-proposed; awaits Origin confirmation (D-SD-2)",
         "from_node": "BrakeOnset",
         "mapping_name": "m.F5_vehicle_states_speed.identity",
         "observational_support": "proposed",
@@ -34,7 +34,7 @@
       },
       {
         "class": "continuation",
-        "description": "the vehicle passes directly from state FullBraking to state Standstill in the observed course of the stopping event, with no declared state between; direction is the observed order of the event",
+        "description": "SIMULATED observation: the vehicle's position track increases from state FullBraking to state Standstill (the vehicle travels forward along the road), with no declared state between; direction is declared from that observed position increase, not from the order of the state labels. Generator-proposed; awaits Origin confirmation (D-SD-2)",
         "from_node": "FullBraking",
         "mapping_name": "m.F5_vehicle_states_speed.identity",
         "observational_support": "proposed",
@@ -42,7 +42,7 @@
       },
       {
         "class": "continuation",
-        "description": "the stopping event as a whole: the vehicle passes from its hazard-onset state to its standstill state. Declared so that the stopping distance is the directed difference on one relation (DESIGN D-SD-12, for Origin)",
+        "description": "SIMULATED observation: the vehicle's position track increases from its hazard-onset state to its standstill state (one vehicle, one continuous stopping event). Generator-proposed so that the stopping distance is the directed difference on one relation; awaits Origin authorization (D-SD-12)",
         "from_node": "Onset",
         "mapping_name": "m.F5_vehicle_states_speed.identity",
         "observational_support": "proposed",

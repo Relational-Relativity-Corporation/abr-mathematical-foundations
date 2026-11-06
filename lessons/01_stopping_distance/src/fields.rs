@@ -353,12 +353,12 @@ pub fn f5_states(obs: &Observation, component: &str) -> FieldSpec {
     };
     let next = |k: usize| EdgeSpec {
         from: ids[k].clone(), to: ids[k + 1].clone(), class: "continuation",
-        basis: format!("the vehicle passes directly from state {} to state {} in the observed course of the stopping event, with no declared state between; direction is the observed order of the event", ids[k], ids[k + 1]),
+        basis: format!("SIMULATED observation: the vehicle's position track increases from state {} to state {} (the vehicle travels forward along the road), with no declared state between; direction is declared from that observed position increase, not from the order of the state labels. Generator-proposed; awaits Origin confirmation (D-SD-2)", ids[k], ids[k + 1]),
     };
     let mut edges: Vec<EdgeSpec> = (0..4).map(next).collect();
     edges.push(EdgeSpec {
         from: "Onset".into(), to: "Standstill".into(), class: "continuation",
-        basis: "the stopping event as a whole: the vehicle passes from its hazard-onset state to its standstill state. Declared so that the stopping distance is the directed difference on one relation (DESIGN D-SD-12, for Origin)".into(),
+        basis: "SIMULATED observation: the vehicle's position track increases from its hazard-onset state to its standstill state (one vehicle, one continuous stopping event). Generator-proposed so that the stopping distance is the directed difference on one relation; awaits Origin authorization (D-SD-12)".into(),
     });
     FieldSpec {
         stem: format!("F5_vehicle_states_{component}"),

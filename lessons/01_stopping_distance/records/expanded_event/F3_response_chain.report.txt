@@ -42,6 +42,14 @@ Declaration SHA-256 (raw text, as irrs-eval computes it): d413277c6a266f220e6382
     OPEN: ABR topology admission — Parameter 'rho_base': illustrative value — not admissible for production evaluation. OPEN.
     OPEN: ABR topology admission — Parameter 'chi_0': illustrative value — not admissible for production evaluation. OPEN.
 
+== Authorization boundary ==
+  AUTHORIZED EXECUTION: NOT PERFORMED. IRRS status is OPEN — 14 condition(s), 0 violation(s); not authorized.
+  Canonical rule: abr-irrs c7410c5 eval/README.md — 'open … not evaluated; build held'; only an
+  `authorized` record lets the build proceed. irrs-eval/src/authorization.rs rule 1: 'An OPEN or
+  REJECTED evaluation cannot be authorized.' No canonical IRRS rule permits authorized execution on OPEN.
+  Everything below is a NON-AUTHORITATIVE DIAGNOSTIC: the same canonical calls, made to show what the
+  declaration would give. Its values are not IRRS-authorized results and are not verified.
+
 == Step 3 — IRRS observation admission (relational_gate) ==
   Region 'lesson1.F3_response_chain' established; extent [0.0, 10.0] s
   Obstacle: ADMITTED — raw 0.0, gate-computed 0.0 s
@@ -55,7 +63,7 @@ Declaration SHA-256 (raw text, as irrs-eval computes it): d413277c6a266f220e6382
 == Step 5 — Completeness of the declaration for A → B → R ==
   Every input the A → B → R path uses is declared.
 
-== Step 6 — Canonical execution (irrs_session::execute::execute) ==
+== Step 6 — Canonical execution (irrs_session::execute::execute) — NON-AUTHORITATIVE DIAGNOSTIC ==
   Inputs: NodeField x[0] = [0.0, 2.0, 2.45, 2.7] s
           edges [(0, 1), (1, 2), (2, 3)], provenance [Coupling, Coupling, Continuation]
   Structural check relational_isolation(rel) = false

@@ -23,14 +23,14 @@ So agreement is not built in.
 
 ## 5.2 Side by side
 
-| | Basic prediction (Exercise A) | Expanded prediction (Exercise B) | Relational calculation from the observed states |
+| | PREDICTION, basic (Exercise A) | PREDICTION, expanded (Exercise B; V-03c) | RECONSTRUCTION from the vehicle's states |
 |---|---|---|---|
 | Stopping distance | 100.187 m | 180.109 m | **174.953 m** = −A[Onset → Standstill] |
-| Minus relational | −74.766 m | +5.156 m | — |
+| COMPARISON: minus reconstruction | −74.766 m | +5.156 m | — |
 | Inputs | v, t, a (assumed) | condition fields (F1, F2, F3) via declared projections; declared mass, drag area, air density, g | the vehicle's observed states (F5), admitted by IRRS |
-| Authority | Newtonian, by hand | a Newtonian formula **pending authorization** (D-SD-4) | Kernel V9 operator A, executed through IRRS |
+| Authority | Newtonian, by hand | a Newtonian formula **pending authorization** (D-SD-4) | canonical A as a NON-AUTHORITATIVE DIAGNOSTIC (IRRS OPEN); Kernel V9 `admit` ADMITTED, status Simulated |
 
-The relational value agrees with the simulator's own stopping distance to 0.000 m, because it is calculated from the same observation. It is a calculation of observable data, not a prediction. The two predictions are what observation tests.
+The reconstruction agrees with the simulator's own stopping distance to 0.000 m, because it is calculated from the same observation. That agreement is a reconstruction check (conformance), not a correspondence. The two predictions are what observation would test.
 
 **Observed result.** Here the expanded prediction is closer to the relational value: |difference| 5.156 m against 74.766 m.
 
@@ -56,7 +56,8 @@ Mass enters only through drag divided by mass. With braking limited by friction,
 ## 5.4 Unmeasured or unresolved  [OPEN]
 
 - **No measurement exists.** Every value is illustrative and the reference is simulated, so observational verification is OPEN. A real test would replace the simulator readings with instrumented measurements and rerun the same declarations.
-- **Phase 2** (changing deceleration, brake activation history): not entered (§8; D-SD-6). `irrs-session` has no persistence path.
+- **IRRS evaluation is OPEN for every field.** No authorized execution was performed, so every operator output here is a diagnostic.
+- **Phase 2** (changing deceleration, brake activation history): not executable at the pins. `irrs-session` has no persistence execution path (README: "M3 … Planned (OPEN)"), and §8 requires the simulator to be declared a transducer (D-SD-6). Calling `operator_e_v5` directly would bypass IRRS. Returned OPEN (V-04).
 - **ρ_base and χ₀** are illustrative, so R and ρ on the condition fields are reported only. On the stopping relation, R rests on empty sums (A-3 OPEN).
 - **The Onset → Standstill relation** awaits Origin confirmation (D-SD-12).
 - **V9 provenance admission for A → B → R:** OPEN, outside the `abr-kernel` `1c1ef70` admission scope.

@@ -69,6 +69,13 @@ pub struct Outcome {
     pub admission: String,
     pub calculation: String,
     pub executed: bool,
+    /// True only when IRRS returned `Authorized`. An OPEN or
+    /// PassedAwaitingAuthorization record holds the build (abr-irrs
+    /// eval/README.md); any calculation made then is a non-authoritative
+    /// diagnostic.
+    pub authorized: bool,
+    /// The OPEN conditions, verbatim.
+    pub open_list: Vec<String>,
     /// Gate-admitted node values, by node id.
     pub admitted: BTreeMap<String, f64>,
     /// Edge outputs by "from->to".
@@ -179,7 +186,25 @@ fn run_inner(name: &str, raw: &str, r: &mut String, o: &mut Outcome) {
         EvaluationStatus::Open => {
             o.irrs_status = format!("OPEN — {} condition(s), {} violation(s); not authorized", o.open_conditions, o.violations);
         }
-        ref other => o.irrs_status = format!("{other:?}"),
+        EvaluationStatus::Authorized => {
+            o.irrs_status = "AUTHORIZED".into();
+            o.authorized = true;
+        }
+        ref other => o.irrs_status = format!("{other:?} — not authorized"),
+    }
+    o.open_list = record.open_conditions.iter().map(|c| c.to_string()).collect();
+
+    // ── Authorization boundary (V-01) ─────────────────────────────────────
+    let _ = writeln!(r, "\n== Authorization boundary ==");
+    if o.authorized {
+        let _ = writeln!(r, "  IRRS status AUTHORIZED: the authorized execution path proceeds.");
+    } else {
+        let _ = writeln!(r, "  AUTHORIZED EXECUTION: NOT PERFORMED. IRRS status is {}.", o.irrs_status);
+        let _ = writeln!(r, "  Canonical rule: abr-irrs c7410c5 eval/README.md — 'open … not evaluated; build held'; only an");
+        let _ = writeln!(r, "  `authorized` record lets the build proceed. irrs-eval/src/authorization.rs rule 1: 'An OPEN or");
+        let _ = writeln!(r, "  REJECTED evaluation cannot be authorized.' No canonical IRRS rule permits authorized execution on OPEN.");
+        let _ = writeln!(r, "  Everything below is a NON-AUTHORITATIVE DIAGNOSTIC: the same canonical calls, made to show what the");
+        let _ = writeln!(r, "  declaration would give. Its values are not IRRS-authorized results and are not verified.");
     }
 
     // ── Step 3: IRRS observation admission ────────────────────────────────
@@ -315,7 +340,8 @@ fn run_inner(name: &str, raw: &str, r: &mut String, o: &mut Outcome) {
     let _ = writeln!(r, "  Every input the A → B → R path uses is declared.");
 
     // ── Step 6: Canonical execution ───────────────────────────────────────
-    let _ = writeln!(r, "\n== Step 6 — Canonical execution (irrs_session::execute::execute) ==");
+    let _ = writeln!(r, "\n== Step 6 — Canonical execution (irrs_session::execute::execute){} ==",
+        if o.authorized { "" } else { " — NON-AUTHORITATIVE DIAGNOSTIC" });
     let index: BTreeMap<&str, usize> = topo.nodes.iter().enumerate().map(|(i, n)| (n.id.as_str(), i)).collect();
     let edges_idx: Vec<(usize, usize)> = topo.edges.iter().map(|e| (index[e.from_node.as_str()], index[e.to_node.as_str()])).collect();
     let rel = DeclaredRelations::from_edges_with_provenance(topo.nodes.len(), edges_idx.clone(), classes.clone());
@@ -370,7 +396,8 @@ fn run_inner(name: &str, raw: &str, r: &mut String, o: &mut Outcome) {
     if out.detection_indicators[0].iter().any(|&v| v != 0.0) {
         let _ = writeln!(r, "  𝟙[e] = 1.0 on at least one relation: a REVIEW SIGNAL (§11.4), preserved; not a finding.");
     }
-    o.calculation = format!("CALCULATED — A, ρ, B, R, 𝟙 over {} relations, {} loci (RPPI re-execution agreed); ρ_base/χ₀ {:?}/{:?}",
+    o.calculation = format!("{} — A, ρ, B, R, 𝟙 over {} relations, {} loci (RPPI re-execution agreed); ρ_base/χ₀ {:?}/{:?}",
+        if o.authorized { "CALCULATED (authorized)" } else { "DIAGNOSTIC CALCULATION, NON-AUTHORITATIVE (IRRS not authorized)" },
         labels.len(), topo.nodes.len(), rho_base.unwrap().provenance, chi_0.unwrap().provenance);
     let _ = writeln!(r, "\n  V9 provenance admission for A → B → R: OPEN — outside abr-kernel 1c1ef70 admission scope ('OPEN: ABR kernel A → B → R').");
 }

@@ -340,3 +340,13 @@ The expanded Newtonian formula (§6) remains a *prediction* from the condition f
 
 **D-SD-12 (new).** Confirm the declared Onset → Standstill relation (the stopping event as a whole).
 
+## 14. Verifier revision (V-01 to V-06, 2026-11-05)
+
+See `VERIFICATION_REPORT.md` §2 for the dispositions:
+- No authorized execution on OPEN; diagnostics are labelled.
+- The B outputs are relabelled by the states they span.
+- The prediction inputs are audited: V-03a, V-03b and V-03c are OPEN.
+- Persistence is OPEN: no IRRS execution interface exists for it.
+- Topology review: `TOPOLOGY_REVIEW.md`.
+- The ring defect is reported to the canonical authority: `DEFECT_REPORT_V06_RING_TOPOLOGY.md`.
+

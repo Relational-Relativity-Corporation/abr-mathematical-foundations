@@ -13,6 +13,7 @@ mod calc;
 mod fields;
 mod pipeline;
 mod sim;
+mod v9;
 
 use std::collections::BTreeMap;
 use std::fmt::Write as _;
@@ -198,7 +199,8 @@ fn main() {
         let name = Path::new(&path).file_name().map(|s| s.to_string_lossy().to_string()).unwrap_or_default();
         let out = pipeline::run(&name, &raw);
         print!("{}", out.report);
-        println!("\nIRRS evaluation: {}\nAdmission: {}\nCalculation: {}", out.irrs_status, out.admission, out.calculation);
+        println!("\nIRRS evaluation: {}\nGate admission: {}\nAuthorized execution: {}\nCalculation: {}", out.irrs_status, out.admission,
+            if out.authorized { "AUTHORIZED" } else { "NOT PERFORMED (IRRS not authorized)" }, out.calculation);
         return;
     }
     let cfg: Value = serde_json::from_str(SIM_DECL).expect("simulator declaration is valid JSON");
@@ -243,9 +245,33 @@ fn main() {
         f(ev, "grade_percent"), tr.wind_speed, tr.wind_direction_deg, tr.wind_along());
     let _ = writeln!(r, "              dusk + distracted (perception {} s), response {} s, brake build-up {} s, mass {} kg", tr.perception, tr.response, tr.buildup, veh.mass);
     let _ = writeln!(r, "\n  Each field: IRRS declaration evaluation → gate admission → canonical execution (full reports: records/expanded_event/)");
-    let _ = writeln!(r, "  {:28} {:44} {:28} {}", "field", "IRRS evaluation", "admission", "calculation");
+    let _ = writeln!(r, "  Four statuses, kept separate: IRRS declaration evaluation | gate admission | authorized execution | calculation.");
+    let _ = writeln!(r, "  {:28} {:44} {:24} {:14} {}", "field", "IRRS evaluation", "gate admission", "authorized?", "calculation");
     for (stem, o) in &run.outcomes {
-        let _ = writeln!(r, "  {:28} {:44} {:28} {}", stem, o.irrs_status, o.admission, if o.executed { "CALCULATED (A, ρ, B, R, 𝟙)" } else { &o.calculation });
+        let _ = writeln!(r, "  {:28} {:44} {:24} {:14} {}", stem, o.irrs_status, o.admission,
+            if o.authorized { "AUTHORIZED" } else { "NO (held)" },
+            if o.executed && !o.authorized { "DIAGNOSTIC only (non-authoritative)" } else if o.executed { "CALCULATED" } else { &o.calculation });
+    }
+    let any_unauth = run.outcomes.values().any(|o| !o.authorized);
+    if any_unauth {
+        let _ = writeln!(r, "\n  AUTHORIZED EXECUTION: NOT PERFORMED for any field. IRRS returned OPEN, and an OPEN record is 'not evaluated;");
+        let _ = writeln!(r, "  build held' (abr-irrs eval/README.md); it 'cannot be authorized' (irrs-eval authorization.rs rule 1; record.rs).");
+        let _ = writeln!(r, "  EVERY OPERATOR OUTPUT BELOW IS A NON-AUTHORITATIVE DIAGNOSTIC of the declared fields. The unresolved IRRS");
+        let _ = writeln!(r, "  conditions are listed verbatim in each field report (records/expanded_event/*.report.txt). Distinct conditions:");
+        let mut distinct: Vec<String> = Vec::new();
+        for o in run.outcomes.values() {
+            for c in &o.open_list {
+                // Blank the quoted names so one line stands for each kind of condition.
+                let mut key = String::new();
+                let mut quoted = false;
+                for ch in c.chars() {
+                    if ch == '\'' { quoted = !quoted; key.push_str(if quoted { "'<name" } else { ">'" }); }
+                    else if !quoted { key.push(ch); }
+                }
+                if !distinct.contains(&key) { distinct.push(key); }
+            }
+        }
+        for c in &distinct { let _ = writeln!(r, "    OPEN: {c}"); }
     }
     let show = |r: &mut String, stem: &str, o: &Outcome| {
         let _ = writeln!(r, "\n  {stem}: canonical outputs");
@@ -268,59 +294,107 @@ fn main() {
     }
     let signals: usize = run.outcomes.values().map(|o| o.indicator.values().filter(|&&v| v != 0.0).count()).sum();
     let rels: usize = run.outcomes.values().map(|o| o.indicator.len()).sum();
-    let _ = writeln!(r, "\n  𝟙[e] = 1.0 (review signal, §11.4) on {signals} of {rels} relations across the five fields.");
+    let _ = writeln!(r, "\n  𝟙[e] = 1.0 (review signal, §11.4) on {signals} of {rels} relations across the seven event fields.");
 
     // Relationship between kernel outputs and the calculation.
     for stem in ["F5_vehicle_states_position", "F5_vehicle_states_speed"] {
         show(&mut r, stem, &run.outcomes[stem]);
     }
-    let _ = writeln!(r, "\n  ---- The stopping distance, calculated by the canonical operators on F5 (vehicle states) ----");
+    let _ = writeln!(r, "\n  ---- RECONSTRUCTION: the stopping distance from the vehicle's (simulated) observed states, F5 [DIAGNOSTIC; IRRS OPEN] ----");
     match &run.relational {
         Some(q) => {
-            let _ = writeln!(r, "    stopping distance   = −A[Onset->Standstill]          = {:.3} m", q.stopping);
-            let _ = writeln!(r, "    reaction distance   = −B[Onset->ResponseStart]       = {:.3} m  (perception {:.3} + response {:.3})", q.reaction, q.phases[0], q.phases[1]);
-            let _ = writeln!(r, "    braking distance    = −B[BrakeOnset->FullBraking]    = {:.3} m  (build-up {:.3} + full braking {:.3})", q.braking, q.phases[2], q.phases[3]);
+            let _ = writeln!(r, "    Canonical A (irrs-kernel operators.rs): A[e] = x[source(e)] − x[target(e)].");
+            let _ = writeln!(r, "    Canonical B (operators.rs operator_b): B[e] = A[e] + Σ A[f] over f in succ(e), succ(e) = relations leaving target(e).");
+            let _ = writeln!(r, "    stopping distance                       = −A[Onset->Standstill]       = {:.3} m", q.stopping);
+            let _ = writeln!(r, "    distance, onset to brake onset          = −B[Onset->ResponseStart]    = {:.3} m", q.reaction);
+            let _ = writeln!(r, "        succ(Onset->ResponseStart) = {{ResponseStart->BrakeOnset}}: perception {:.3} + response {:.3}", q.phases[0], q.phases[1]);
+            let _ = writeln!(r, "    distance, brake onset to standstill     = −B[BrakeOnset->FullBraking] = {:.3} m", q.braking);
+            let _ = writeln!(r, "        succ(BrakeOnset->FullBraking) = {{FullBraking->Standstill}}: build-up {:.3} + full braking {:.3}", q.phases[2], q.phases[3]);
+            let _ = writeln!(r, "    Phase accounting: ResponseStart = end of perception (foot leaves the accelerator); BrakeOnset = brake pressure");
+            let _ = writeln!(r, "    begins; FullBraking = full deceleration reached (simulator states, sim.rs). Each state position is the first");
+            let _ = writeln!(r, "    integration step at or after the declared time (step 0.1 ms; ≤ about 3 mm at 27 m/s).");
+            let _ = writeln!(r, "    Check: (onset→brake onset) + (brake onset→standstill) − stopping = {:+.3e} m", q.reaction + q.braking - q.stopping);
+            let _ = writeln!(r, "    Interpretation limit: Exercise A's t = 1.5 s covers perception + response + build-up (the base trial splits it");
+            let _ = writeln!(r, "    0.8 + 0.45 + 0.25 s). Its 'reaction distance' v·t therefore spans Onset->FullBraking, which no single B output");
+            let _ = writeln!(r, "    gives under this topology. The two B outputs are NOT Exercise A's reaction and braking distances.");
             let _ = writeln!(r, "    speed lost per phase (A on F5 speed): perception {:.3}, response {:.3}, build-up {:.3}, full braking {:.3} m/s",
                 q.speed_lost[0], q.speed_lost[1], q.speed_lost[2], q.speed_lost[3]);
-            let _ = writeln!(r, "    The basic calculation's two terms, v·t and v²/(2a), correspond to −B on the two chain relations that begin");
-            let _ = writeln!(r, "    the reaction and the braking; the relational field calculates them from the observed states, not from assumed t and a.");
-            let _ = writeln!(r, "    Check: reaction + braking − stopping = {:+.3e} m", q.reaction + q.braking - q.stopping);
             let pos = &run.outcomes["F5_vehicle_states_position"];
             let l = "Onset->Standstill";
-            let _ = writeln!(r, "    On Onset->Standstill the full path gives A = B = R = {} m, 𝟙 = {}. No relation precedes Onset or follows",
-                fmt(pos.a[l]), fmt(pos.indicator[l]));
-            let _ = writeln!(r, "    Standstill, so both sums in R are over empty sets: R there does not depend on ρ_base and χ₀, but it rests on");
-            let _ = writeln!(r, "    empty sums evaluating to 0.0, which is kernel open condition A-3 (§18). A and B there do not depend on A-3.");
+            let _ = writeln!(r, "    On Onset->Standstill: A = B = R = {} m, 𝟙 = {}. succ and pred of this relation are empty, so B and R", fmt(pos.a[l]), fmt(pos.indicator[l]));
+            let _ = writeln!(r, "    there are A plus sums over empty sets. The register text of A-3 (§18) names Σ, R and R_persistence; whether it");
+            let _ = writeln!(r, "    also covers B's empty successor sum is OPEN (returned to Origin). A itself has no sum.");
+            let _ = writeln!(r, "    This is a RECONSTRUCTION from the event's own states. It is not a prediction, and agreement with the");
+            let _ = writeln!(r, "    simulator's figure is a reconstruction check (conformance), not a correspondence (GOVERNING_DECLARATIONS.md).");
         }
         None => { let _ = writeln!(r, "    OPEN — F5 was not executed"); }
     }
-    let _ = writeln!(r, "\n  Outputs that describe the conditions of the event (A on F1, F2, F3):");
-    let _ = writeln!(r, "    A[Air->Body] = w − v: relative air speed;  A[Body->Tread] at full braking: slip velocity;");
-    let _ = writeln!(r, "    A[Sk->Sk+1] on F2a: elevation drop per segment;  A on F2b: change in friction;  −A on F3: latencies.");
-    let _ = writeln!(r, "    These, with admitted readings, are the inputs of the expanded (predictive) Newtonian calculation below");
-    let _ = writeln!(r, "    (projections C, D-SD-3: wind ← Air reading; grade ← atan(−A/spacing); friction ← station readings; times ← −A on F3).");
-    let _ = writeln!(r, "    R and ρ depend on the illustrative ρ_base and χ₀; 𝟙 is a review signal (§11.4).");
+
+    // ── Kernel V9 provenance admission of the stopping relation ───────────
+    let v9r = v9::admit_stopping_relation(&tr.id, obs.state_positions_m[0], obs.state_positions_m[4]);
+    save("expanded_event/V9_stopping_relation.report.txt", &v9r.report);
+    let _ = writeln!(r, "\n  ---- Kernel V9 verification of the reconstruction (abr-kernel 1c1ef70, admission::admit) ----");
+    let _ = writeln!(r, "    Onset -> Standstill declared alone: two loci, no interior locus → Primary kernel, Δ(x)[e] = x[s] − x[t]");
+    let _ = writeln!(r, "    (formula identical to A). V9 reconstructs it from the declaration records and traces it to its terminus.");
+    let _ = writeln!(r, "    V9 admission: {}", v9r.status);
+    if let (Some(d), Some(q)) = (v9r.delta, &run.relational) {
+        let _ = writeln!(r, "    V9-admitted Δ[Onset->Standstill] = {} m;  F5 A[Onset->Standstill] = {} m;  difference {:+.3e} m",
+            fmt(d), fmt(-q.stopping), d + q.stopping);
+    }
+    let _ = writeln!(r, "    Full record: records/expanded_event/V9_stopping_relation.report.txt. A Simulated terminus is not empirical evidence.");
+
+    // ── Provenance of every prediction input (V-03) ───────────────────────
+    let f1 = &run.outcomes["F1_velocity_hazard_onset"];
+    let f3 = &run.outcomes["F3_response_chain"];
+    let el = &run.outcomes["F2_road_elevation"];
+    let fr = &run.outcomes["F2_road_friction"];
+    let st = |o: &Outcome| format!("IRRS {} / gate {}", o.irrs_status.split(" — ").next().unwrap_or("?"), o.admission.split(" — ").next().unwrap_or("?"));
+    let _ = writeln!(r, "\n  ---- Provenance of every input to the expanded prediction (application mathematics, src/calc.rs) ----");
+    let _ = writeln!(r, "    {:22} | {:34} | {:22} | {:22} | {:22} | {}", "input", "declared observable / parameter", "IRRS / gate", "canonical output", "projection C", "destination");
+    let rows: Vec<[String; 6]> = vec![
+        ["initial speed".into(), "obs.Body, F1 onset (simulated)".into(), st(f1), "none (node value)".into(), "none".into(), "reaction and braking phases".into()],
+        ["along-road wind".into(), "obs.Air, F1 onset (simulated)".into(), st(f1), "none (node value)".into(), "speed×cos(dir) IN sim.rs, BEFORE the gate (V-03a)".into(), "drag term".into()],
+        ["perception time".into(), "obs.Obstacle, obs.Driver, F3".into(), st(f3), "A[Obstacle->Driver]".into(), "sign reversal".into(), "reaction phase".into()],
+        ["response time".into(), "obs.Driver, obs.Brake, F3".into(), st(f3), "A[Driver->Brake]".into(), "sign reversal".into(), "reaction phase".into()],
+        ["build-up time".into(), "obs.Brake, obs.Tread, F3".into(), st(f3), "A[Brake->Tread]".into(), "sign reversal".into(), "build-up phase".into()],
+        ["grade per segment".into(), "obs.S00..S16 elevation, F2a".into(), st(el), "A[Sk->Sk+1]".into(), "atan(−A / spacing)".into(), "segment deceleration".into()],
+        ["friction per segment".into(), "obs.S00..S15 friction, F2b".into(), st(fr), "none (node value)".into(), "none".into(), "segment deceleration".into()],
+        ["station spacing 25 m".into(), "simulator_illustrative.json".into(), "NOT submitted to IRRS (V-03b)".into(), "none".into(), "none".into(), "segment length; grade".into()],
+        ["mass, drag area, air density, g".into(), "simulator_illustrative.json".into(), "NOT submitted to IRRS (V-03b)".into(), "none".into(), "none".into(), "drag/m; g·(μcosθ+sinθ)".into()],
+    ];
+    for row in &rows {
+        let _ = writeln!(r, "    {:22} | {:34} | {:22} | {:22} | {:22} | {}", row[0], row[1], row[2], row[3], row[4], row[5]);
+    }
+    let _ = writeln!(r, "    V-03a: the wind projection is executed by the simulator before submission; the gate's AuthorizedMapping is");
+    let _ = writeln!(r, "           identity, so the gate does not itself execute this M. OPEN, returned to Origin.");
+    let _ = writeln!(r, "    V-03b: mass, drag area, air density, g and spacing are DECLARED but never pass IRRS evaluation or the gate.");
+    let _ = writeln!(r, "           They are also the simulator's own values (shared provenance, recorded not excluded). OPEN.");
+    let _ = writeln!(r, "    V-03c: perception, response and build-up times are observed DURING the event (F3), so they are not 'conditions");
+    let _ = writeln!(r, "           available before the stopping event'. Whether the expanded calculation counts as a prediction is OPEN.");
+    let _ = writeln!(r, "    Every canonical output used is a NON-AUTHORITATIVE DIAGNOSTIC (IRRS OPEN). The Newtonian equations are");
+    let _ = writeln!(r, "    explanatory application mathematics, not ABR; the formula awaits Origin authorization (D-SD-4, OPEN).");
+    let _ = writeln!(r, "    R and ρ depend on the illustrative ρ_base and χ₀; 𝟙 is a review signal (§11.4). None is used.");
 
     // ── Side-by-side ──────────────────────────────────────────────────────
-    let _ = writeln!(r, "\n================ Exercise C — Predictions compared with the relational calculation from observation ================");
+    let _ = writeln!(r, "\n================ Exercise C — PREDICTION vs RECONSTRUCTION: COMPARISON [all values diagnostic; IRRS OPEN] ================");
     let reference = run.relational.as_ref().map(|q| q.stopping).unwrap_or(f64::NAN);
     let expanded = run.inputs.as_ref().map(calc::expanded);
-    let _ = writeln!(r, "  {:44} {:>14} {:>16}", "", "distance (m)", "minus relational");
-    let _ = writeln!(r, "  {:44} {:>14.3} {:>+16.3}", "Basic (Exercise A inputs)", basic.total_m, basic.total_m - reference);
+    let _ = writeln!(r, "  {:44} {:>14} {:>16}", "", "distance (m)", "comparison: minus reconstruction");
+    let _ = writeln!(r, "  {:44} {:>14.3} {:>+16.3}", "PREDICTION, basic (Exercise A inputs)", basic.total_m, basic.total_m - reference);
     match &expanded {
         Some(e) => {
-            let _ = writeln!(r, "  {:44} {:>14.3} {:>+16.3}", "Expanded (pending Origin authorization D-SD-4)", e.total_m, e.total_m - reference);
+            let _ = writeln!(r, "  {:44} {:>14.3} {:>+16.3}", "PREDICTION, expanded (D-SD-4 OPEN; V-03c)", e.total_m, e.total_m - reference);
             let _ = writeln!(r, "      reaction {:.3} m + build-up {:.3} m + braking {:.3} m", e.reaction_m, e.buildup_m, e.braking_m);
         }
         None => { let _ = writeln!(r, "  Expanded: OPEN — required field(s) not executed: {}", run.missing.join(", ")); }
     }
-    let _ = writeln!(r, "  {:44} {:>14.3} {:>16}", "Relational (kernel: −A[Onset->Standstill], F5)", reference, "—");
+    let _ = writeln!(r, "  {:44} {:>14.3} {:>16}", "RECONSTRUCTION (−A[Onset->Standstill], F5)", reference, "—");
     let _ = writeln!(r, "      calculated from the observed (simulated) vehicle states. The simulator's own figure is {:.3} m (difference {:+.3e} m):", obs.stopping_distance_m, reference - obs.stopping_distance_m);
-    let _ = writeln!(r, "      the same observation, so they agree. The relational result is a calculation of observable data, not a prediction.");
+    let _ = writeln!(r, "      the same observation, so they agree: a reconstruction check, not an independent prediction.");
     let _ = writeln!(r, "      stopping time {:.3} s; trajectory in records/expanded_event/reference_observation.json", obs.stopping_time_s);
     if let Some(e) = &expanded {
         let (db, de) = ((basic.total_m - reference).abs(), (e.total_m - reference).abs());
-        let _ = writeln!(r, "  Observed result: |basic − relational| = {db:.3} m, |expanded − relational| = {de:.3} m — the {} prediction is closer here.",
+        let _ = writeln!(r, "  COMPARISON: |basic − reconstruction| = {db:.3} m, |expanded − reconstruction| = {de:.3} m — the {} prediction is closer here.",
             if de < db { "expanded" } else if db < de { "basic" } else { "two" });
         let _ = writeln!(r, "  The remaining expanded difference includes effects the simulator models and the calculation does not (D-SD-9).");
     }
@@ -359,6 +433,7 @@ fn main() {
     let _ = writeln!(r, "  Each trial: reference simulation; its seven fields through IRRS and the kernel (stopping distance = −A on F5);");
     let _ = writeln!(r, "  basic and expanded predictions. The four relational stopping distances then form field F4, a diamond of");
     let _ = writeln!(r, "  controlled-condition relations (D-SD-8 OPEN), whose A outputs are the differences between trials.");
+    let _ = writeln!(r, "  Every IRRS record here is OPEN: all values are NON-AUTHORITATIVE DIAGNOSTICS.");
     let mut trial_lines = String::new();
     for d in cfg["diamonds"].as_array().unwrap() {
         let id = d["id"].as_str().unwrap();
@@ -370,7 +445,7 @@ fn main() {
         let mut dist = [0.0; 4];
         let _ = writeln!(r, "\n  --- {id}: {fa} × {fb} ---");
         let _ = writeln!(r, "    Source of any interaction: {}", d["_basis"].as_str().unwrap_or("<not declared>"));
-        let _ = writeln!(r, "    {:22} {:>12} {:>12} {:>12}  {}", "trial", "basic (m)", "expanded (m)", "relational (m)", "IRRS (all seven fields)");
+        let _ = writeln!(r, "    {:22} {:>12} {:>12} {:>12}  {}", "trial", "basic (m)", "expanded (m)", "reconstr. (m)", "IRRS (all seven fields)");
         for (k, (i, j)) in order.iter().enumerate() {
             let tid = format!("{}_{}", la[*i], lb[*j]);
             let t = trial(&cfg, &tid, &d["trials"][&tid]);
@@ -416,14 +491,36 @@ fn main() {
     }
     save("diamonds/trials_summary.txt", &trial_lines);
 
-    let _ = writeln!(r, "\n================ Status ================");
-    let _ = writeln!(r, "  Exercise A                 : CALCULATED (Newtonian, by hand; not kernel)");
-    let _ = writeln!(r, "  IRRS declaration evaluation: OPEN for every field (0 violations) — proposed support, illustrative parameters, Phase 2");
-    let _ = writeln!(r, "  IRRS observation admission : see the table above (simulated readings, admitted only as simulated)");
-    let _ = writeln!(r, "  Canonical calculation      : A, ρ, B, R, 𝟙 per field (irrs_session::execute; RPPI re-execution agreed)");
-    let _ = writeln!(r, "  Expanded stopping distance : CALCULATED by a non-kernel Newtonian formula PENDING Origin authorization (D-SD-4)");
-    let _ = writeln!(r, "  V9 provenance admission    : OPEN — A → B → R outside abr-kernel 1c1ef70 admission scope");
-    let _ = writeln!(r, "  Observational verification : OPEN — the reference is simulated; no comparison with a measurement exists");
+    // ── Negative-path fixtures (preserved evidence; V-06) ─────────────────
+    let _ = writeln!(r, "\n================ Negative-path fixtures (declarations/negative_tests/; reports in records/negative_tests/) ================");
+    let neg_dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("declarations").join("negative_tests");
+    let mut negs: Vec<PathBuf> = std::fs::read_dir(&neg_dir).map(|d| d.filter_map(|e| e.ok().map(|e| e.path()))
+        .filter(|p| p.extension().map(|x| x == "json").unwrap_or(false)).collect()).unwrap_or_default();
+    negs.sort();
+    for p in &negs {
+        let stem = p.file_stem().unwrap().to_string_lossy().to_string();
+        let raw = std::fs::read_to_string(p).expect("read fixture");
+        let out = pipeline::run(&format!("{stem}.json"), &raw);
+        save(&format!("negative_tests/{stem}.report.txt", ), &format!("{}\nIRRS evaluation: {}\nGate admission: {}\nAuthorized execution: {}\nCalculation: {}\n",
+            out.report, out.irrs_status, out.admission, if out.authorized { "AUTHORIZED" } else { "NOT PERFORMED" }, out.calculation));
+        let _ = writeln!(r, "  {:32} IRRS {:54} | {}", stem, out.irrs_status, out.calculation);
+    }
+    let _ = writeln!(r, "  neg4 (directed ring): IRRS raises no violation, and the canonical calls execute A → B → R on a topology Kernel V9");
+    let _ = writeln!(r, "  §8 declares inadmissible. Canonical defect, reported to the IRRS/Kernel authority: DEFECT_REPORT_V06_RING_TOPOLOGY.md.");
+    let _ = writeln!(r, "  Lesson 1 adds no ring-rejection rule of its own.");
+
+    let _ = writeln!(r, "\n================ Status (DECLARED · CALCULATED · SIMULATED · VERIFIED · OPEN) ================");
+    let _ = writeln!(r, "  DECLARED   : fields F1, F2a, F2b, F3, F5 and diamonds F4 (D, M, loci, relations, bases); simulator and calculation");
+    let _ = writeln!(r, "               values (declarations/simulator_illustrative.json); ρ_base and χ₀ (illustrative). Declared ≠ correct.");
+    let _ = writeln!(r, "  SIMULATED  : every reading and the reference trajectory (src/sim.rs). Not empirical evidence.");
+    let _ = writeln!(r, "  CALCULATED : Exercise A (Newtonian, by hand); the expanded prediction (Newtonian application mathematics, not ABR;");
+    let _ = writeln!(r, "               D-SD-4 OPEN); canonical A, ρ, B, R, 𝟙 per field as a NON-AUTHORITATIVE DIAGNOSTIC (IRRS OPEN);");
+    let _ = writeln!(r, "               Kernel V9 admission::admit of Δ[Onset->Standstill]: ADMITTED, status Simulated (provenance conformance).");
+    let _ = writeln!(r, "  VERIFIED   : NOTHING. No outcome has been compared with an actual observation. Compilation, passing tests,");
+    let _ = writeln!(r, "               deterministic reproduction, RPPI agreement and V9 admission are conformance, not verification.");
+    let _ = writeln!(r, "  OPEN       : IRRS evaluation of every field (authorized execution not performed); Phase 2 persistence (V-04);");
+    let _ = writeln!(r, "               V-03a/b/c; ring defect (V-06); D-SD-2, -3, -4, -6, -7, -8, -10, -12; A-3 for B's empty sum;");
+    let _ = writeln!(r, "               observational verification.");
     print!("{r}");
     save("LESSON1_REPORT.txt", &r);
     eprintln!("Records written to records/ (LESSON1_REPORT.txt, expanded_event/, diamonds/).");

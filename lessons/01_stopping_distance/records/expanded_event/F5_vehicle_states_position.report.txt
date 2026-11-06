@@ -1,5 +1,5 @@
 Field declaration: F5_vehicle_states_position.declaration.json
-Declaration SHA-256 (raw text, as irrs-eval computes it): 728dbcf8db4296a40568a5282cc8b23572b0b1bc0ffd9f5e8c14a3da18311dd8
+Declaration SHA-256 (raw text, as irrs-eval computes it): 86b1764d0cb96e21c4e3eb06862904c9b7416244111153cf65b4a14377615296
 
 == Step 1 — Declaration ==
   Observation status : SIMULATED — reference simulator readings (illustrative values); not an observation
@@ -16,15 +16,15 @@ Declaration SHA-256 (raw text, as irrs-eval computes it): 728dbcf8db4296a40568a5
     [4] Standstill       reading 174.9531225782069 m
   Declared relations:
     e0: Onset → ResponseStart  class continuation
-        basis: the vehicle passes directly from state Onset to state ResponseStart in the observed course of the stopping event, with no declared state between; direction is the observed order of the event
+        basis: SIMULATED observation: the vehicle's position track increases from state Onset to state ResponseStart (the vehicle travels forward along the road), with no declared state between; direction is declared from that observed position increase, not from the order of the state labels. Generator-proposed; awaits Origin confirmation (D-SD-2)
     e1: ResponseStart → BrakeOnset  class continuation
-        basis: the vehicle passes directly from state ResponseStart to state BrakeOnset in the observed course of the stopping event, with no declared state between; direction is the observed order of the event
+        basis: SIMULATED observation: the vehicle's position track increases from state ResponseStart to state BrakeOnset (the vehicle travels forward along the road), with no declared state between; direction is declared from that observed position increase, not from the order of the state labels. Generator-proposed; awaits Origin confirmation (D-SD-2)
     e2: BrakeOnset → FullBraking  class continuation
-        basis: the vehicle passes directly from state BrakeOnset to state FullBraking in the observed course of the stopping event, with no declared state between; direction is the observed order of the event
+        basis: SIMULATED observation: the vehicle's position track increases from state BrakeOnset to state FullBraking (the vehicle travels forward along the road), with no declared state between; direction is declared from that observed position increase, not from the order of the state labels. Generator-proposed; awaits Origin confirmation (D-SD-2)
     e3: FullBraking → Standstill  class continuation
-        basis: the vehicle passes directly from state FullBraking to state Standstill in the observed course of the stopping event, with no declared state between; direction is the observed order of the event
+        basis: SIMULATED observation: the vehicle's position track increases from state FullBraking to state Standstill (the vehicle travels forward along the road), with no declared state between; direction is declared from that observed position increase, not from the order of the state labels. Generator-proposed; awaits Origin confirmation (D-SD-2)
     e4: Onset → Standstill  class continuation
-        basis: the stopping event as a whole: the vehicle passes from its hazard-onset state to its standstill state. Declared so that the stopping distance is the directed difference on one relation (DESIGN D-SD-12, for Origin)
+        basis: SIMULATED observation: the vehicle's position track increases from its hazard-onset state to its standstill state (one vehicle, one continuous stopping event). Generator-proposed so that the stopping distance is the directed difference on one relation; awaits Origin authorization (D-SD-12)
   Interior loci declared by M (§10): ResponseStart, BrakeOnset, FullBraking
   ρ_base = 0.5 (Illustrative); χ₀ = 5.0 m (Illustrative); component pairs / cc: none; 𝟙 tolerance = 1e-9
 
@@ -50,6 +50,14 @@ Declaration SHA-256 (raw text, as irrs-eval computes it): 728dbcf8db4296a40568a5
     OPEN: ABR topology admission — Parameter 'rho_base': illustrative value — not admissible for production evaluation. OPEN.
     OPEN: ABR topology admission — Parameter 'chi_0': illustrative value — not admissible for production evaluation. OPEN.
 
+== Authorization boundary ==
+  AUTHORIZED EXECUTION: NOT PERFORMED. IRRS status is OPEN — 17 condition(s), 0 violation(s); not authorized.
+  Canonical rule: abr-irrs c7410c5 eval/README.md — 'open … not evaluated; build held'; only an
+  `authorized` record lets the build proceed. irrs-eval/src/authorization.rs rule 1: 'An OPEN or
+  REJECTED evaluation cannot be authorized.' No canonical IRRS rule permits authorized execution on OPEN.
+  Everything below is a NON-AUTHORITATIVE DIAGNOSTIC: the same canonical calls, made to show what the
+  declaration would give. Its values are not IRRS-authorized results and are not verified.
+
 == Step 3 — IRRS observation admission (relational_gate) ==
   Region 'lesson1.F5_vehicle_states_position' established; extent [0.0, 600.0] m
   Onset: ADMITTED — raw 0.0, gate-computed 0.0 m
@@ -64,7 +72,7 @@ Declaration SHA-256 (raw text, as irrs-eval computes it): 728dbcf8db4296a40568a5
 == Step 5 — Completeness of the declaration for A → B → R ==
   Every input the A → B → R path uses is declared.
 
-== Step 6 — Canonical execution (irrs_session::execute::execute) ==
+== Step 6 — Canonical execution (irrs_session::execute::execute) — NON-AUTHORITATIVE DIAGNOSTIC ==
   Inputs: NodeField x[0] = [0.0, 53.48279955771634, 65.47236975479007, 72.0920144707346, 174.9531225782069] m
           edges [(0, 1), (1, 2), (2, 3), (3, 4), (0, 4)], provenance [Continuation, Continuation, Continuation, Continuation, Continuation]
   Structural check relational_isolation(rel) = false
