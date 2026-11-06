@@ -1,0 +1,180 @@
+ABR Mathematical Foundations — Lesson 1: Newtonian stopping distance and expanded relational calculation
+ALL INPUT VALUES ARE ILLUSTRATIVE (Generator-chosen, declarations/simulator_illustrative.json).
+THE REFERENCE OBSERVATION IS SIMULATED. NOTHING HERE IS EMPIRICAL EVIDENCE OR OBSERVATIONALLY VERIFIED.
+
+Canonical authorities (resolved by Cargo.lock):
+  irrs-eval: git+https://github.com/Relational-Relativity-Corporation/abr-irrs?rev=c7410c590d04a96612619e639afdce7f0751aeca#c7410c590d04a96612619e639afdce7f0751aeca
+  irrs-kernel: git+https://github.com/Relational-Relativity-Corporation/abr-irrs?rev=c7410c590d04a96612619e639afdce7f0751aeca#c7410c590d04a96612619e639afdce7f0751aeca
+  irrs-session: git+https://github.com/Relational-Relativity-Corporation/abr-irrs?rev=c7410c590d04a96612619e639afdce7f0751aeca#c7410c590d04a96612619e639afdce7f0751aeca
+  relational-gate: git+https://github.com/Relational-Relativity-Corporation/abr-irrs?rev=c7410c590d04a96612619e639afdce7f0751aeca#c7410c590d04a96612619e639afdce7f0751aeca
+
+================ Exercise A — Basic Newtonian calculation [EXPLANATORY, not kernel] ================
+  d = v·t + v²/(2a),  v = 26.8224 m/s (60 mph), t = 1.5 s, a = 6 m/s², level road
+  reaction distance v·t      = 40.2336 m
+  braking distance  v²/(2a)  = 59.9534 m
+  stopping distance          = 100.1870 m
+  Simulator conformance check (Exercise A assumptions through the same integrator, dt = 0.0001 s):
+    simulated 100.1870 m; difference from hand calculation +0.0000 m (integration only; not physical accuracy)
+
+================ Exercise B — Expanded relational field (event 'expanded_event') ================
+  Conditions: worn tread, wet road (friction 0.329..0.3605), grade -3 %, wind 5 m/s toward 160 deg (along-road -4.698 m/s),
+              dusk + distracted (perception 2 s), response 0.45 s, brake build-up 0.25 s, mass 1500 kg
+
+  Each field: IRRS declaration evaluation → gate admission → canonical execution (full reports: records/expanded_event/)
+  field                        IRRS evaluation                              admission                    calculation
+  F1_velocity_full_braking     OPEN — 14 condition(s), 0 violation(s); not authorized ADMITTED — all 4 readings    CALCULATED (A, ρ, B, R, 𝟙)
+  F1_velocity_hazard_onset     OPEN — 14 condition(s), 0 violation(s); not authorized ADMITTED — all 4 readings    CALCULATED (A, ρ, B, R, 𝟙)
+  F2_road_elevation            OPEN — 40 condition(s), 0 violation(s); not authorized ADMITTED — all 17 readings   CALCULATED (A, ρ, B, R, 𝟙)
+  F2_road_friction             OPEN — 40 condition(s), 0 violation(s); not authorized ADMITTED — all 17 readings   CALCULATED (A, ρ, B, R, 𝟙)
+  F3_response_chain            OPEN — 14 condition(s), 0 violation(s); not authorized ADMITTED — all 4 readings    CALCULATED (A, ρ, B, R, 𝟙)
+
+  F1_velocity_hazard_onset: canonical outputs
+    relation                    A              B              R    𝟙
+    Air->Body      -31.52086310393 -31.52086310393 -18.52205068286    1
+    Body->Tread               0.0        26.8224 55.09701871873    1
+    Tread->Road           26.8224        26.8224 13.89322886883    1
+    ρ: Air 0.4846252543051, Body 0.4846252543051, Road 0.4820288688251, Tread 0.4820288688251
+
+  F1_velocity_full_braking: canonical outputs
+    relation                    A              B              R    𝟙
+    Air->Body      -30.8943003079 -26.9649247273 -14.27767256025    1
+    Body->Tread    3.929375580595 26.19583720397 50.03974065708    1
+    Tread->Road    22.26646162337 22.26646162337 9.731495773466    1
+    ρ: Air 0.4843232177796, Body 0.4843232177796, Road 0.4785098392659, Tread 0.4785098392659
+
+  F3_response_chain: canonical outputs
+    relation                    A              B              R    𝟙
+    Brake->Tread            -0.25          -0.25         -0.025    1
+    Driver->Brake           -0.45           -0.7 0.2777777777778    1
+    Obstacle->Driver             -2          -2.45 -2.761111111111    1
+    ρ: Brake 0.3214285714286, Driver 0.4444444444444, Obstacle 0.4444444444444, Tread 0.25
+
+  F2_road_elevation and F2_road_friction: 16 relations each (full tables in records/expanded_event/). First four:
+    relation     A elev (m)            B            R |          A μ            B            R
+    S00->S01           0.75          1.5         1.95 |       0.0105      -0.0105 -0.009588843
+    S01->S02           0.75          1.5          1.5 |       -0.021       0.0105 0.01412323943662
+    S02->S03           0.75          1.5          1.5 |       0.0315        0.014 0.00655981595092
+    S03->S04           0.75          1.5          1.5 |      -0.0175       -0.028 -0.0286763803681
+
+  𝟙[e] = 1.0 (review signal, §11.4) on 27 of 41 relations across the five fields.
+
+  How admitted relational outputs enter the stopping-distance calculation (declared projections C, D-SD-3):
+    initial speed           ← admitted node value Body (F1 onset)
+    along-road wind         ← admitted node value Air (F1 onset; M projects speed × cos(direction))
+    relative air speed      ← A[Air->Body] = w − v (reported; the calculation uses v − w at each segment entry)
+    perception / response / build-up times ← −A on F3 relations (sign reversal)
+    grade of segment k      ← atan(−A[Sk->Sk+1] / spacing) from F2a (drop ÷ declared spacing)
+    friction of segment k   ← admitted node value at Sk (F2b)
+    slip velocity           ← A[Body->Tread] at full braking — reported; no use in the calculation
+    B, R, ρ, 𝟙              ← NO canonical mapping to a stopping distance: OPEN, not used
+    mass, drag area, air density, g ← declared calculation inputs (single values, no relation; not kernel inputs)
+
+================ Exercise C — Comparison with the reference (simulated) observation ================
+                                                 distance (m)  minus reference
+  Basic (Exercise A inputs)                           100.187          -74.766
+  Expanded (pending Origin authorization D-SD-4)        180.109           +5.156
+      reaction 65.715 m + build-up 6.669 m + braking 107.725 m
+  Reference (simulated event)                         174.953                —
+      stopping time 10.628 s; trajectory in records/expanded_event/reference_observation.json
+  Observed result: |basic − reference| = 74.766 m, |expanded − reference| = 5.156 m — the expanded calculation is closer here.
+  The remaining expanded difference includes effects the simulator models and the calculation does not (D-SD-9).
+  Agreement with a simulator is agreement with a declared model, not with the world.
+
+  Which relationships materially changed the expanded result (each reverted alone to the base trial; threshold 1 m, D-SD-10):
+    reverted                                           expanded (m)     change (m) 
+    perception delay (visibility × attention, F3)           146.763        +33.346 material
+    wind (F1 Air)                                           181.983         -1.874 material
+    road grade (F2a)                                        170.754         +9.355 material
+    friction: tread × moisture, patchiness (F2b)            112.754        +67.355 material
+    brake build-up (F3)                                     176.648         +3.461 material
+    aerodynamic drag at all (declared input)                186.006         -5.897 material
+    (mass enters only through drag/mass; with friction-limited braking it otherwise cancels)
+
+  Unmeasured or unresolved:
+    - every value: illustrative, simulated; no measurement exists (observational verification OPEN)
+    - Phase 2 (changing deceleration over the event, brake activation history): not entered; the simulator is not declared
+      a transducer (§8, D-SD-6), and irrs-session c7410c5 has no persistence execution path
+    - ρ_base, χ₀: illustrative; B, R, ρ, 𝟙 have no canonical mapping to distance
+    - direction bases of F1/F3 (D-SD-2); projections C (D-SD-3); expanded formula (D-SD-4)
+    - IRRS evaluation of every field is OPEN (nodes/edges 'proposed', parameters illustrative, Phase 2)
+
+================ Interdependent observable conditions (four controlled-trial diamonds) ================
+  Each trial: reference simulation; its five fields through IRRS and the kernel; basic and expanded calculations.
+  Then the four reference distances form field F4 (a diamond of controlled-condition relations, D-SD-8 OPEN).
+
+  --- tread_x_moisture: tread × moisture ---
+    Source of any interaction: table, no formula: on a dry road worn tread loses little grip; on a wet road it loses much more (less water evacuation). Generator-chosen illustrative values
+    trial                     basic (m) expanded (m) reference (m)  IRRS (all five fields)
+    good_dry                    100.187       79.339       77.386  OPEN, 0 violations; A→B→R executed
+    worn_dry                    100.187       81.969       79.872  OPEN, 0 violations; A→B→R executed
+    good_wet                    100.187      102.072       98.829  OPEN, 0 violations; A→B→R executed
+    worn_wet                    100.187      138.353      132.380  OPEN, 0 violations; A→B→R executed
+    F4 diamond: IRRS OPEN — 15 condition(s), 0 violation(s); not authorized; ADMITTED — all 4 readings; A→B→R executed
+    Effect of tread (good → worn), as −A (increase in stopping distance):
+      with moisture = dry        −A[good_dry->worn_dry] = +2.486 m
+      with moisture = wet        −A[good_wet->worn_wet] = +33.550 m
+    Effect of moisture (dry → wet):
+      with tread = good       −A[good_dry->good_wet] = +21.443 m
+      with tread = worn       −A[worn_dry->worn_wet] = +52.508 m
+    The two A values for the same tread change differ — the significance of one condition depends on the other
+    (Two admitted A outputs side by side; no interaction formula was applied. B, R on the diamond: in the report.)
+
+  --- visibility_x_attention: attention × illumination ---
+    Source of any interaction: table, no formula: perception delay per trial. Generator-chosen illustrative values
+    trial                     basic (m) expanded (m) reference (m)  IRRS (all five fields)
+    attentive_day               100.187       79.339       77.386  OPEN, 0 violations; A→B→R executed
+    distracted_day              100.187       92.742       90.098  OPEN, 0 violations; A→B→R executed
+    attentive_dusk              100.187       87.375       85.021  OPEN, 0 violations; A→B→R executed
+    distracted_dusk             100.187      111.520      107.779  OPEN, 0 violations; A→B→R executed
+    F4 diamond: IRRS OPEN — 15 condition(s), 0 violation(s); not authorized; ADMITTED — all 4 readings; A→B→R executed
+    Effect of attention (attentive → distracted), as −A (increase in stopping distance):
+      with illumination = day        −A[attentive_day->distracted_day] = +12.712 m
+      with illumination = dusk       −A[attentive_dusk->distracted_dusk] = +22.758 m
+    Effect of illumination (day → dusk):
+      with attention = attentive  −A[attentive_day->attentive_dusk] = +7.635 m
+      with attention = distracted −A[distracted_day->distracted_dusk] = +17.681 m
+    The two A values for the same attention change differ — the significance of one condition depends on the other
+    (Two admitted A outputs side by side; no interaction formula was applied. B, R on the diamond: in the report.)
+
+  --- wind_x_speed: wind × speed ---
+    Source of any interaction: no interaction is tabled here: any interaction comes from the simulator's declared drag law (force proportional to the square of air speed relative to the vehicle). Wind direction is the direction the wind blows toward, measured from the direction of travel: 180 deg is a pure headwind
+    trial                     basic (m) expanded (m) reference (m)  IRRS (all five fields)
+    calm_60mph                  100.187       79.339       77.386  OPEN, 0 violations; A→B→R executed
+    headwind_60mph              100.187       78.199       75.163  OPEN, 0 violations; A→B→R executed
+    calm_80mph                  100.187      123.940      120.466  OPEN, 0 violations; A→B→R executed
+    headwind_80mph              100.187      121.596      116.476  OPEN, 0 violations; A→B→R executed
+    F4 diamond: IRRS OPEN — 15 condition(s), 0 violation(s); not authorized; ADMITTED — all 4 readings; A→B→R executed
+    Effect of wind (calm → headwind), as −A (increase in stopping distance):
+      with speed = 60mph      −A[calm_60mph->headwind_60mph] = -2.223 m
+      with speed = 80mph      −A[calm_80mph->headwind_80mph] = -3.991 m
+    Effect of speed (60mph → 80mph):
+      with wind = calm       −A[calm_60mph->calm_80mph] = +43.081 m
+      with wind = headwind   −A[headwind_60mph->headwind_80mph] = +41.313 m
+    The two A values for the same wind change differ — the significance of one condition depends on the other
+    (Two admitted A outputs side by side; no interaction formula was applied. B, R on the diamond: in the report.)
+
+  --- grade_x_surface: grade × surface ---
+    Source of any interaction: no interaction is tabled here: any interaction comes from the simulator's declared mechanics (gravity along the grade, friction proportional to the normal force). Negative grade = road descends in the direction of travel
+    trial                     basic (m) expanded (m) reference (m)  IRRS (all five fields)
+    level_dry                   100.187       79.339       77.386  OPEN, 0 violations; A→B→R executed
+    downgrade_dry               100.187       82.615       83.703  OPEN, 0 violations; A→B→R executed
+    level_wet                   100.187      102.072       98.829  OPEN, 0 violations; A→B→R executed
+    downgrade_wet               100.187      110.055      111.016  OPEN, 0 violations; A→B→R executed
+    F4 diamond: IRRS OPEN — 15 condition(s), 0 violation(s); not authorized; ADMITTED — all 4 readings; A→B→R executed
+    Effect of grade (level → downgrade), as −A (increase in stopping distance):
+      with surface = dry        −A[level_dry->downgrade_dry] = +6.318 m
+      with surface = wet        −A[level_wet->downgrade_wet] = +12.187 m
+    Effect of surface (dry → wet):
+      with grade = level      −A[level_dry->level_wet] = +21.443 m
+      with grade = downgrade  −A[downgrade_dry->downgrade_wet] = +27.313 m
+    The two A values for the same grade change differ — the significance of one condition depends on the other
+    (Two admitted A outputs side by side; no interaction formula was applied. B, R on the diamond: in the report.)
+
+================ Status ================
+  Exercise A                 : CALCULATED (Newtonian, by hand; not kernel)
+  IRRS declaration evaluation: OPEN for every field (0 violations) — proposed support, illustrative parameters, Phase 2
+  IRRS observation admission : see the table above (simulated readings, admitted only as simulated)
+  Canonical calculation      : A, ρ, B, R, 𝟙 per field (irrs_session::execute; RPPI re-execution agreed)
+  Expanded stopping distance : CALCULATED by a non-kernel Newtonian formula PENDING Origin authorization (D-SD-4)
+  V9 provenance admission    : OPEN — A → B → R outside abr-kernel 1c1ef70 admission scope
+  Observational verification : OPEN — the reference is simulated; no comparison with a measurement exists

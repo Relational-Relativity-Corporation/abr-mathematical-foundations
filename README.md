@@ -47,7 +47,7 @@ Proofs are not invented here. Where a module needs a derivation the canonical so
 | [`CURRICULUM.md`](CURRICULUM.md) | Table of contents and outline of every module | Draft |
 | [`preface/00_an_invitation.md`](preface/00_an_invitation.md) | Preface: *An Invitation to Mathematicians and Physicists* | Draft |
 | [`modules/01_observation_and_abstraction.md`](modules/01_observation_and_abstraction.md) | Module 1: *Observation and Abstraction* | Draft |
-| [`lessons/01_first_relational_calculation/`](lessons/01_first_relational_calculation/README.md) | Lesson 1 (revision 2): a complete bounded observable set (four marks on a ramp) through IRRS evaluation and admission and canonical A → B → R; a single relation as the Primary-condition exercise | Draft, awaiting Origin and Verifier |
+| [`lessons/01_stopping_distance/`](lessons/01_stopping_distance/README.md) | Lesson 1: a basic Newtonian stopping-distance calculation beside an expanded relational field (IRRS evaluation and admission, canonical A → B → R), compared with a simulated reference braking event; four interdependent-condition diamonds | Draft (illustrative values), awaiting Origin and Verifier |
 | [`references/CANONICAL_SOURCES.md`](references/CANONICAL_SOURCES.md) | Pinned canonical sources and the sections each module draws on | Draft |
 | [`review/OPEN_QUESTIONS_FOR_ORIGIN.md`](review/OPEN_QUESTIONS_FOR_ORIGIN.md) | Questions raised while drafting, returned to Origin | Draft |
 

@@ -1,0 +1,310 @@
+{
+  "record_id": "lesson1.stopping_event-lesson1.F1_velocity_hazard_onset-lesson1-v0.3-simulated",
+  "declaration_digest": "aab246bd84f51bbdfb732f439e610aa87d33c93e424c258232ee2d9b3381a9ff",
+  "domain": "lesson1.stopping_event",
+  "topology_id": "lesson1.F1_velocity_hazard_onset",
+  "version": "lesson1-v0.3-simulated",
+  "kernel": null,
+  "input_inventory": [
+    {
+      "name": "obs.Air",
+      "classification": "SimulatedInput",
+      "source_identity": "SIMULATED — Lesson 1 reference simulator (src/sim.rs), illustrative declaration declarations/simulator_illustrative.json; no measurement was made",
+      "acquisition_method": "simulated instrument reading at instant 'hazard_onset' of the reference event",
+      "relationship_to_problem": "wind velocity component along the direction of travel (+ = tailwind), from the simulated anemometer speed and direction",
+      "evidence_count": 0,
+      "known_limitations": "simulated reading from Generator-chosen illustrative values; admitted only as simulated (V9); not empirical evidence",
+      "provenance_status_claimed": "declared",
+      "evaluator_provenance_assessment": "consistent_claim",
+      "submitted_to_gate": true
+    },
+    {
+      "name": "obs.Body",
+      "classification": "SimulatedInput",
+      "source_identity": "SIMULATED — Lesson 1 reference simulator (src/sim.rs), illustrative declaration declarations/simulator_illustrative.json; no measurement was made",
+      "acquisition_method": "simulated instrument reading at instant 'hazard_onset' of the reference event",
+      "relationship_to_problem": "vehicle body (centre of mass) velocity along the road",
+      "evidence_count": 0,
+      "known_limitations": "simulated reading from Generator-chosen illustrative values; admitted only as simulated (V9); not empirical evidence",
+      "provenance_status_claimed": "declared",
+      "evaluator_provenance_assessment": "consistent_claim",
+      "submitted_to_gate": true
+    },
+    {
+      "name": "obs.Tread",
+      "classification": "SimulatedInput",
+      "source_identity": "SIMULATED — Lesson 1 reference simulator (src/sim.rs), illustrative declaration declarations/simulator_illustrative.json; no measurement was made",
+      "acquisition_method": "simulated instrument reading at instant 'hazard_onset' of the reference event",
+      "relationship_to_problem": "tyre tread circumferential surface speed ω·r",
+      "evidence_count": 0,
+      "known_limitations": "simulated reading from Generator-chosen illustrative values; admitted only as simulated (V9); not empirical evidence",
+      "provenance_status_claimed": "declared",
+      "evaluator_provenance_assessment": "consistent_claim",
+      "submitted_to_gate": true
+    },
+    {
+      "name": "obs.Road",
+      "classification": "SimulatedInput",
+      "source_identity": "SIMULATED — Lesson 1 reference simulator (src/sim.rs), illustrative declaration declarations/simulator_illustrative.json; no measurement was made",
+      "acquisition_method": "simulated instrument reading at instant 'hazard_onset' of the reference event",
+      "relationship_to_problem": "road surface velocity at the contact patch (the road is observed stationary)",
+      "evidence_count": 0,
+      "known_limitations": "simulated reading from Generator-chosen illustrative values; admitted only as simulated (V9); not empirical evidence",
+      "provenance_status_claimed": "declared",
+      "evaluator_provenance_assessment": "consistent_claim",
+      "submitted_to_gate": true
+    },
+    {
+      "name": "rho_base",
+      "classification": "DeclaredParameter",
+      "source_identity": "ILLUSTRATIVE — chosen for this field by the Generator; taken from no other domain or repository",
+      "acquisition_method": "declared by M for this field (kernel_reference.md §9: M-supplied, no kernel value)",
+      "relationship_to_problem": "dimensionless ceiling of ρ used by operator_r",
+      "evidence_count": 0,
+      "known_limitations": "no observational basis; ρ, B and R depend on it",
+      "provenance_status_claimed": "declared",
+      "evaluator_provenance_assessment": "consistent_claim",
+      "submitted_to_gate": false
+    },
+    {
+      "name": "chi_0",
+      "classification": "DeclaredParameter",
+      "source_identity": "ILLUSTRATIVE — chosen for this field by the Generator; taken from no other domain or repository",
+      "acquisition_method": "declared by M for this field (kernel_reference.md §9: M-supplied, no kernel value)",
+      "relationship_to_problem": "reference of the saturating map in ρ, in the dimension of χ",
+      "evidence_count": 0,
+      "known_limitations": "no observational basis; ρ, B and R depend on it",
+      "provenance_status_claimed": "declared",
+      "evaluator_provenance_assessment": "consistent_claim",
+      "submitted_to_gate": false
+    }
+  ],
+  "provenance_summary": {
+    "claimed_declared": 6,
+    "claimed_verified": 0,
+    "claimed_unverified": 0,
+    "inputs_with_evidence": 0,
+    "inputs_without_evidence": [
+      "obs.Air",
+      "obs.Body",
+      "obs.Tread",
+      "obs.Road",
+      "rho_base",
+      "chi_0"
+    ],
+    "inconsistent_claims": 0,
+    "evaluator_note": "The evaluator records submitter claims. It does not independently verify physical acquisition. Independent verification is Origin's determination to make. 6 input(s) carry no supporting evidence (obs.Air, obs.Body, obs.Tread, obs.Road, rho_base, chi_0). This is acceptable for a declared-only submission; Origin notes which inputs would benefit from independent evidence."
+  },
+  "regional_prerequisite": {
+    "region_name": "lesson1.F1_velocity_hazard_onset",
+    "extent": "[-60, 60] m/s",
+    "orientation_preserved": "the velocity component along the direction of travel at each locus, in m/s",
+    "orientation_discarded": "crosswind and vertical components (wind 5 m/s toward 160 deg from the direction of travel is projected to its along-road component by M); everything else about each locus",
+    "admission_rule_name": "lesson1.F1_velocity_hazard_onset.extent",
+    "admission_rule_description": "A velocity reading is admitted only within the simulated instruments' range, −60 m/s to 60 m/s inclusive.",
+    "all_fields_declared": true,
+    "observed_locus": -4.698463103929542,
+    "observed_locus_inside_extent": true
+  },
+  "mapping_chain": [
+    {
+      "mapping_name": "m.F1_velocity_hazard_onset.identity",
+      "input_description": "for Air: wind speed × cos(direction from travel), the declared along-road projection (DESIGN D-SD-3); for Body, Tread, Road: the along-road velocity reading in m/s",
+      "output_description": "the same value in D, in m/s",
+      "preserves": "the velocity component along the direction of travel at each locus, in m/s",
+      "discards": "crosswind and vertical components (wind 5 m/s toward 160 deg from the direction of travel is projected to its along-road component by M); everything else about each locus",
+      "executor": "AdmissionGate (declared; the evaluator does not execute mappings)"
+    }
+  ],
+  "status": "open",
+  "failure_reason": "V9 Phase 2: the sequence of actual observations {M(o1), ..., M(on)} is not declared.",
+  "open_conditions": [
+    "V9 Phase 2: the sequence of actual observations {M(o1), ..., M(on)} is not declared.",
+    "V9 Phase 2: what one relational step is in this system is not declared.",
+    "V9 Phase 2: whether the sequence comes from actual measurements or a declared model is not declared.",
+    "V9 Phase 2: the direction of relational evolution is not declared (index order is not a direction).",
+    "ABR topology admission — Node 'Air': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Node 'Body': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Node 'Tread': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Node 'Road': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Edge 'Air' → 'Body': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Edge 'Body' → 'Tread': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Edge 'Tread' → 'Road': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Interior locus 'Body': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Parameter 'rho_base': illustrative value — not admissible for production evaluation. OPEN.",
+    "ABR topology admission — Parameter 'chi_0': illustrative value — not admissible for production evaluation. OPEN."
+  ],
+  "continuous_process": {
+    "process_entry_declared": true,
+    "process_entry_statement": "One declared instant of one simulated braking event. No sequence of observations is declared: the simulator is not declared as a transducer from observable inputs (kernel_reference.md §8; DESIGN D-SD-6), so Phase 2 is not entered.",
+    "prior_evidence": "open",
+    "persistence_path": [
+      "A_persistence",
+      "B_persistence",
+      "R_persistence"
+    ],
+    "persistence_path_valid": true,
+    "prior_evidence_refs_count": 0,
+    "open_conditions": [
+      "OPEN — Prior relational evidence unavailable at evaluation window open. The evaluation record begins with the first admitted observation. The prior relational result does not yet exist; it is not zero. No value is fabricated. Otherwise admissible calculations proceed. This dependency resolves when the first complete evaluation cycle produces an actual relational result."
+    ],
+    "observation_sequence_declared": false,
+    "process_step_declared": false
+  },
+  "evaluation_notes": [
+    "Problem space: SIMULATED (illustrative values). Field F1: along-road velocity of the air, the vehicle body, the tyre tread surface and the road, at the instant 'hazard_onset' of the simulated braking event 'expanded_event'.",
+    "CONTINUOUS PROCESS: Declared persistence path [A_persistence, B_persistence, R_persistence] is valid. Matches Kernel V9 (kernel_reference.md §11.1): A_persistence → B_persistence → R_persistence, executed by operator_e_v5.",
+    "CONTINUOUS PROCESS: OPEN — Prior relational evidence unavailable at evaluation window open. The evaluation record begins with the first admitted observation. The prior relational result does not yet exist; it is not zero. No value is fabricated. Otherwise admissible calculations proceed. This dependency resolves when the first complete evaluation cycle produces an actual relational result.",
+    "OPEN (not evaluated): V9 Phase 2: the sequence of actual observations {M(o1), ..., M(on)} is not declared.",
+    "OPEN (not evaluated): V9 Phase 2: what one relational step is in this system is not declared.",
+    "OPEN (not evaluated): V9 Phase 2: whether the sequence comes from actual measurements or a declared model is not declared.",
+    "OPEN (not evaluated): V9 Phase 2: the direction of relational evolution is not declared (index order is not a direction).",
+    "OPEN (not evaluated): ABR topology admission — Node 'Air': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Node 'Body': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Node 'Tread': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Node 'Road': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Edge 'Air' → 'Body': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Edge 'Body' → 'Tread': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Edge 'Tread' → 'Road': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Interior locus 'Body': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Parameter 'rho_base': illustrative value — not admissible for production evaluation. OPEN.",
+    "OPEN (not evaluated): ABR topology admission — Parameter 'chi_0': illustrative value — not admissible for production evaluation. OPEN."
+  ],
+  "abr_topology": {
+    "domain_observables": [
+      [
+        "obs.Air",
+        true
+      ],
+      [
+        "obs.Body",
+        true
+      ],
+      [
+        "obs.Tread",
+        true
+      ],
+      [
+        "obs.Road",
+        true
+      ]
+    ],
+    "nodes": [
+      {
+        "node_id": "Air",
+        "observable": "obs.Air",
+        "observable_in_inventory": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Node 'Air': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      },
+      {
+        "node_id": "Body",
+        "observable": "obs.Body",
+        "observable_in_inventory": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Node 'Body': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      },
+      {
+        "node_id": "Tread",
+        "observable": "obs.Tread",
+        "observable_in_inventory": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Node 'Tread': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      },
+      {
+        "node_id": "Road",
+        "observable": "obs.Road",
+        "observable_in_inventory": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Node 'Road': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      }
+    ],
+    "edges": [
+      {
+        "from_node": "Air",
+        "to_node": "Body",
+        "description": "the air acts on the vehicle body through aerodynamic force; direction declared from the air to the body it acts on (DESIGN D-SD-2)",
+        "nodes_declared": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Edge 'Air' → 'Body': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      },
+      {
+        "from_node": "Body",
+        "to_node": "Tread",
+        "description": "the body's momentum is removed through the wheel and tyre during braking; direction declared along that momentum-removal path (DESIGN D-SD-2)",
+        "nodes_declared": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Edge 'Body' → 'Tread': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      },
+      {
+        "from_node": "Tread",
+        "to_node": "Road",
+        "description": "the tyre tread transmits the braking force to the road at the contact patch; direction declared along the momentum-removal path (DESIGN D-SD-2)",
+        "nodes_declared": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Edge 'Tread' → 'Road': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      }
+    ],
+    "interior_locus": {
+      "node_id": "Body",
+      "node_declared": true,
+      "status": "proposed",
+      "evidence_count": 0,
+      "note": "Interior locus 'Body': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+    },
+    "parameters": [
+      {
+        "name": "rho_base",
+        "value": 0.5,
+        "provenance_kind": "illustrative",
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Parameter 'rho_base': illustrative value — not admissible for production evaluation. OPEN."
+      },
+      {
+        "name": "chi_0",
+        "value": 1.0,
+        "provenance_kind": "illustrative",
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Parameter 'chi_0': illustrative value — not admissible for production evaluation. OPEN."
+      }
+    ],
+    "persistence_required": false,
+    "summary": {
+      "total_nodes": 4,
+      "observed_nodes": 0,
+      "proposed_nodes": 4,
+      "missing_nodes": 0,
+      "contradicted_nodes": 0,
+      "total_edges": 3,
+      "observed_edges": 0,
+      "proposed_edges": 3,
+      "missing_edges": 0,
+      "contradicted_edges": 0,
+      "interior_locus_status": "proposed",
+      "total_parameters": 2,
+      "observational_parameters": 0,
+      "illustrative_parameters": 2
+    },
+    "open_conditions": [
+      "Node 'Air': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Node 'Body': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Node 'Tread': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Node 'Road': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Edge 'Air' → 'Body': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Edge 'Body' → 'Tread': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Edge 'Tread' → 'Road': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Interior locus 'Body': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Parameter 'rho_base': illustrative value — not admissible for production evaluation. OPEN.",
+      "Parameter 'chi_0': illustrative value — not admissible for production evaluation. OPEN."
+    ]
+  }
+}

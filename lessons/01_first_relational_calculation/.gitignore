@@ -1,8 +1,0 @@
-/target
-# Students' own declarations and reports are theirs; the supplied demonstration records are kept.
-/declarations/my_measurement_*.txt
-!/declarations/my_measurement_TEMPLATE.txt
-/records/my_measurement_*.report.txt
-/declarations/my_set_*.json
-!/declarations/my_set_TEMPLATE.json
-/records/my_set_*

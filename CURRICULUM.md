@@ -18,7 +18,7 @@ Only the Preface and Module 1 are drafted. Modules 2–11 are **outlines**: each
 
 | | Title | Status |
 |---|---|---|
-| Lesson 1 | [First Relational Calculation](lessons/01_first_relational_calculation/README.md): from a complete bounded observable set toward the Primary condition (revision 2) | Draft, awaiting Origin and Verifier |
+| Lesson 1 | [Stopping Distance: a Newtonian Calculation and Its Relational Expansion](lessons/01_stopping_distance/README.md): the basic d = vt + v²/(2a) beside an expanded relational field run through IRRS and canonical A → B → R, compared with a simulated reference event; interdependent conditions | Draft (illustrative values), awaiting Origin and Verifier |
 
 ## Part I — Foundations
 

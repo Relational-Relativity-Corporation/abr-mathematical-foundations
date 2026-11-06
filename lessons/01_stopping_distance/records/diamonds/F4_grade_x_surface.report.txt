@@ -1,0 +1,85 @@
+Field declaration: F4_grade_x_surface.declaration.json
+Declaration SHA-256 (raw text, as irrs-eval computes it): 15dec76b8e24109bb4742ed856d8d674941438ef0909efb64c242004cdc56764
+
+== Step 1 — Declaration ==
+  Observation status : SIMULATED — reference simulator readings (illustrative values); not an observation
+  D (observable extent): [0.0, 600.0] m — region 'lesson1.F4_grade_x_surface'
+  M: mapping 'm.F4_grade_x_surface.identity'
+     input   : reference stopping distance of the trial, in m
+     preserves: the stopping distance observed in each trial, in m
+     discards : everything about each trial except its stopping distance
+  Loci (list position is a label only, NOT topology):
+    [0] level_dry        reading 77.385866308 m
+    [1] downgrade_dry    reading 83.70343435 m
+    [2] level_wet        reading 98.829190769 m
+    [3] downgrade_wet    reading 111.016390647 m
+  Declared relations:
+    e0: level_dry → downgrade_dry  class coupling
+        basis: controlled-condition contrast: grade changed from level to downgrade with surface fixed at dry; same vehicle, same hazard, every other declared condition held at its base value. Admissibility of a relation between separate trials is OPEN (DESIGN D-SD-8)
+    e1: level_wet → downgrade_wet  class coupling
+        basis: controlled-condition contrast: grade changed from level to downgrade with surface fixed at wet; same vehicle, same hazard, every other declared condition held at its base value. Admissibility of a relation between separate trials is OPEN (DESIGN D-SD-8)
+    e2: level_dry → level_wet  class coupling
+        basis: controlled-condition contrast: surface changed from dry to wet with grade fixed at level; same vehicle, same hazard, every other declared condition held at its base value. Admissibility of a relation between separate trials is OPEN (DESIGN D-SD-8)
+    e3: downgrade_dry → downgrade_wet  class coupling
+        basis: controlled-condition contrast: surface changed from dry to wet with grade fixed at downgrade; same vehicle, same hazard, every other declared condition held at its base value. Admissibility of a relation between separate trials is OPEN (DESIGN D-SD-8)
+  Interior loci declared by M (§10): downgrade_dry, level_wet
+  ρ_base = 0.5 (Illustrative); χ₀ = 5.0 m (Illustrative); component pairs / cc: none; 𝟙 tolerance = 1e-9
+
+== Step 2 — IRRS declaration evaluation (irrs_eval::Evaluator::evaluate) ==
+  Record lesson1.condition_trials-lesson1.F4_grade_x_surface-lesson1-v0.3-simulated — status Open
+  ABR topology: nodes 4 (observed 0, proposed 4); edges 4 (observed 0, proposed 4); interior locus proposed; parameters 2 (illustrative 2)
+  Open conditions returned by IRRS (15):
+    OPEN: V9 Phase 2: the sequence of actual observations {M(o1), ..., M(on)} is not declared.
+    OPEN: V9 Phase 2: what one relational step is in this system is not declared.
+    OPEN: V9 Phase 2: whether the sequence comes from actual measurements or a declared model is not declared.
+    OPEN: V9 Phase 2: the direction of relational evolution is not declared (index order is not a direction).
+    OPEN: ABR topology admission — Node 'level_dry': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Node 'downgrade_dry': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Node 'level_wet': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Node 'downgrade_wet': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Edge 'level_dry' → 'downgrade_dry': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Edge 'level_wet' → 'downgrade_wet': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Edge 'level_dry' → 'level_wet': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Edge 'downgrade_dry' → 'downgrade_wet': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Interior locus 'downgrade_dry': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Parameter 'rho_base': illustrative value — not admissible for production evaluation. OPEN.
+    OPEN: ABR topology admission — Parameter 'chi_0': illustrative value — not admissible for production evaluation. OPEN.
+
+== Step 3 — IRRS observation admission (relational_gate) ==
+  Region 'lesson1.F4_grade_x_surface' established; extent [0.0, 600.0] m
+  level_dry: ADMITTED — raw 77.385866308, gate-computed 77.385866308 m
+  downgrade_dry: ADMITTED — raw 83.70343435, gate-computed 83.70343435 m
+  level_wet: ADMITTED — raw 98.829190769, gate-computed 98.829190769 m
+  downgrade_wet: ADMITTED — raw 111.016390647, gate-computed 111.016390647 m
+
+== Step 4 — Kernel selection (kernel_reference.md §10) ==
+  ABR kernel A → B → R — interior loci established by M: downgrade_dry, level_wet. R is not optional (§10).
+
+== Step 5 — Completeness of the declaration for A → B → R ==
+  Every input the A → B → R path uses is declared.
+
+== Step 6 — Canonical execution (irrs_session::execute::execute) ==
+  Inputs: NodeField x[0] = [77.385866308, 83.70343435, 98.829190769, 111.016390647] m
+          edges [(0, 1), (2, 3), (0, 2), (1, 3)], provenance [Coupling, Coupling, Coupling, Coupling]
+  Structural check relational_isolation(rel) = false
+  Executed. Independent RPPI re-execution (verify_abr_irrs) agreed.
+
+  Edge outputs (unit m; 𝟙 is 0.0 or 1.0):
+    relation                                    A              B              R    𝟙
+    level_dry->downgrade_dry         -6.317568042  -33.630524339 -44.7047859117  1.0
+    level_wet->downgrade_wet        -12.187199878  -12.187199878 1.448571340145  1.0
+    level_dry->level_wet            -21.443324461  -33.630524339 -38.57192423069  1.0
+    downgrade_dry->downgrade_wet    -27.312956297  -27.312956297 -13.09963218834  1.0
+  Node outputs (ρ dimensionless):
+    ρ[level_dry] = 0.405458180809
+    ρ[downgrade_dry] = 0.422631653476
+    ρ[level_wet] = 0.405458180809
+    ρ[downgrade_wet] = 0.422631653476
+  Kernel V9 open conditions surfaced by IRRS:
+    ChiMaxSelectionRule (OPEN, §11.2/§18): χ[i] = max incident |A| is a working assumption; Origin declaration required.
+    RhoSaturatingForm (OPEN, §11.2/§18): ρ[i] = ρ_base·χ[i]/(χ₀+χ[i]) not declared; Origin declaration required.
+    EmptyAdjacency A-3 (OPEN, §18): sums over an empty declared set evaluate to 0.0 in Σ, R, R_persistence; Origin disposition pending.
+    DetectionIndicatorAudit (HOLD, §13.4/§18): meaning of 𝟙[e] = 0 pending the A-3 disposition.
+  𝟙[e] = 1.0 on at least one relation: a REVIEW SIGNAL (§11.4), preserved; not a finding.
+
+  V9 provenance admission for A → B → R: OPEN — outside abr-kernel 1c1ef70 admission scope ('OPEN: ABR kernel A → B → R').

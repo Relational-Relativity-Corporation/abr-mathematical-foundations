@@ -1,0 +1,322 @@
+{
+  "record_id": "lesson1.condition_trials-lesson1.F4_grade_x_surface-lesson1-v0.3-simulated",
+  "declaration_digest": "15dec76b8e24109bb4742ed856d8d674941438ef0909efb64c242004cdc56764",
+  "domain": "lesson1.condition_trials",
+  "topology_id": "lesson1.F4_grade_x_surface",
+  "version": "lesson1-v0.3-simulated",
+  "kernel": null,
+  "input_inventory": [
+    {
+      "name": "obs.level_dry",
+      "classification": "SimulatedInput",
+      "source_identity": "SIMULATED — Lesson 1 reference simulator (src/sim.rs), illustrative declaration declarations/simulator_illustrative.json; no measurement was made",
+      "acquisition_method": "simulated reference stopping distance of the trial",
+      "relationship_to_problem": "stopping distance in trial level_dry",
+      "evidence_count": 0,
+      "known_limitations": "simulated reading from Generator-chosen illustrative values; admitted only as simulated (V9); not empirical evidence",
+      "provenance_status_claimed": "declared",
+      "evaluator_provenance_assessment": "consistent_claim",
+      "submitted_to_gate": true
+    },
+    {
+      "name": "obs.downgrade_dry",
+      "classification": "SimulatedInput",
+      "source_identity": "SIMULATED — Lesson 1 reference simulator (src/sim.rs), illustrative declaration declarations/simulator_illustrative.json; no measurement was made",
+      "acquisition_method": "simulated reference stopping distance of the trial",
+      "relationship_to_problem": "stopping distance in trial downgrade_dry",
+      "evidence_count": 0,
+      "known_limitations": "simulated reading from Generator-chosen illustrative values; admitted only as simulated (V9); not empirical evidence",
+      "provenance_status_claimed": "declared",
+      "evaluator_provenance_assessment": "consistent_claim",
+      "submitted_to_gate": true
+    },
+    {
+      "name": "obs.level_wet",
+      "classification": "SimulatedInput",
+      "source_identity": "SIMULATED — Lesson 1 reference simulator (src/sim.rs), illustrative declaration declarations/simulator_illustrative.json; no measurement was made",
+      "acquisition_method": "simulated reference stopping distance of the trial",
+      "relationship_to_problem": "stopping distance in trial level_wet",
+      "evidence_count": 0,
+      "known_limitations": "simulated reading from Generator-chosen illustrative values; admitted only as simulated (V9); not empirical evidence",
+      "provenance_status_claimed": "declared",
+      "evaluator_provenance_assessment": "consistent_claim",
+      "submitted_to_gate": true
+    },
+    {
+      "name": "obs.downgrade_wet",
+      "classification": "SimulatedInput",
+      "source_identity": "SIMULATED — Lesson 1 reference simulator (src/sim.rs), illustrative declaration declarations/simulator_illustrative.json; no measurement was made",
+      "acquisition_method": "simulated reference stopping distance of the trial",
+      "relationship_to_problem": "stopping distance in trial downgrade_wet",
+      "evidence_count": 0,
+      "known_limitations": "simulated reading from Generator-chosen illustrative values; admitted only as simulated (V9); not empirical evidence",
+      "provenance_status_claimed": "declared",
+      "evaluator_provenance_assessment": "consistent_claim",
+      "submitted_to_gate": true
+    },
+    {
+      "name": "rho_base",
+      "classification": "DeclaredParameter",
+      "source_identity": "ILLUSTRATIVE — chosen for this field by the Generator; taken from no other domain or repository",
+      "acquisition_method": "declared by M for this field (kernel_reference.md §9: M-supplied, no kernel value)",
+      "relationship_to_problem": "dimensionless ceiling of ρ used by operator_r",
+      "evidence_count": 0,
+      "known_limitations": "no observational basis; ρ, B and R depend on it",
+      "provenance_status_claimed": "declared",
+      "evaluator_provenance_assessment": "consistent_claim",
+      "submitted_to_gate": false
+    },
+    {
+      "name": "chi_0",
+      "classification": "DeclaredParameter",
+      "source_identity": "ILLUSTRATIVE — chosen for this field by the Generator; taken from no other domain or repository",
+      "acquisition_method": "declared by M for this field (kernel_reference.md §9: M-supplied, no kernel value)",
+      "relationship_to_problem": "reference of the saturating map in ρ, in the dimension of χ",
+      "evidence_count": 0,
+      "known_limitations": "no observational basis; ρ, B and R depend on it",
+      "provenance_status_claimed": "declared",
+      "evaluator_provenance_assessment": "consistent_claim",
+      "submitted_to_gate": false
+    }
+  ],
+  "provenance_summary": {
+    "claimed_declared": 6,
+    "claimed_verified": 0,
+    "claimed_unverified": 0,
+    "inputs_with_evidence": 0,
+    "inputs_without_evidence": [
+      "obs.level_dry",
+      "obs.downgrade_dry",
+      "obs.level_wet",
+      "obs.downgrade_wet",
+      "rho_base",
+      "chi_0"
+    ],
+    "inconsistent_claims": 0,
+    "evaluator_note": "The evaluator records submitter claims. It does not independently verify physical acquisition. Independent verification is Origin's determination to make. 6 input(s) carry no supporting evidence (obs.level_dry, obs.downgrade_dry, obs.level_wet, obs.downgrade_wet, rho_base, chi_0). This is acceptable for a declared-only submission; Origin notes which inputs would benefit from independent evidence."
+  },
+  "regional_prerequisite": {
+    "region_name": "lesson1.F4_grade_x_surface",
+    "extent": "[0, 600] m",
+    "orientation_preserved": "the stopping distance observed in each trial, in m",
+    "orientation_discarded": "everything about each trial except its stopping distance",
+    "admission_rule_name": "lesson1.F4_grade_x_surface.extent",
+    "admission_rule_description": "A stopping distance is admitted only within 0 m to 600 m inclusive.",
+    "all_fields_declared": true,
+    "observed_locus": 77.385866308,
+    "observed_locus_inside_extent": true
+  },
+  "mapping_chain": [
+    {
+      "mapping_name": "m.F4_grade_x_surface.identity",
+      "input_description": "reference stopping distance of the trial, in m",
+      "output_description": "the same value in D, in m",
+      "preserves": "the stopping distance observed in each trial, in m",
+      "discards": "everything about each trial except its stopping distance",
+      "executor": "AdmissionGate (declared; the evaluator does not execute mappings)"
+    }
+  ],
+  "status": "open",
+  "failure_reason": "V9 Phase 2: the sequence of actual observations {M(o1), ..., M(on)} is not declared.",
+  "open_conditions": [
+    "V9 Phase 2: the sequence of actual observations {M(o1), ..., M(on)} is not declared.",
+    "V9 Phase 2: what one relational step is in this system is not declared.",
+    "V9 Phase 2: whether the sequence comes from actual measurements or a declared model is not declared.",
+    "V9 Phase 2: the direction of relational evolution is not declared (index order is not a direction).",
+    "ABR topology admission — Node 'level_dry': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Node 'downgrade_dry': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Node 'level_wet': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Node 'downgrade_wet': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Edge 'level_dry' → 'downgrade_dry': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Edge 'level_wet' → 'downgrade_wet': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Edge 'level_dry' → 'level_wet': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Edge 'downgrade_dry' → 'downgrade_wet': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Interior locus 'downgrade_dry': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "ABR topology admission — Parameter 'rho_base': illustrative value — not admissible for production evaluation. OPEN.",
+    "ABR topology admission — Parameter 'chi_0': illustrative value — not admissible for production evaluation. OPEN."
+  ],
+  "continuous_process": {
+    "process_entry_declared": true,
+    "process_entry_statement": "One declared instant of one simulated braking event. No sequence of observations is declared: the simulator is not declared as a transducer from observable inputs (kernel_reference.md §8; DESIGN D-SD-6), so Phase 2 is not entered.",
+    "prior_evidence": "open",
+    "persistence_path": [
+      "A_persistence",
+      "B_persistence",
+      "R_persistence"
+    ],
+    "persistence_path_valid": true,
+    "prior_evidence_refs_count": 0,
+    "open_conditions": [
+      "OPEN — Prior relational evidence unavailable at evaluation window open. The evaluation record begins with the first admitted observation. The prior relational result does not yet exist; it is not zero. No value is fabricated. Otherwise admissible calculations proceed. This dependency resolves when the first complete evaluation cycle produces an actual relational result."
+    ],
+    "observation_sequence_declared": false,
+    "process_step_declared": false
+  },
+  "evaluation_notes": [
+    "Problem space: SIMULATED (illustrative values). Field F4: the reference stopping distance observed in four controlled trials, grade × surface. The relations contrast the trials; they are not an observed passage.",
+    "CONTINUOUS PROCESS: Declared persistence path [A_persistence, B_persistence, R_persistence] is valid. Matches Kernel V9 (kernel_reference.md §11.1): A_persistence → B_persistence → R_persistence, executed by operator_e_v5.",
+    "CONTINUOUS PROCESS: OPEN — Prior relational evidence unavailable at evaluation window open. The evaluation record begins with the first admitted observation. The prior relational result does not yet exist; it is not zero. No value is fabricated. Otherwise admissible calculations proceed. This dependency resolves when the first complete evaluation cycle produces an actual relational result.",
+    "OPEN (not evaluated): V9 Phase 2: the sequence of actual observations {M(o1), ..., M(on)} is not declared.",
+    "OPEN (not evaluated): V9 Phase 2: what one relational step is in this system is not declared.",
+    "OPEN (not evaluated): V9 Phase 2: whether the sequence comes from actual measurements or a declared model is not declared.",
+    "OPEN (not evaluated): V9 Phase 2: the direction of relational evolution is not declared (index order is not a direction).",
+    "OPEN (not evaluated): ABR topology admission — Node 'level_dry': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Node 'downgrade_dry': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Node 'level_wet': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Node 'downgrade_wet': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Edge 'level_dry' → 'downgrade_dry': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Edge 'level_wet' → 'downgrade_wet': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Edge 'level_dry' → 'level_wet': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Edge 'downgrade_dry' → 'downgrade_wet': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Interior locus 'downgrade_dry': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+    "OPEN (not evaluated): ABR topology admission — Parameter 'rho_base': illustrative value — not admissible for production evaluation. OPEN.",
+    "OPEN (not evaluated): ABR topology admission — Parameter 'chi_0': illustrative value — not admissible for production evaluation. OPEN."
+  ],
+  "abr_topology": {
+    "domain_observables": [
+      [
+        "obs.level_dry",
+        true
+      ],
+      [
+        "obs.downgrade_dry",
+        true
+      ],
+      [
+        "obs.level_wet",
+        true
+      ],
+      [
+        "obs.downgrade_wet",
+        true
+      ]
+    ],
+    "nodes": [
+      {
+        "node_id": "level_dry",
+        "observable": "obs.level_dry",
+        "observable_in_inventory": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Node 'level_dry': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      },
+      {
+        "node_id": "downgrade_dry",
+        "observable": "obs.downgrade_dry",
+        "observable_in_inventory": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Node 'downgrade_dry': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      },
+      {
+        "node_id": "level_wet",
+        "observable": "obs.level_wet",
+        "observable_in_inventory": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Node 'level_wet': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      },
+      {
+        "node_id": "downgrade_wet",
+        "observable": "obs.downgrade_wet",
+        "observable_in_inventory": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Node 'downgrade_wet': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      }
+    ],
+    "edges": [
+      {
+        "from_node": "level_dry",
+        "to_node": "downgrade_dry",
+        "description": "controlled-condition contrast: grade changed from level to downgrade with surface fixed at dry; same vehicle, same hazard, every other declared condition held at its base value. Admissibility of a relation between separate trials is OPEN (DESIGN D-SD-8)",
+        "nodes_declared": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Edge 'level_dry' → 'downgrade_dry': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      },
+      {
+        "from_node": "level_wet",
+        "to_node": "downgrade_wet",
+        "description": "controlled-condition contrast: grade changed from level to downgrade with surface fixed at wet; same vehicle, same hazard, every other declared condition held at its base value. Admissibility of a relation between separate trials is OPEN (DESIGN D-SD-8)",
+        "nodes_declared": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Edge 'level_wet' → 'downgrade_wet': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      },
+      {
+        "from_node": "level_dry",
+        "to_node": "level_wet",
+        "description": "controlled-condition contrast: surface changed from dry to wet with grade fixed at level; same vehicle, same hazard, every other declared condition held at its base value. Admissibility of a relation between separate trials is OPEN (DESIGN D-SD-8)",
+        "nodes_declared": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Edge 'level_dry' → 'level_wet': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      },
+      {
+        "from_node": "downgrade_dry",
+        "to_node": "downgrade_wet",
+        "description": "controlled-condition contrast: surface changed from dry to wet with grade fixed at downgrade; same vehicle, same hazard, every other declared condition held at its base value. Admissibility of a relation between separate trials is OPEN (DESIGN D-SD-8)",
+        "nodes_declared": true,
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Edge 'downgrade_dry' → 'downgrade_wet': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+      }
+    ],
+    "interior_locus": {
+      "node_id": "downgrade_dry",
+      "node_declared": true,
+      "status": "proposed",
+      "evidence_count": 0,
+      "note": "Interior locus 'downgrade_dry': declared as Proposed — not yet observationally established. OPEN (GR-5)."
+    },
+    "parameters": [
+      {
+        "name": "rho_base",
+        "value": 0.5,
+        "provenance_kind": "illustrative",
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Parameter 'rho_base': illustrative value — not admissible for production evaluation. OPEN."
+      },
+      {
+        "name": "chi_0",
+        "value": 5.0,
+        "provenance_kind": "illustrative",
+        "status": "proposed",
+        "evidence_count": 0,
+        "note": "Parameter 'chi_0': illustrative value — not admissible for production evaluation. OPEN."
+      }
+    ],
+    "persistence_required": false,
+    "summary": {
+      "total_nodes": 4,
+      "observed_nodes": 0,
+      "proposed_nodes": 4,
+      "missing_nodes": 0,
+      "contradicted_nodes": 0,
+      "total_edges": 4,
+      "observed_edges": 0,
+      "proposed_edges": 4,
+      "missing_edges": 0,
+      "contradicted_edges": 0,
+      "interior_locus_status": "proposed",
+      "total_parameters": 2,
+      "observational_parameters": 0,
+      "illustrative_parameters": 2
+    },
+    "open_conditions": [
+      "Node 'level_dry': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Node 'downgrade_dry': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Node 'level_wet': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Node 'downgrade_wet': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Edge 'level_dry' → 'downgrade_dry': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Edge 'level_wet' → 'downgrade_wet': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Edge 'level_dry' → 'level_wet': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Edge 'downgrade_dry' → 'downgrade_wet': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Interior locus 'downgrade_dry': declared as Proposed — not yet observationally established. OPEN (GR-5).",
+      "Parameter 'rho_base': illustrative value — not admissible for production evaluation. OPEN.",
+      "Parameter 'chi_0': illustrative value — not admissible for production evaluation. OPEN."
+    ]
+  }
+}

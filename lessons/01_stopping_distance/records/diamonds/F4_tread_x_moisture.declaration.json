@@ -1,0 +1,222 @@
+{
+  "abr_topology": {
+    "domain_observables": [
+      "obs.good_dry",
+      "obs.worn_dry",
+      "obs.good_wet",
+      "obs.worn_wet"
+    ],
+    "edges": [
+      {
+        "class": "coupling",
+        "description": "controlled-condition contrast: tread changed from good to worn with moisture fixed at dry; same vehicle, same hazard, every other declared condition held at its base value. Admissibility of a relation between separate trials is OPEN (DESIGN D-SD-8)",
+        "from_node": "good_dry",
+        "mapping_name": "m.F4_tread_x_moisture.identity",
+        "observational_support": "proposed",
+        "to_node": "worn_dry"
+      },
+      {
+        "class": "coupling",
+        "description": "controlled-condition contrast: tread changed from good to worn with moisture fixed at wet; same vehicle, same hazard, every other declared condition held at its base value. Admissibility of a relation between separate trials is OPEN (DESIGN D-SD-8)",
+        "from_node": "good_wet",
+        "mapping_name": "m.F4_tread_x_moisture.identity",
+        "observational_support": "proposed",
+        "to_node": "worn_wet"
+      },
+      {
+        "class": "coupling",
+        "description": "controlled-condition contrast: moisture changed from dry to wet with tread fixed at good; same vehicle, same hazard, every other declared condition held at its base value. Admissibility of a relation between separate trials is OPEN (DESIGN D-SD-8)",
+        "from_node": "good_dry",
+        "mapping_name": "m.F4_tread_x_moisture.identity",
+        "observational_support": "proposed",
+        "to_node": "good_wet"
+      },
+      {
+        "class": "coupling",
+        "description": "controlled-condition contrast: moisture changed from dry to wet with tread fixed at worn; same vehicle, same hazard, every other declared condition held at its base value. Admissibility of a relation between separate trials is OPEN (DESIGN D-SD-8)",
+        "from_node": "worn_dry",
+        "mapping_name": "m.F4_tread_x_moisture.identity",
+        "observational_support": "proposed",
+        "to_node": "worn_wet"
+      }
+    ],
+    "interior_locus": {
+      "node_id": "worn_dry",
+      "observational_support": "proposed"
+    },
+    "nodes": [
+      {
+        "id": "good_dry",
+        "observable": "obs.good_dry",
+        "observational_support": "proposed"
+      },
+      {
+        "id": "worn_dry",
+        "observable": "obs.worn_dry",
+        "observational_support": "proposed"
+      },
+      {
+        "id": "good_wet",
+        "observable": "obs.good_wet",
+        "observational_support": "proposed"
+      },
+      {
+        "id": "worn_wet",
+        "observable": "obs.worn_wet",
+        "observational_support": "proposed"
+      }
+    ],
+    "operator_parameters": {
+      "chi_0": {
+        "name": "chi_0",
+        "provenance": "illustrative",
+        "value": 5.0
+      },
+      "rho_base": {
+        "name": "rho_base",
+        "provenance": "illustrative",
+        "value": 0.5
+      }
+    }
+  },
+  "description": "SIMULATED (illustrative values). Field F4: the reference stopping distance observed in four controlled trials, tread × moisture. The relations contrast the trials; they are not an observed passage.",
+  "domain": "lesson1.condition_trials",
+  "inputs": [
+    {
+      "acquisition_method": "simulated reference stopping distance of the trial",
+      "classification": "simulated_input",
+      "known_limitations": "simulated reading from Generator-chosen illustrative values; admitted only as simulated (V9); not empirical evidence",
+      "name": "obs.good_dry",
+      "provenance_status": "declared",
+      "relationship_to_problem": "stopping distance in trial good_dry",
+      "source_identity": "SIMULATED — Lesson 1 reference simulator (src/sim.rs), illustrative declaration declarations/simulator_illustrative.json; no measurement was made",
+      "submitted_to_gate": true
+    },
+    {
+      "acquisition_method": "simulated reference stopping distance of the trial",
+      "classification": "simulated_input",
+      "known_limitations": "simulated reading from Generator-chosen illustrative values; admitted only as simulated (V9); not empirical evidence",
+      "name": "obs.worn_dry",
+      "provenance_status": "declared",
+      "relationship_to_problem": "stopping distance in trial worn_dry",
+      "source_identity": "SIMULATED — Lesson 1 reference simulator (src/sim.rs), illustrative declaration declarations/simulator_illustrative.json; no measurement was made",
+      "submitted_to_gate": true
+    },
+    {
+      "acquisition_method": "simulated reference stopping distance of the trial",
+      "classification": "simulated_input",
+      "known_limitations": "simulated reading from Generator-chosen illustrative values; admitted only as simulated (V9); not empirical evidence",
+      "name": "obs.good_wet",
+      "provenance_status": "declared",
+      "relationship_to_problem": "stopping distance in trial good_wet",
+      "source_identity": "SIMULATED — Lesson 1 reference simulator (src/sim.rs), illustrative declaration declarations/simulator_illustrative.json; no measurement was made",
+      "submitted_to_gate": true
+    },
+    {
+      "acquisition_method": "simulated reference stopping distance of the trial",
+      "classification": "simulated_input",
+      "known_limitations": "simulated reading from Generator-chosen illustrative values; admitted only as simulated (V9); not empirical evidence",
+      "name": "obs.worn_wet",
+      "provenance_status": "declared",
+      "relationship_to_problem": "stopping distance in trial worn_wet",
+      "source_identity": "SIMULATED — Lesson 1 reference simulator (src/sim.rs), illustrative declaration declarations/simulator_illustrative.json; no measurement was made",
+      "submitted_to_gate": true
+    },
+    {
+      "acquisition_method": "declared by M for this field (kernel_reference.md §9: M-supplied, no kernel value)",
+      "classification": "declared_parameter",
+      "known_limitations": "no observational basis; ρ, B and R depend on it",
+      "name": "rho_base",
+      "provenance_status": "declared",
+      "relationship_to_problem": "dimensionless ceiling of ρ used by operator_r",
+      "source_identity": "ILLUSTRATIVE — chosen for this field by the Generator; taken from no other domain or repository",
+      "submitted_to_gate": false
+    },
+    {
+      "acquisition_method": "declared by M for this field (kernel_reference.md §9: M-supplied, no kernel value)",
+      "classification": "declared_parameter",
+      "known_limitations": "no observational basis; ρ, B and R depend on it",
+      "name": "chi_0",
+      "provenance_status": "declared",
+      "relationship_to_problem": "reference of the saturating map in ρ, in the dimension of χ",
+      "source_identity": "ILLUSTRATIVE — chosen for this field by the Generator; taken from no other domain or repository",
+      "submitted_to_gate": false
+    }
+  ],
+  "lesson": {
+    "detection_tolerance": 1e-9,
+    "detection_tolerance_basis": "implementation-only numerical tolerance for finite-precision arithmetic (kernel_reference.md §11.5)",
+    "interior_loci": [
+      {
+        "basis": "declared: trial worn_dry is reached by a tread change and continues by a moisture change (DESIGN D-SD-8)",
+        "continuing": "worn_dry -> worn_wet",
+        "incoming": "good_dry -> worn_dry",
+        "node": "worn_dry"
+      },
+      {
+        "basis": "declared: trial good_wet is reached by a moisture change and continues by a tread change (DESIGN D-SD-8)",
+        "continuing": "good_wet -> worn_wet",
+        "incoming": "good_dry -> good_wet",
+        "node": "good_wet"
+      }
+    ],
+    "kernel_selection": "abr",
+    "kernel_selection_basis": "the declared interior loci each have a declared incoming and a declared continuing relation (kernel_reference.md §10)",
+    "observation_status": "SIMULATED — reference simulator readings (illustrative values); not an observation",
+    "provenance_links": [
+      {
+        "description": "The Lesson 1 reference simulator integrates the declared illustrative braking event",
+        "step": "simulate"
+      },
+      {
+        "description": "The simulated instrument reading for this locus is taken at the declared instant",
+        "step": "read_instrument"
+      },
+      {
+        "description": "The reading is written into this field declaration",
+        "step": "record"
+      },
+      {
+        "description": "The gate executes the declared identity M",
+        "step": "apply_declared_M"
+      }
+    ],
+    "readings": {
+      "obs.good_dry": 77.385866308,
+      "obs.good_wet": 98.829190769,
+      "obs.worn_dry": 79.872038283,
+      "obs.worn_wet": 132.379684621
+    }
+  },
+  "mappings": [
+    {
+      "discards": "everything about each trial except its stopping distance",
+      "input_description": "reference stopping distance of the trial, in m",
+      "name": "m.F4_tread_x_moisture.identity",
+      "output_description": "the same value in D, in m",
+      "preserves": "the stopping distance observed in each trial, in m"
+    }
+  ],
+  "persistence": {
+    "persistence_path": [
+      "A_persistence",
+      "B_persistence",
+      "R_persistence"
+    ],
+    "prior_evidence": "open",
+    "process_entry": "One declared instant of one simulated braking event. No sequence of observations is declared: the simulator is not declared as a transducer from observable inputs (kernel_reference.md §8; DESIGN D-SD-6), so Phase 2 is not entered."
+  },
+  "regional_prerequisite": {
+    "admission_rule_description": "A stopping distance is admitted only within 0 m to 600 m inclusive.",
+    "admission_rule_name": "lesson1.F4_tread_x_moisture.extent",
+    "extent_ceiling": 600.0,
+    "extent_floor": 0.0,
+    "extent_unit": "m",
+    "observed_locus": 77.385866308,
+    "orientation_discarded": "everything about each trial except its stopping distance",
+    "orientation_preserved": "the stopping distance observed in each trial, in m",
+    "region_name": "lesson1.F4_tread_x_moisture"
+  },
+  "topology_id": "lesson1.F4_tread_x_moisture",
+  "version": "lesson1-v0.3-simulated"
+}

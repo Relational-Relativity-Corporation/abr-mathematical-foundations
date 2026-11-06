@@ -1,0 +1,185 @@
+Field declaration: F2_road_friction.declaration.json
+Declaration SHA-256 (raw text, as irrs-eval computes it): f7bc10937bb51d141eec4de79122c533cc68d44061da5e040dd26843a5e8fe5b
+
+== Step 1 — Declaration ==
+  Observation status : SIMULATED — reference simulator readings (illustrative values); not an observation
+  D (observable extent): [0.0, 1.5] 1 — region 'lesson1.F2_road_friction'
+  M: mapping 'm.F2_road_friction.identity'
+     input   : friction-trailer reading at the station (dimensionless)
+     preserves: the peak friction coefficient at each station (dimensionless)
+     discards : friction between stations; the shape of the friction–slip curve; temperature
+  Loci (list position is a label only, NOT topology):
+    [0] S00              reading 0.35 1
+    [1] S01              reading 0.3395 1
+    [2] S02              reading 0.3605 1
+    [3] S03              reading 0.329 1
+    [4] S04              reading 0.3465 1
+    [5] S05              reading 0.357 1
+    [6] S06              reading 0.336 1
+    [7] S07              reading 0.35 1
+    [8] S08              reading 0.343 1
+    [9] S09              reading 0.3535 1
+    [10] S10              reading 0.3395 1
+    [11] S11              reading 0.35 1
+    [12] S12              reading 0.357 1
+    [13] S13              reading 0.3465 1
+    [14] S14              reading 0.336 1
+    [15] S15              reading 0.35 1
+    [16] S16              reading 0.35 1
+  Declared relations:
+    e0: S00 → S01  class continuation
+        basis: the vehicle travels from station S00 directly to station S01 (25 m along the same lane, no station between); direction is the observed direction of travel
+    e1: S01 → S02  class continuation
+        basis: the vehicle travels from station S01 directly to station S02 (25 m along the same lane, no station between); direction is the observed direction of travel
+    e2: S02 → S03  class continuation
+        basis: the vehicle travels from station S02 directly to station S03 (25 m along the same lane, no station between); direction is the observed direction of travel
+    e3: S03 → S04  class continuation
+        basis: the vehicle travels from station S03 directly to station S04 (25 m along the same lane, no station between); direction is the observed direction of travel
+    e4: S04 → S05  class continuation
+        basis: the vehicle travels from station S04 directly to station S05 (25 m along the same lane, no station between); direction is the observed direction of travel
+    e5: S05 → S06  class continuation
+        basis: the vehicle travels from station S05 directly to station S06 (25 m along the same lane, no station between); direction is the observed direction of travel
+    e6: S06 → S07  class continuation
+        basis: the vehicle travels from station S06 directly to station S07 (25 m along the same lane, no station between); direction is the observed direction of travel
+    e7: S07 → S08  class continuation
+        basis: the vehicle travels from station S07 directly to station S08 (25 m along the same lane, no station between); direction is the observed direction of travel
+    e8: S08 → S09  class continuation
+        basis: the vehicle travels from station S08 directly to station S09 (25 m along the same lane, no station between); direction is the observed direction of travel
+    e9: S09 → S10  class continuation
+        basis: the vehicle travels from station S09 directly to station S10 (25 m along the same lane, no station between); direction is the observed direction of travel
+    e10: S10 → S11  class continuation
+        basis: the vehicle travels from station S10 directly to station S11 (25 m along the same lane, no station between); direction is the observed direction of travel
+    e11: S11 → S12  class continuation
+        basis: the vehicle travels from station S11 directly to station S12 (25 m along the same lane, no station between); direction is the observed direction of travel
+    e12: S12 → S13  class continuation
+        basis: the vehicle travels from station S12 directly to station S13 (25 m along the same lane, no station between); direction is the observed direction of travel
+    e13: S13 → S14  class continuation
+        basis: the vehicle travels from station S13 directly to station S14 (25 m along the same lane, no station between); direction is the observed direction of travel
+    e14: S14 → S15  class continuation
+        basis: the vehicle travels from station S14 directly to station S15 (25 m along the same lane, no station between); direction is the observed direction of travel
+    e15: S15 → S16  class continuation
+        basis: the vehicle travels from station S15 directly to station S16 (25 m along the same lane, no station between); direction is the observed direction of travel
+  Interior loci declared by M (§10): S01, S02, S03, S04, S05, S06, S07, S08, S09, S10, S11, S12, S13, S14, S15
+  ρ_base = 0.5 (Illustrative); χ₀ = 0.05 1 (Illustrative); component pairs / cc: none; 𝟙 tolerance = 1e-9
+
+== Step 2 — IRRS declaration evaluation (irrs_eval::Evaluator::evaluate) ==
+  Record lesson1.stopping_event-lesson1.F2_road_friction-lesson1-v0.3-simulated — status Open
+  ABR topology: nodes 17 (observed 0, proposed 17); edges 16 (observed 0, proposed 16); interior locus proposed; parameters 2 (illustrative 2)
+  Open conditions returned by IRRS (40):
+    OPEN: V9 Phase 2: the sequence of actual observations {M(o1), ..., M(on)} is not declared.
+    OPEN: V9 Phase 2: what one relational step is in this system is not declared.
+    OPEN: V9 Phase 2: whether the sequence comes from actual measurements or a declared model is not declared.
+    OPEN: V9 Phase 2: the direction of relational evolution is not declared (index order is not a direction).
+    OPEN: ABR topology admission — Node 'S00': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Node 'S01': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Node 'S02': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Node 'S03': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Node 'S04': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Node 'S05': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Node 'S06': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Node 'S07': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Node 'S08': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Node 'S09': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Node 'S10': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Node 'S11': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Node 'S12': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Node 'S13': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Node 'S14': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Node 'S15': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Node 'S16': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Edge 'S00' → 'S01': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Edge 'S01' → 'S02': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Edge 'S02' → 'S03': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Edge 'S03' → 'S04': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Edge 'S04' → 'S05': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Edge 'S05' → 'S06': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Edge 'S06' → 'S07': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Edge 'S07' → 'S08': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Edge 'S08' → 'S09': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Edge 'S09' → 'S10': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Edge 'S10' → 'S11': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Edge 'S11' → 'S12': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Edge 'S12' → 'S13': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Edge 'S13' → 'S14': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Edge 'S14' → 'S15': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Edge 'S15' → 'S16': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Interior locus 'S01': declared as Proposed — not yet observationally established. OPEN (GR-5).
+    OPEN: ABR topology admission — Parameter 'rho_base': illustrative value — not admissible for production evaluation. OPEN.
+    OPEN: ABR topology admission — Parameter 'chi_0': illustrative value — not admissible for production evaluation. OPEN.
+
+== Step 3 — IRRS observation admission (relational_gate) ==
+  Region 'lesson1.F2_road_friction' established; extent [0.0, 1.5] 1
+  S00: ADMITTED — raw 0.35, gate-computed 0.35 1
+  S01: ADMITTED — raw 0.3395, gate-computed 0.3395 1
+  S02: ADMITTED — raw 0.3605, gate-computed 0.3605 1
+  S03: ADMITTED — raw 0.329, gate-computed 0.329 1
+  S04: ADMITTED — raw 0.3465, gate-computed 0.3465 1
+  S05: ADMITTED — raw 0.357, gate-computed 0.357 1
+  S06: ADMITTED — raw 0.336, gate-computed 0.336 1
+  S07: ADMITTED — raw 0.35, gate-computed 0.35 1
+  S08: ADMITTED — raw 0.343, gate-computed 0.343 1
+  S09: ADMITTED — raw 0.3535, gate-computed 0.3535 1
+  S10: ADMITTED — raw 0.3395, gate-computed 0.3395 1
+  S11: ADMITTED — raw 0.35, gate-computed 0.35 1
+  S12: ADMITTED — raw 0.357, gate-computed 0.357 1
+  S13: ADMITTED — raw 0.3465, gate-computed 0.3465 1
+  S14: ADMITTED — raw 0.336, gate-computed 0.336 1
+  S15: ADMITTED — raw 0.35, gate-computed 0.35 1
+  S16: ADMITTED — raw 0.35, gate-computed 0.35 1
+
+== Step 4 — Kernel selection (kernel_reference.md §10) ==
+  ABR kernel A → B → R — interior loci established by M: S01, S02, S03, S04, S05, S06, S07, S08, S09, S10, S11, S12, S13, S14, S15. R is not optional (§10).
+
+== Step 5 — Completeness of the declaration for A → B → R ==
+  Every input the A → B → R path uses is declared.
+
+== Step 6 — Canonical execution (irrs_session::execute::execute) ==
+  Inputs: NodeField x[0] = [0.35, 0.3395, 0.3605, 0.329, 0.3465, 0.357, 0.336, 0.35, 0.343, 0.3535, 0.3395, 0.35, 0.357, 0.3465, 0.336, 0.35, 0.35] 1
+          edges [(0, 1), (1, 2), (2, 3), (3, 4), (4, 5), (5, 6), (6, 7), (7, 8), (8, 9), (9, 10), (10, 11), (11, 12), (12, 13), (13, 14), (14, 15), (15, 16)], provenance [Continuation, Continuation, Continuation, Continuation, Continuation, Continuation, Continuation, Continuation, Continuation, Continuation, Continuation, Continuation, Continuation, Continuation, Continuation, Continuation]
+  Structural check relational_isolation(rel) = false
+  Executed. Independent RPPI re-execution (verify_abr_irrs) agreed.
+
+  Edge outputs (unit 1; 𝟙 is 0.0 or 1.0):
+    relation                                    A              B              R    𝟙
+    S00->S01                               0.0105        -0.0105   -0.009588843  1.0
+    S01->S02                               -0.021         0.0105 0.01412323943662  1.0
+    S02->S03                               0.0315          0.014 0.00655981595092  1.0
+    S03->S04                              -0.0175         -0.028 -0.0286763803681  1.0
+    S04->S05                              -0.0105         0.0105 0.01503703703704  1.0
+    S05->S06                                0.021          0.007    0.004411972  1.0
+    S06->S07                               -0.014         -0.007   -0.008552817  1.0
+    S07->S08                                0.007        -0.0035  -0.0023515625  1.0
+    S08->S09                              -0.0105         0.0035    0.004107438  1.0
+    S09->S10                                0.014         0.0035    0.001203125  1.0
+    S10->S11                              -0.0105        -0.0175        -0.0175  0.0
+    S11->S12                               -0.007         0.0035    0.006840909  1.0
+    S12->S13                               0.0105          0.021 0.02039256198347  1.0
+    S13->S14                               0.0105        -0.0035   -0.006537190  1.0
+    S14->S15                               -0.014         -0.014  -0.0136171875  1.0
+    S15->S16                                  0.0            0.0     0.00153125  1.0
+  Node outputs (ρ dimensionless):
+    ρ[S00] = 0.08677685950413
+    ρ[S01] = 0.1478873239437
+    ρ[S02] = 0.1932515337423
+    ρ[S03] = 0.1932515337423
+    ρ[S04] = 0.1296296296296
+    ρ[S05] = 0.1478873239437
+    ρ[S06] = 0.1478873239437
+    ρ[S07] = 0.109375
+    ρ[S08] = 0.08677685950413
+    ρ[S09] = 0.109375
+    ρ[S10] = 0.109375
+    ρ[S11] = 0.08677685950413
+    ρ[S12] = 0.08677685950413
+    ρ[S13] = 0.08677685950413
+    ρ[S14] = 0.109375
+    ρ[S15] = 0.109375
+    ρ[S16] = 0.0
+  Kernel V9 open conditions surfaced by IRRS:
+    ChiMaxSelectionRule (OPEN, §11.2/§18): χ[i] = max incident |A| is a working assumption; Origin declaration required.
+    RhoSaturatingForm (OPEN, §11.2/§18): ρ[i] = ρ_base·χ[i]/(χ₀+χ[i]) not declared; Origin declaration required.
+    EmptyAdjacency A-3 (OPEN, §18): sums over an empty declared set evaluate to 0.0 in Σ, R, R_persistence; Origin disposition pending.
+    DetectionIndicatorAudit (HOLD, §13.4/§18): meaning of 𝟙[e] = 0 pending the A-3 disposition.
+  𝟙[e] = 1.0 on at least one relation: a REVIEW SIGNAL (§11.4), preserved; not a finding.
+
+  V9 provenance admission for A → B → R: OPEN — outside abr-kernel 1c1ef70 admission scope ('OPEN: ABR kernel A → B → R').
