@@ -1,0 +1,36 @@
+# Lesson 1 — Experiment 3 (ILLUSTRATIVE): what happens if the ABR kernel
+# (operator A → B → R) is requested for two loci.
+#
+# Identical to Experiment 1 except kernel_selection = abr. Two loci and one
+# relation cannot supply an interior locus s → t → u, so the canonical code is
+# expected to decline. The point of this run is to see the canonical refusal,
+# not to obtain a number.
+
+observation_status = illustrative
+
+instrument = ILLUSTRATIVE EXAMPLE — Lesson 1 supplied values, not an observation
+measurement_conditions = illustrative example: no measurement was made; values supplied by the lesson for demonstration
+unit = mm
+
+scale_floor = 0
+scale_ceiling = 300
+scale_basis = illustrative: a 300 mm ruler whose printed scale runs from 0 mm to 300 mm
+
+L1 = 20
+L1_description = illustrative: first mark on the strip
+L1_record_entry = Lesson 1 illustrative value L1
+L2 = 90
+L2_description = illustrative: second mark on the strip
+L2_record_entry = Lesson 1 illustrative value L2
+
+relation = L1 -> L2
+direction_basis = illustrative: both marks are read on one ruler scale; the relation is declared from mark L1 toward mark L2, the direction in which the printed scale increases between them
+continuation_basis = illustrative: both marks lie on one continuous ruler scale (device geometry)
+
+mapping_preserves = the position of each mark as read on the printed scale, in mm
+mapping_discards = everything about the marks except their scale reading (width, colour, reading uncertainty)
+
+kernel_selection = abr
+kernel_selection_basis = illustrative: requested to show the canonical response; no interior locus is declared
+
+comparison_outcome = not_compared

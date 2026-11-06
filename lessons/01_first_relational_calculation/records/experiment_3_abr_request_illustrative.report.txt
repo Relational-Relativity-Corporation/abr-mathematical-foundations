@@ -1,0 +1,61 @@
+ABR Mathematical Foundations — Lesson 1: First Relational Calculation
+Declaration file: declarations/experiment_3_abr_request_illustrative.txt
+
+== Canonical authorities (resolved by Cargo.lock) ==
+  abr-kernel: git+https://github.com/Relational-Relativity-Corporation/abr-kernel?rev=1c1ef70a69b3175a2df0458d0ebf1f71475a3d62#1c1ef70a69b3175a2df0458d0ebf1f71475a3d62
+  relational-gate: git+https://github.com/Relational-Relativity-Corporation/abr-irrs?rev=c7410c590d04a96612619e639afdce7f0751aeca#c7410c590d04a96612619e639afdce7f0751aeca
+
+== Step 1 — Declaration (Origin: the student) ==
+  observation_status       = illustrative
+  instrument               = ILLUSTRATIVE EXAMPLE — Lesson 1 supplied values, not an observation
+  measurement_conditions   = illustrative example: no measurement was made; values supplied by the lesson for demonstration
+  unit                     = mm
+  scale_floor              = 0
+  scale_ceiling            = 300
+  scale_basis              = illustrative: a 300 mm ruler whose printed scale runs from 0 mm to 300 mm
+  L1                       = 20
+  L1_description           = illustrative: first mark on the strip
+  L1_record_entry          = Lesson 1 illustrative value L1
+  L2                       = 90
+  L2_description           = illustrative: second mark on the strip
+  L2_record_entry          = Lesson 1 illustrative value L2
+  relation                 = L1 -> L2
+  direction_basis          = illustrative: both marks are read on one ruler scale; the relation is declared from mark L1 toward mark L2, the direction in which the printed scale increases between them
+  continuation_basis       = illustrative: both marks lie on one continuous ruler scale (device geometry)
+  mapping_preserves        = the position of each mark as read on the printed scale, in mm
+  mapping_discards         = everything about the marks except their scale reading (width, colour, reading uncertainty)
+  kernel_selection         = abr
+  kernel_selection_basis   = illustrative: requested to show the canonical response; no interior locus is declared
+  Observation status: ILLUSTRATIVE — supplied demonstration values, NOT an observation (V9 OriginKind::SyntheticFixture)
+
+== Step 2 — IRRS observation admission ==
+  Called: relational_gate::RegionBuilder::establish, relational_gate::AdmissionGate::submit
+          (abr-irrs c7410c5: relational-gate/src/region.rs, relational-gate/src/gate.rs)
+  Region 'lesson1.ruler_scale' established; extent [0.0, 300.0] mm; evidence reading 20.0 mm
+  L1: ADMITTED — source obs.L1, mapping m.lesson1.identity, raw input 20.0, gate-computed 20.0 mm
+  L2: ADMITTED — source obs.L2, mapping m.lesson1.identity, raw input 90.0, gate-computed 90.0 mm
+
+== Step 3 — Canonical declaration records (abr_kernel::provenance) ==
+  Loci (node index = position; labels only, NOT topology): [locus.L1, locus.L2]
+  Declared relation rel.L1_to_L2: locus.L1 → locus.L2 (class Continuation), M m.lesson1.identity (Identity), domain domain.lesson1.ruler_scale
+  Kernel selection: Abr; ρ_base, χ₀: not declared
+
+== Step 4 — Canonical execution ==
+  Called: abr_kernel::provenanced_exec::execute_primary(&registry, "st.lesson1")
+          (abr-kernel 1c1ef70, src/provenanced_exec.rs). For a Primary selection it
+          calls abr_kernel::operators::operator_delta (src/operators.rs): Δ(x)[e] = x[s] − x[t]
+  NOT EXECUTED — canonical return value: NotExecutable { reason: "kernel selection is not Primary" }
+  Operator A is not evaluated. No substitute calculation is made.
+
+== Status summary ==
+  Code execution            : completed (this report was produced)
+  Declaration               : DECLARED (every Lesson 1 key present; admission decides admissibility)
+  IRRS observation admission: ADMITTED — both readings (AdmittedObservation<f64>, identity M, inside declared extent)
+  V9 provenance admission   : not reached (nothing executed to submit)
+  Canonical calculation     : OPEN — not evaluated
+  Operator A (ABR kernel)   : OPEN — not evaluated. ABR kernel (A → B → R) requested: canonical execute_primary returns NotExecutable; V9 admission supports the Primary kernel only (admission.rs: 'OPEN: ABR kernel A → B → R'); A → B → R also requires an interior locus s → t → u (kernel_reference.md §10), which two loci cannot supply
+  Observational verification: OPEN
+
+These statuses are not interchangeable. Successful execution, admission and
+calculation are conformance statements; only the last line concerns agreement
+with observation (kernel_reference.md §16.3, §17).

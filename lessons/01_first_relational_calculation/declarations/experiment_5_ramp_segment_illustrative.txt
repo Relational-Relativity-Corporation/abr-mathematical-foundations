@@ -1,0 +1,38 @@
+# Lesson 1 — Experiment 5 (ILLUSTRATIVE): one relation of the ramp, alone
+#
+# Supporting exercise for 05_TOWARD_THE_PRIMARY_REGION.md. Only marks P2 and P3
+# of set 1 (set_1_ramp_illustrative.json) are declared here, as L1 and L2. With
+# two loci and one relation, M establishes no interior locus, so the Primary
+# kernel applies (kernel_reference.md §10). Run with:
+#   cargo run --bin lesson01 -- declarations/experiment_5_ramp_segment_illustrative.txt
+#
+# These values are supplied demonstration data. They are NOT an observation.
+
+observation_status = illustrative
+
+instrument = ILLUSTRATIVE EXAMPLE — Lesson 1 supplied values (set 1, marks P2 and P3), not an observation
+measurement_conditions = illustrative example: no measurement was made; values supplied by the lesson for demonstration
+unit = mm
+
+scale_floor = 0
+scale_ceiling = 300
+scale_basis = illustrative: a 300 mm ruler held vertically on the tabletop; its printed scale runs from 0 mm to 300 mm
+
+L1 = 180
+L1_description = illustrative: mark P2 of the ramp, height above the tabletop
+L1_record_entry = Lesson 1 illustrative value, set 1 mark P2
+L2 = 135
+L2_description = illustrative: mark P3 of the ramp, height above the tabletop
+L2_record_entry = Lesson 1 illustrative value, set 1 mark P3
+
+relation = L1 -> L2
+direction_basis = illustrative: the marble is observed to roll from mark P2 (L1) directly to mark P3 (L2); direction is the observed direction of travel
+continuation_basis = illustrative: both marks lie on the one continuous groove of the ramp (device geometry)
+
+mapping_preserves = the height of each mark above the tabletop, in mm, as read on the ruler
+mapping_discards = everything else about the marks and the ramp: position along the ramp, width of the pencil line, the marble's speed, reading uncertainty
+
+kernel_selection = primary
+kernel_selection_basis = illustrative: only P2 and P3 are declared, with one relation; neither is both the target of one declared relation and the source of another, so this M establishes no interior locus
+
+comparison_outcome = not_compared

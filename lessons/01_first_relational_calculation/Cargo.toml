@@ -1,0 +1,43 @@
+[package]
+name = "lesson01-first-relational-calculation"
+version = "0.2.0"
+edition = "2021"
+description = "ABR Mathematical Foundations, Lesson 1: a complete bounded observable set through IRRS admission and the canonical Kernel V9, with the two-locus Primary exercise as support."
+publish = false
+default-run = "observable_set"
+
+# Principal exercise (revision 2): a complete bounded observable set
+# (four marks on a marble ramp) through IRRS declaration evaluation,
+# IRRS observation admission and the IRRS execution of canonical A → B → R.
+[[bin]]
+name = "observable_set"
+path = "src/bin/observable_set.rs"
+
+# Supporting exercise (revision 1, source unchanged): a two-locus declaration,
+# where no interior locus is established and the Primary kernel Δ applies.
+[[bin]]
+name = "lesson01"
+path = "src/main.rs"
+
+# Canonical authorities, pinned by full commit. This lesson implements no
+# operator, no admission rule and no comparison rule of its own.
+[dependencies]
+# Kernel V9 — canonical operators, provenance records, V9 admission (supporting exercise).
+abr-kernel = { git = "https://github.com/Relational-Relativity-Corporation/abr-kernel", rev = "1c1ef70a69b3175a2df0458d0ebf1f71475a3d62" }
+# IRRS — observation admission gate (AdmittedObservation<T>).
+relational-gate = { git = "https://github.com/Relational-Relativity-Corporation/abr-irrs", rev = "c7410c590d04a96612619e639afdce7f0751aeca" }
+# IRRS — declaration evaluator (Stage 2 ABR topology admission).
+irrs-eval = { git = "https://github.com/Relational-Relativity-Corporation/abr-irrs", rev = "c7410c590d04a96612619e639afdce7f0751aeca" }
+# IRRS — execution interface: canonical A → ρ → B → R → 𝟙[e].
+irrs-session = { git = "https://github.com/Relational-Relativity-Corporation/abr-irrs", rev = "c7410c590d04a96612619e639afdce7f0751aeca" }
+# The IRRS copy of Kernel V9 (library `abr_kernel`, byte for byte; checked by
+# `irrs-eval verify-kernel`). irrs-session's types come from it, so it is
+# named here under a distinct name.
+irrs_kernel = { package = "irrs-kernel", git = "https://github.com/Relational-Relativity-Corporation/abr-irrs", rev = "c7410c590d04a96612619e639afdce7f0751aeca" }
+# Reading the JSON declaration and computing its SHA-256 digest, as the irrs-eval CLI does.
+serde_json = "1"
+sha2 = "0.10"
+hex = "0.4"
+
+# Standalone package: not part of any parent workspace.
+[workspace]
