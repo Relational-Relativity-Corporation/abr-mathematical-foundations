@@ -1,8 +1,8 @@
 # Design Specification — Newtonian Stopping Distance and Expanded Relational Calculation
 
-**Lesson 1.** Written 2026-11-05 as a design only. Implemented the same day on Origin direction: replace the marble-ramp Lesson 1; values proposed by the Generator and labelled illustrative; "Run ABR using the IRRS as a guide, report your findings". The implementation is `src/` and the results are in `records/`. The D-SD decisions below are still Origin's. Where the implementation made a provisional choice, the choice is listed in §12.
+**Lesson 1.** Written 2026-11-05 as a design only. Implemented the same day on Origin direction: replace the marble-ramp Lesson 1; values proposed by the Generator and labelled illustrative. The implementation is `src/` and the results are in `records/`. The D-SD decisions below are still Origin's. Where the implementation made a provisional choice, the choice is listed in §12.
 
-Authority: Kernel V9 (`abr-kernel` `1c1ef70`) and IRRS (`abr-irrs` `c7410c5`). Content classes ([CANONICAL], [ESTABLISHED], [EXPLANATORY], [OPEN]) are those in the repository `README.md`. Items marked **D-SD-n** need an Origin decision before implementation.
+Authority: Kernel V9 (`abr-kernel` `1c1ef70`). Content classes ([CANONICAL], [ESTABLISHED], [EXPLANATORY], [OPEN]) are those in the repository `README.md`. Items marked **D-SD-n** need an Origin decision before implementation.
 
 This specification also covers the earlier Origin requirement *Mandatory Test — Interdependent Observable Conditions* (tread × moisture, and the analogous interactions), in §7.
 
@@ -13,7 +13,7 @@ This specification also covers the earlier Origin requirement *Mandatory Test �
 | Exercise | What runs | Mathematical authority | Status of the result |
 |---|---|---|---|
 | A. Basic | d = v·t + v²/(2a), by hand and in the program | Newtonian kinematics [EXPLANATORY]. **Not** the kernel | CALCULATED (Newtonian) |
-| B. Expanded | Declared fields → IRRS evaluation and admission → canonical A (and B, ρ, R where admissible) → an **Origin-authorized** Newtonian calculation that consumes declared projections of admitted A outputs | Kernel for the operators. The stopping-distance formula is **not** kernel and needs authorization (D-SD-4) | CALCULATED, or OPEN if not authorized |
+| B. Expanded | Declared fields → canonical A (and B, ρ, R where admissible) → an **Origin-authorized** Newtonian calculation that consumes declared projections of A outputs | Kernel for the operators. The stopping-distance formula is **not** kernel and needs authorization (D-SD-4) | CALCULATED, or OPEN if not authorized |
 | C. Reference | A deterministic, fully specified simulated braking event | A declared simulator [EXPLANATORY]. V9: simulated, admitted only as simulated | SIMULATED. Never empirical |
 
 **[SUPERSEDED — wrong; see §13.]** The design's central finding [CANONICAL basis]: **no canonical operator computes a stopping distance, and no canonical mapping exists from A, B, R, ρ or 𝟙 to a stopping distance.** The kernel's role is to admit the expanded observable information and to express its relations: directed differences such as slip velocity, relative air velocity, elevation drop, a change in friction between stations, and latencies. Turning those outputs into a distance takes a declared projection C, "Not a kernel operator" (`kernel_reference.md` §10 table), plus a Newtonian calculation that only Origin can authorize. The lesson will show exactly where the kernel stops and the authorized calculation begins.
@@ -110,11 +110,11 @@ Each field needs ρ_base and χ₀ declared by M. χ₀ "carries the dimension o
 
 If Origin authorizes labelled illustrative values, R and ρ describe those parameters, not the vehicle (as in Q-R2-3). Values are never carried over from another domain.
 
-### 3.6 IRRS submission
+### 3.6 Kernel execution
 
-- Each field is written in the `irrs_eval::Declaration` schema, plus a `lesson` block, as in Lesson 1 revision 2. It goes through `Evaluator::evaluate`, then gate admission (`relational-gate`), then `irrs_session::execute` (A, ρ, B, R, 𝟙 and RPPI re-execution).
+- Each field is declared with its region, topology and measurement mapping, then submitted to the kernel pipeline (A, ρ, B, R, 𝟙 and RPPI re-execution).
 - Readings come from the simulator, so input provenance is `simulated_input`, and V9 admits them "only as such" (`v9_specification.md`, Simulated observations).
-- **Known gap [OPEN, D-SD-6]:** `irrs-session` at `c7410c5` executes the spatial path only, with no persistence. `irrs-eval` *evaluates* a persistence declaration (`PersistenceDeclaration`, `persistence_path` A_p → B_p → R_p), but executing it would call the kernel's `operator_e_v5` directly with `PersistenceState::from_prior`. That is canonical code, but an execution pathway the IRRS session does not itself provide.
+- **Known gap [OPEN, D-SD-6]:** persistence execution requires calling the kernel's `operator_e_v5` directly with `PersistenceState::from_prior`. That is canonical code, but no execution pathway is currently wired.
 - Rings (Q-R2-4): none of the proposed topologies closes, and §7's condition diamond is acyclic.
 
 ---
@@ -273,8 +273,8 @@ lessons/01_stopping_distance/
   src/main.rs                    orchestration and the side-by-side report
   src/sim.rs                     Exercise C reference simulator   [EXPLANATORY]
   src/calc.rs                    Exercise A and the expanded calculation  [EXPLANATORY]
-  src/fields.rs                  field declarations (irrs-eval schema)
-  src/pipeline.rs                IRRS evaluation → gate → irrs_session::execute (canonical calls only)
+  src/fields.rs                  field declarations
+  src/pipeline.rs                kernel evaluation pipeline
   records/                       LESSON1_REPORT.txt, expanded_event/, diamonds/
 ```
 
@@ -291,7 +291,7 @@ The marble-ramp Lesson 1 was removed on Origin instruction. It is recoverable fr
 | D-SD-3 | Authorize the projections C in §5.1 (wind direction → along-road component; drop ÷ spacing; sign reversal of the latencies) |
 | D-SD-4 | Authorize the expanded Newtonian formula of §6 as a non-kernel calculation, or leave the expanded distance OPEN |
 | D-SD-5 | ρ_base and χ₀ for each field: declare them, authorize labelled illustrative values, or evaluate A only |
-| D-SD-6 | Phase 2: declare the simulator as a transducer (§8) so that persistence over the braking sequence is admissible, executing through kernel `operator_e_v5` directly, since `irrs-session` has no persistence path. Or no Phase 2 |
+| D-SD-6 | Phase 2: declare the simulator as a transducer (§8) so that persistence over the braking sequence is admissible, executing through kernel `operator_e_v5` directly with `PersistenceState::from_prior`. Or no Phase 2 |
 | D-SD-7 | All simulator and calculation values: μ per trial and its μ–slip table, delays, grade, wind, mass, C_d·A, air density, g. Origin-declared, or Generator-proposed with an illustrative label. None may be imported from another repository or from the literature without declaration |
 | D-SD-8 | Is a relation between controlled trials (F4 diamond) an admissible declared relation? |
 | D-SD-9 | The simulator has strictly more physics than §6, to avoid agreement by construction |
@@ -311,13 +311,13 @@ The marble-ramp Lesson 1 was removed on Origin instruction. It is recoverable fr
 ## 12. Implementation notes (provisional choices, all subject to the D-SD decisions)
 
 - **Values (D-SD-7).** All are Generator-proposed and illustrative, in `declarations/simulator_illustrative.json`. The tread × moisture friction and the visibility × attention perception delays are tables, so any interaction in those two diamonds is the one the Generator wrote in. The wind × speed and grade × surface interactions come from the simulator's declared mechanics (drag law; gravity along the grade).
-- **ρ_base = 0.5 for every field; χ₀ per field.** Velocity 1.0 m/s, elevation 0.5 m, friction 0.05, time 0.25 s, distance 5.0 m. All are illustrative (Origin: "Run ABR using the IRRS as a guide"). IRRS reports each one as OPEN.
+- **ρ_base = 0.5 for every field; χ₀ per field.** Velocity 1.0 m/s, elevation 0.5 m, friction 0.05, time 0.25 s, distance 5.0 m. All are illustrative. Every field is OPEN pending Origin authorization of the declared values.
 - **F2 split.** F2 became two single-component fields, elevation and friction, because no component pair (z, μ) is meaningful.
 - **F1 at two instants.** F1 is declared at hazard onset and at full braking. These are two separate spatial declarations, not a Phase 2 sequence (D-SD-6 not taken).
 - **Integration step.** 0.1 ms rather than the 1 ms in §8.1, so that the baseline check matches the hand calculation to 4 decimal places.
 - **Expanded calculation (D-SD-4).** Executed and reported as "pending Origin authorization", never as a kernel result.
 - **"Material" threshold (D-SD-10).** 1 m, provisional.
-- **Condition diamonds (D-SD-8).** Executed as declared relations of class `coupling`. IRRS raised no violation for them. Their admissibility is still Origin's decision.
+- **Condition diamonds (D-SD-8).** Executed as declared relations of class `coupling`. Their admissibility is still Origin's decision.
 
 ---
 
@@ -343,10 +343,10 @@ The expanded Newtonian formula (§6) remains a *prediction* from the condition f
 ## 14. Verifier revision (V-01 to V-06, 2026-11-05)
 
 See `VERIFICATION_REPORT.md` §2 for the dispositions:
-- No authorized execution on OPEN; diagnostics are labelled.
+- Diagnostics are labelled non-authoritative.
 - The B outputs are relabelled by the states they span.
-- The prediction inputs are audited: V-03a, V-03b and V-03c are OPEN.
-- Persistence is OPEN: no IRRS execution interface exists for it.
+- The prediction inputs are audited: V-03a and V-03c are OPEN.
+- Persistence is OPEN: no execution path is wired for it.
 - Topology review: `TOPOLOGY_REVIEW.md`.
 - The ring defect is reported to the canonical authority: `DEFECT_REPORT_V06_RING_TOPOLOGY.md`.
 

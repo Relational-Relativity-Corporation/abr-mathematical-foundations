@@ -67,7 +67,7 @@ AI systems bring a specific risk, and the framework names it: mathematics carrie
 
 ## What we ask of you
 
-1. **Check the sources.** Every [CANONICAL] passage gives a file and section in `abr-kernel` (Kernel V9, `1c1ef70`) or `abr-irrs` (`c7410c5`). If our restatement differs from the source, the source governs, and we want to know.
+1. **Check the sources.** Every [CANONICAL] passage gives a file and section in `abr-kernel` (Kernel V9, `1c1ef70`). If our restatement differs from the source, the source governs, and we want to know.
 2. **Run the code.** `cargo test` in `abr-kernel` reproduces the conformance baseline. The operators are short enough to read in an afternoon.
 3. **Separate what is established from what is open.** The canonical record keeps an explicit register of open conditions (`kernel_reference.md` §18) and a Part II of framework-level statements awaiting derivation (§15). Several of those open conditions are mathematical problems, and closing them by derivation is real work.
 4. **Bring your judgement.** If a definition is unclear, a step does not follow, or an explanation here outruns its source, that is a finding.

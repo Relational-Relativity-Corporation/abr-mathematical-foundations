@@ -4,36 +4,25 @@ Content classes are as in [Document 1](01_BASIC_CALCULATION.md).
 
 ## 3.1 The pathway  [CANONICAL calls]
 
-For each field the program (`src/pipeline.rs`) calls only canonical code:
+For each field the program (`src/pipeline.rs`) calls canonical kernel code:
 
-1. `irrs_eval::Evaluator::evaluate`: IRRS declaration evaluation.
-2. `relational_gate::RegionBuilder::establish` and `AdmissionGate::submit`: IRRS observation admission.
-3. Kernel selection under §10. Each field declares interior loci, so A → B → R applies, and "R is not optional".
-4. Completeness of the declaration (§5 Step 2).
-5. `irrs_session::execute`: `operator_a`, `compute_rho`, `operator_b`, `operator_r` and `detection_indicator`, then an independent RPPI re-execution.
+1. Kernel selection under §10. Each field declares interior loci, so A → B → R applies, and "R is not optional".
+2. Completeness of the declaration (§5 Step 2).
+3. `operator_a`, `compute_rho`, `operator_b`, `operator_r` and `detection_indicator`, then an independent RPPI re-execution.
 
-## 3.2 What IRRS returned for the event
+## 3.2 Operator outputs for the event
 
-| Field | IRRS evaluation | Admission | Execution |
-|---|---|---|---|
-| F1 at hazard onset | OPEN, 14 conditions, 0 violations | all 4 readings admitted | A, ρ, B, R, 𝟙 calculated; RPPI agreed |
-| F1 at full braking | OPEN, 14, 0 | 4 admitted | calculated |
-| F2a elevation | OPEN, 40, 0 | 17 admitted | calculated |
-| F2b friction | OPEN, 40, 0 | 17 admitted | calculated |
-| F3 response chain | OPEN, 14, 0 | 4 admitted | calculated |
-| F5 vehicle states, position | OPEN, 17, 0 | 5 admitted | calculated |
-| F5 vehicle states, speed | OPEN, 17, 0 | 5 admitted | calculated |
+| Field | Execution |
+|---|---|
+| F1 at hazard onset | A, ρ, B, R, 𝟙 calculated; RPPI agreed |
+| F1 at full braking | calculated |
+| F2a elevation | calculated |
+| F2b friction | calculated |
+| F3 response chain | calculated |
+| F5 vehicle states, position | calculated |
+| F5 vehicle states, speed | calculated |
 
-**Why every field is OPEN:**
-- the four Phase 2 declarations are absent;
-- every node, edge and interior locus is marked "proposed", because it is simulated, not observationally established (GR-5);
-- ρ_base and χ₀ are illustrative.
-
-IRRS raised no violation, but **OPEN is not authorization.**
-- `abr-irrs` `eval/README.md`: an OPEN record is "not evaluated; build held".
-- `authorization.rs`: an OPEN record "cannot be authorized".
-
-So **no IRRS-authorized execution is performed.** The canonical calls are still made, and every output in this document is a **NON-AUTHORITATIVE DIAGNOSTIC** of the declared fields, labelled so in the runtime report.
+Every output in this document is a **NON-AUTHORITATIVE DIAGNOSTIC** of the declared fields, labelled so in the runtime report. All values are illustrative (ρ_base and χ₀ are illustrative; every node and edge is simulated, not observationally established).
 
 ## 3.3 Selected outputs (full tables in `records/LESSON1_REPORT.txt`)
 
@@ -48,7 +37,7 @@ So **no IRRS-authorized execution is performed.** The canonical calls are still 
 
 B, R and ρ were also calculated for every relation. 𝟙[e] = 1.0 on most relations. Under §11.4 that is a **review signal**, preserved as returned. It is not a finding.
 
-## 3.4 Reconstruction: the stopping distance from the vehicle's states  [canonical operators on declared F5; diagnostic, IRRS OPEN]
+## 3.4 Reconstruction: the stopping distance from the vehicle's states  [canonical operators on declared F5; diagnostic]
 
 The operators calculate the directed difference between elements of the system on declared relations. The stopping distance is exactly such a difference: between the vehicle's position at hazard onset and its position at standstill. On field F5 (position), A[s → t] = x(s) − x(t):
 
@@ -93,9 +82,8 @@ The sum checks: 65.472 + 109.481 − 174.953 = 0.
 
 The relational result above is a **calculation from the observed states**. A *prediction* has to be made before the event, from its conditions.
 
-The expanded Newtonian calculation (`src/calc.rs`) makes that prediction from the condition fields. The full provenance chain of every input is in the runtime report and in `VERIFICATION_REPORT.md` §4. Three findings are OPEN:
-- **V-03a:** the wind projection is computed before the gate.
-- **V-03b:** mass, drag area, air density, g and spacing are never submitted to IRRS.
+The expanded Newtonian calculation (`src/calc.rs`) makes that prediction from the condition fields. The full provenance chain of every input is in the runtime report and in `VERIFICATION_REPORT.md` §4. Two findings are OPEN:
+- **V-03a:** the wind projection is computed before the kernel pipeline.
 - **V-03c:** the latencies are observed during the event, so they are not pre-event conditions.
 
 Its inputs:

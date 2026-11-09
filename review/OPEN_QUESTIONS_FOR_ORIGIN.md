@@ -12,12 +12,11 @@ These questions came up while drafting. Each needs an Origin decision. None has 
 
 **OQ-2 — The "Executor" role is not a Kernel V9 role.** The task names Origin, Generator, Executor, and Verifier. Kernel V9 declares three roles (`kernel_reference.md` §3), and it assigns execution of the applicable kernel to the Generator (§5, Step 2). *Draft's choice:* the curriculum describes AI as implementing and executing authorized calculations within the Generator role, and does not name an Executor role. Naming one would add a role the canonical sources do not hold. *Needed:* should "Executor" appear? If so, it must first be declared in the canonical source, not in this curriculum.
 
-**OQ-3 — Wording of the central distinction.** Three wordings are in play:
+**OQ-3 — Wording of the central distinction.** Two wordings are in play:
 - the task: "relation is the mathematical primitive";
-- Kernel V9: "the foundational observable primitive is a directed relation declared from observable information";
-- IRRS GD-1: "Relation is the observable primitive".
+- Kernel V9: "the foundational observable primitive is a directed relation declared from observable information".
 
-*Draft's choice:* Module 1 §1.5 uses the task's wording as its headline and quotes both canonical wordings beneath it. *Needed:* which wording should govern the curriculum's own sentences?
+*Draft's choice:* Module 1 §1.5 uses the task's wording as its headline and quotes the canonical wording beneath it. *Needed:* which wording should govern the curriculum's own sentences?
 
 **OQ-4 — Content-class labels.** The draft introduces four labels: [CANONICAL], [ESTABLISHED], [EXPLANATORY], and [OPEN] (`README.md`). These are editorial conventions for this curriculum, not kernel classifications. They sit alongside, and do not replace, the kernel's support classifications (Observed, Inferred, Derived, Downstream projection) and its five-way correspondence classification (§16.3). *Needed:* approve, rename, or replace them.
 
@@ -49,7 +48,3 @@ These questions came up while drafting. Each needs an Origin decision. None has 
 
 ---
 
-## Observations returned without action
-
-- **Reference clone state.** The local reference clone of `abr-irrs` is checked out on branch `exact-representation` (`2d926f0`), not on `main`. The Generator read `origin/main` (`c7410c5`) without changing the checkout. Nothing was modified.
-- **IRRS kernel labelling.** An earlier record held that `abr-irrs/irrs-kernel` described itself as "Kernel V8 canonical". At `c7410c5`, the IRRS `README.md` and `docs/GOVERNING_DECLARATIONS.md` state that `irrs-kernel` carries the canonical V9 files byte for byte. The Generator did not run `irrs-eval verify-kernel` to confirm this.

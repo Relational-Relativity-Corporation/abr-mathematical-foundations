@@ -2,7 +2,7 @@
 
 **ABR Mathematical Foundations.** First draft, awaiting Origin review.
 
-Mathematical authority: Kernel V9 (`abr-kernel` `1c1ef70`) and IRRS (`abr-irrs` `c7410c5`). Content classes are defined in [`README.md`](../README.md). Each section carries its class in its heading.
+Mathematical authority: Kernel V9 (`abr-kernel` `1c1ef70`). Content classes are defined in [`README.md`](../README.md). Each section carries its class in its heading.
 
 ---
 
@@ -133,12 +133,6 @@ The canonical sources state this in several places, each closing a different rou
 | Revision of the declaration | "The kernel does not vary the declaration." — `kernel_reference.md` §1 |
 | A traceable relation, from computation alone | "A relation that cannot be traced to an observable through M is fabricated within D, even when it computes." — `operators_notation_and_constraint.md`, Relations |
 
-The IRRS records the same distinction as its first governing declaration and makes it a property of the type system:
-
-> **[CANONICAL]** GD-1: "Relation is the observable primitive." GD-2: "D and M, including variable assignments and topology, are the subjects of empirical correspondence testing." — `abr-irrs` `docs/GOVERNING_DECLARATIONS.md`
->
-> **[ESTABLISHED]** In the IRRS, `AdmittedObservation<T>` has a `pub(crate)` constructor inside `relational-gate`, so no application code can manufacture one. A value that did not pass through the admission gate cannot be passed to a declared relational treatment: the program does not compile. — `abr-irrs` `README.md`
-
 ### Commentary — [EXPLANATORY]
 
 A comparison may help, as long as it is taken only as a comparison. A grammar fixes what form a sentence must take, but it does not tell you which sentences are accurate reports of what happened. Knowing the form of a directed relation, with a source locus, a target locus, and one direction, likewise does not tell you which directed relations a given system has. Someone has to look.
@@ -229,7 +223,7 @@ These are for discussion. They have no graded answers, and none of them asks for
 | 1.2 The achievement of abstraction | [EXPLANATORY] | — (general history; see open question OQ-7) |
 | 1.3 What abstraction sets aside | [EXPLANATORY], one [CANONICAL] quotation | `kernel_reference.md` §1 |
 | 1.4 The observational starting point | [CANONICAL] | `kernel_reference.md` §1–§2; `operators_notation_and_constraint.md`; `abr_operators_plain.md` |
-| 1.5 The central distinction | [CANONICAL], [ESTABLISHED], [EXPLANATORY] | `kernel_reference.md` §1, §9; `operators_notation_and_constraint.md`; `abr-irrs` `README.md`, `docs/GOVERNING_DECLARATIONS.md` |
+| 1.5 The central distinction | [CANONICAL], [EXPLANATORY] | `kernel_reference.md` §1, §9; `operators_notation_and_constraint.md` |
 | 1.6 Responsibility: Origin and AI | [CANONICAL], [EXPLANATORY] | `kernel_reference.md` §3, §5, §16, §20; `role_separation_and_operator_application.md` |
 | 1.7 What this module does not claim | [EXPLANATORY] | — |
 | 1.8 Reflection questions | [EXPLANATORY] | — |

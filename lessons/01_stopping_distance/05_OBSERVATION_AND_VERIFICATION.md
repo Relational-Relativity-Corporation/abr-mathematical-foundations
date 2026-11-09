@@ -27,8 +27,8 @@ So agreement is not built in.
 |---|---|---|---|
 | Stopping distance | 100.187 m | 180.109 m | **174.953 m** = −A[Onset → Standstill] |
 | COMPARISON: minus reconstruction | −74.766 m | +5.156 m | — |
-| Inputs | v, t, a (assumed) | condition fields (F1, F2, F3) via declared projections; declared mass, drag area, air density, g | the vehicle's observed states (F5), admitted by IRRS |
-| Authority | Newtonian, by hand | a Newtonian formula **pending authorization** (D-SD-4) | canonical A as a NON-AUTHORITATIVE DIAGNOSTIC (IRRS OPEN); Kernel V9 `admit` ADMITTED, status Simulated |
+| Inputs | v, t, a (assumed) | condition fields (F1, F2, F3) via declared projections; declared mass, drag area, air density, g | the vehicle's observed states (F5) |
+| Authority | Newtonian, by hand | a Newtonian formula **pending authorization** (D-SD-4) | canonical A as a NON-AUTHORITATIVE DIAGNOSTIC; Kernel V9 `admit` ADMITTED, status Simulated |
 
 The reconstruction agrees with the simulator's own stopping distance to 0.000 m, because it is calculated from the same observation. That agreement is a reconstruction check (conformance), not a correspondence. The two predictions are what observation would test.
 
@@ -56,17 +56,17 @@ Mass enters only through drag divided by mass. With braking limited by friction,
 ## 5.4 Unmeasured or unresolved  [OPEN]
 
 - **No measurement exists.** Every value is illustrative and the reference is simulated, so observational verification is OPEN. A real test would replace the simulator readings with instrumented measurements and rerun the same declarations.
-- **IRRS evaluation is OPEN for every field.** No authorized execution was performed, so every operator output here is a diagnostic.
-- **Phase 2** (changing deceleration, brake activation history): not executable at the pins. `irrs-session` has no persistence execution path (README: "M3 … Planned (OPEN)"), and §8 requires the simulator to be declared a transducer (D-SD-6). Calling `operator_e_v5` directly would bypass IRRS. Returned OPEN (V-04).
+- **No authorized execution was performed.** Every operator output here is a diagnostic.
+- **Phase 2** (changing deceleration, brake activation history): no execution path is currently wired. §8 requires the simulator to be declared a transducer (D-SD-6). Returned OPEN (V-04).
 - **ρ_base and χ₀** are illustrative, so R and ρ on the condition fields are reported only. On the stopping relation, R rests on empty sums (A-3 OPEN).
 - **The Onset → Standstill relation** awaits Origin confirmation (D-SD-12).
-- **V9 provenance admission for A → B → R:** OPEN, outside the `abr-kernel` `1c1ef70` admission scope.
+- **V9 provenance admission for A → B → R:** OPEN, pending Origin declaration.
 - **Origin decisions:** D-SD-2 (direction bases), D-SD-3 (projections), D-SD-4 (expanded formula), D-SD-8 (relations between trials).
 
 ## 5.5 What this lesson establishes
 
 **Established:**
-- With the declared information, the canonical operators execute through IRRS.
+- With the declared information, the canonical operators execute.
 - On the vehicle's observed states they calculate the stopping distance and its reaction and braking parts.
 - On the condition fields they calculate latencies, grade, friction change, relative air speed and slip, which a declared Newtonian prediction can use.
 - In the condition diamonds, two admitted A outputs show one condition's significance depending on another.

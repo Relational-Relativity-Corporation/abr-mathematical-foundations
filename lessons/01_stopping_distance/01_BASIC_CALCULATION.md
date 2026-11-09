@@ -1,6 +1,6 @@
 # 1 — The Basic Calculation (Exercise A)
 
-Content classes: [CANONICAL] restates Kernel V9 or IRRS. [EXPLANATORY] is teaching material with no mathematical authority. [OPEN] is undeclared or undecided.
+Content classes: [CANONICAL] restates Kernel V9. [EXPLANATORY] is teaching material with no mathematical authority. [OPEN] is undeclared or undecided.
 
 ## 1.1 The calculation  [EXPLANATORY: Newtonian kinematics, not the ABR kernel]
 

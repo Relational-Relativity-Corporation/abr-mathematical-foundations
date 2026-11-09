@@ -17,11 +17,10 @@ It is a teaching layer, **not a mathematical authority.**
 | Authority | Repository | Pinned commit |
 |---|---|---|
 | Mathematics: operator forms, invariants, admissibility, roles | [`abr-kernel`](https://github.com/Relational-Relativity-Corporation/abr-kernel), **Kernel V9** | `1c1ef70` |
-| Admission and enforcement | [`abr-irrs`](https://github.com/Relational-Relativity-Corporation/abr-irrs), **IRRS** | `c7410c5` |
 
-Where anything in this curriculum differs from those sources, **the canonical source governs**, and the difference is a finding to return to Origin. This repository introduces no operator definition, no mathematical primitive, no topology rule, and no admissibility condition of its own. See [`references/CANONICAL_SOURCES.md`](references/CANONICAL_SOURCES.md).
+Where anything in this curriculum differs from that source, **the canonical source governs**, and the difference is a finding to return to Origin. This repository introduces no operator definition, no mathematical primitive, no topology rule, and no admissibility condition of its own. See [`references/CANONICAL_SOURCES.md`](references/CANONICAL_SOURCES.md).
 
-The mathematics taught here is implemented. Kernel V9 is a Rust reference implementation with a conformance test suite. The IRRS enforces admission by construction. Readers are invited to build both and check every statement against the code.
+The mathematics taught here is implemented. Kernel V9 is a Rust reference implementation with a conformance test suite. Readers are invited to build it and check every statement against the code.
 
 ---
 
@@ -31,7 +30,7 @@ Every section of every module carries one of four labels. The labels keep what t
 
 | Label | Meaning | Who may change it |
 |---|---|---|
-| **[CANONICAL]** | A definition, rule, or form stated in Kernel V9 or IRRS. Quoted or closely restated, with a section reference. | No one in this repository. Changes happen in the canonical repository, by Origin. |
+| **[CANONICAL]** | A definition, rule, or form stated in Kernel V9. Quoted or closely restated, with a section reference. | No one in this repository. Changes happen in the canonical repository, by Origin. |
 | **[ESTABLISHED]** | A result the canonical sources classify as established: an implemented and tested behaviour, a CLOSED finding, or a Part I invariant the canonical record classifies as confirmed. Reported here *as the canonical record states it*; this repository does not re-establish it. | No one in this repository. |
 | **[EXPLANATORY]** | Teaching material written for this curriculum: motivation, history, analogy, commentary. It carries **no mathematical authority**. If it appears to add a rule, it is wrong. | Origin, after review. |
 | **[OPEN]** | An open condition, HOLD, or undeclared item, either recorded in the canonical sources or raised for Origin review by this curriculum. | Closed only by derivation or Origin declaration in the canonical source, never in this repository. |
@@ -47,7 +46,7 @@ Proofs are not invented here. Where a module needs a derivation the canonical so
 | [`CURRICULUM.md`](CURRICULUM.md) | Table of contents and outline of every module | Draft |
 | [`preface/00_an_invitation.md`](preface/00_an_invitation.md) | Preface: *An Invitation to Mathematicians and Physicists* | Draft |
 | [`modules/01_observation_and_abstraction.md`](modules/01_observation_and_abstraction.md) | Module 1: *Observation and Abstraction* | Draft |
-| [`lessons/01_stopping_distance/`](lessons/01_stopping_distance/README.md) | Lesson 1: a basic Newtonian stopping-distance calculation beside an expanded relational field (IRRS evaluation and admission, canonical A → B → R), compared with a simulated reference braking event; four interdependent-condition diamonds | Draft (illustrative values), awaiting Origin and Verifier |
+| [`lessons/01_stopping_distance/`](lessons/01_stopping_distance/README.md) | Lesson 1: a basic Newtonian stopping-distance calculation beside an expanded relational field (canonical A → B → R), compared with a simulated reference braking event; four interdependent-condition diamonds | Draft (illustrative values), awaiting Origin and Verifier |
 | [`references/CANONICAL_SOURCES.md`](references/CANONICAL_SOURCES.md) | Pinned canonical sources and the sections each module draws on | Draft |
 | [`review/OPEN_QUESTIONS_FOR_ORIGIN.md`](review/OPEN_QUESTIONS_FOR_ORIGIN.md) | Questions raised while drafting, returned to Origin | Draft |
 

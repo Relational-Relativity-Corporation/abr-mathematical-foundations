@@ -59,6 +59,6 @@ Because of the NodeField rule, the twelve items cannot share one field: lux, sec
 
 **Changing deceleration over the event and the brake activation history** (items 5 and 12) need Phase 2: a declared sequence of actual observations. The kernel states that "a model-generated trajectory is not an observable sequence through M unless the model is itself declared as a transducer from observable inputs" (§8). That declaration is Origin's (D-SD-6).
 
-`irrs-session` at `c7410c5` also has no persistence execution path. The two F1 instants are therefore two separate spatial declarations, not a sequence.
+No persistence execution path is currently wired. The two F1 instants are therefore two separate spatial declarations, not a sequence.
 
 *Bounded over D. No claim beyond D.*

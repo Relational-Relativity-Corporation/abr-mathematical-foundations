@@ -2,7 +2,7 @@
 
 **ABR Mathematical Foundations.** First draft, awaiting Origin review.
 
-Mathematical authority: Kernel V9 (`abr-kernel` `1c1ef70`) and IRRS (`abr-irrs` `c7410c5`). Content classes ([CANONICAL], [ESTABLISHED], [EXPLANATORY], [OPEN]) are defined in [`README.md`](README.md).
+Mathematical authority: Kernel V9 (`abr-kernel` `1c1ef70`). Content classes ([CANONICAL], [ESTABLISHED], [EXPLANATORY], [OPEN]) are defined in [`README.md`](README.md).
 
 Only the Preface and Module 1 are drafted. Modules 2–11 are **outlines**: each lists its purpose, the canonical material it will teach, and what it must not do. An outline is not a claim that the material is complete, derived, or verified. Its content and order are proposals for Origin review.
 
@@ -18,7 +18,7 @@ Only the Preface and Module 1 are drafted. Modules 2–11 are **outlines**: each
 
 | | Title | Status |
 |---|---|---|
-| Lesson 1 | [Stopping Distance: a Newtonian Calculation and Its Relational Expansion](lessons/01_stopping_distance/README.md): the basic d = vt + v²/(2a) beside an expanded relational field run through IRRS and canonical A → B → R, compared with a simulated reference event; interdependent conditions | Draft (illustrative values), awaiting Origin and Verifier |
+| Lesson 1 | [Stopping Distance: a Newtonian Calculation and Its Relational Expansion](lessons/01_stopping_distance/README.md): the basic d = vt + v²/(2a) beside an expanded relational field, canonical A → B → R, compared with a simulated reference event; interdependent conditions | Draft (illustrative values), awaiting Origin and Verifier |
 
 ## Part I — Foundations
 
@@ -42,7 +42,7 @@ Only the Preface and Module 1 are drafted. Modules 2–11 are **outlines**: each
 | | Title | Status |
 |---|---|---|
 | Module 8 | Proof and Derivation in a Bounded Domain | Outline |
-| Module 9 | Provenance and Admission: RPPI and IRRS | Outline |
+| Module 9 | Provenance and Admission: RPPI | Outline |
 | Module 10 | Observational Verification and Validation | Outline |
 
 ## Part IV — Applications
@@ -97,7 +97,7 @@ Where mathematics begins, and what abstraction achieved. The central distinction
 ### Module 6 — Persistence and Relational Evolution *(outline)*
 
 - **Purpose.** Phase 2: how the operators act across a declared sequence of actual observations.
-- **Canonical material.** The sequential observation requirement; the relational step as the system's own declared process step; the relational evolution direction declared from an observable property of the process (index order is not a direction declaration; temporal order is a projection); A_persistence = E_current − E_prior; B_persistence, R_persistence; `PersistenceState::from_prior`; no persistence at the first declared observation. Sources: `operators_notation_and_constraint.md` (Domain, Relational evolution direction, A); `kernel_reference.md` §8, §11.6; `role_separation_and_operator_application.md` Step 1–2. IRRS rule W-1 (whole field) from `abr-irrs` `docs/GOVERNING_DECLARATIONS.md`.
+- **Canonical material.** The sequential observation requirement; the relational step as the system's own declared process step; the relational evolution direction declared from an observable property of the process (index order is not a direction declaration; temporal order is a projection); A_persistence = E_current − E_prior; B_persistence, R_persistence; `PersistenceState::from_prior`; no persistence at the first declared observation. Sources: `operators_notation_and_constraint.md` (Domain, Relational evolution direction, A); `kernel_reference.md` §8, §11.6; `role_separation_and_operator_application.md` Step 1–2.
 - **Must not.** Treat a model trajectory, a parameter sweep, or a repeated static configuration as an observed sequence.
 
 ### Module 7 — Derived Invariants and Their Status *(outline)*
@@ -113,11 +113,11 @@ Where mathematics begins, and what abstraction achieved. The central distinction
 - **Canonical material.** The Derived support classification; the separation of verification (conformance) from validation (correspondence); [MATH]-tagged tests as machine-checked statements of operator properties; movement from Part II to Part I only by derivation, "not by additional agreement" (`kernel_reference.md` §15). Sources: `kernel_reference.md` §6, §15, §17; `tests/v9_conformance.rs`; `docs/process/kernel_self_consistency_test.md`.
 - **Must not.** Invent a proof. Where a module needs a derivation the canonical sources do not hold, it records an [OPEN] item for Origin.
 
-### Module 9 — Provenance and Admission: RPPI and IRRS *(outline)*
+### Module 9 — Provenance and Admission: RPPI *(outline)*
 
 - **Purpose.** How the canonical implementation enforces admissibility.
-- **Canonical material.** The Relational Primitive Provenance Invariant; provenance label vs. declaration record vs. calculation record; RPPI failure modes (missing, fabricated, disconnected, misattributed); outcomes OPEN / REJECTED / FAILED / Divergent; `AdmittedObservation<T>` and the seven-step gate; IRRS governing declarations GD-1 to GD-8. Sources: `abr-kernel` `README.md`, `docs/kernel/v9_specification.md`, `src/admission.rs`, `src/provenance.rs`; `abr-irrs` `README.md`, `docs/GOVERNING_DECLARATIONS.md`.
-- **Must not.** Describe the IRRS as having capabilities its README marks planned (OPEN), for example M2–M5 candidate alignment stages.
+- **Canonical material.** The Relational Primitive Provenance Invariant; provenance label vs. declaration record vs. calculation record; RPPI failure modes (missing, fabricated, disconnected, misattributed); outcomes OPEN / REJECTED / FAILED / Divergent; `AdmittedObservation<T>` and the admission gate. Sources: `abr-kernel` `README.md`, `docs/kernel/v9_specification.md`, `src/admission.rs`, `src/provenance.rs`.
+- **Must not.** Present an admissibility condition not stated in the kernel canonical sources.
 
 ### Module 10 — Observational Verification and Validation *(outline)*
 
@@ -128,7 +128,7 @@ Where mathematics begins, and what abstraction achieved. The central distinction
 ### Module 11 — Reproducible Applications *(outline)*
 
 - **Purpose.** Worked applications a reader can rebuild and check.
-- **Selection.** Origin selects which applications are taught. Each needs a recorded declaration (D, M, topology, parameters), a pinned repository commit, and an outcome classified under §16.3. Candidate sources are the canonical illustrative examples (`abr-irrs` `examples/abr-simple`, `bin/provenance_demo.rs` in `abr-kernel`); application repositories are referenced, never modified.
+- **Selection.** Origin selects which applications are taught. Each needs a recorded declaration (D, M, topology, parameters), a pinned repository commit, and an outcome classified under §16.3. Candidate sources are the canonical illustrative examples (`bin/provenance_demo.rs` in `abr-kernel`); application repositories are referenced, never modified.
 - **Must not.** Present an illustrative or synthetic fixture as empirical evidence (V9 admission: a Simulated or SyntheticFixture terminus is not empirical evidence), or carry a declared value from one domain into another.
 
 ---
